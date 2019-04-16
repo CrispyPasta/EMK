@@ -1,16 +1,27 @@
-; TODO INSERT INCLUDE CODE HERE
+;-------------------------------------------------
+;		Include Headers
+;-------------------------------------------------
+    
+    
+;<editor-fold defaultstate="collapsed" desc="Include Code">   
     list p=PIC18F45K22
     #include "p18f45K22.inc"
-;*******************************************************************************
-; Code het 'n verandering hier ingesit
-; TODO Step #2 - Configuration Word Setup
-;
- ;--- Configuration bits ---
+;</editor-fold>
+;-------------------------------------------------
+;		Configuration Bits
+;-------------------------------------------------
+;<editor-fold defaultstate="collapsed" desc="Configuration Bits">  
+    ;--- Configuration bits ---
     CONFIG  FOSC = INTIO67        ; Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON
-    
+;</editor-fold>
 
+    
+;-------------------------------------------------
+;		CBlock
+;-------------------------------------------------    
+;<editor-fold defaultstate="collapsed" desc="CBlock">      
     CBLOCK 0x00
     col
     count
@@ -56,6 +67,8 @@
     EEPROM_DATA
     readCount
     ENDC
+    
+    ;</editor-fold>
     
     org 0h
     GOTO setup   
