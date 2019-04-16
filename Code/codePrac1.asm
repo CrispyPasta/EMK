@@ -2,7 +2,7 @@
     list p=PIC18F45K22
     #include "p18f45K22.inc"
 ;*******************************************************************************
-;
+; Code het 'n verandering hier ingesit
 ; TODO Step #2 - Configuration Word Setup
 ;
  ;--- Configuration bits ---
