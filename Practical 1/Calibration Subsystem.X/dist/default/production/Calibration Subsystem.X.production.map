@@ -1,0 +1,80 @@
+MPLINK 5.09, LINKER
+Linker Map File - Created Mon Apr 01 09:31:27 2019
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000004
+                   .cinit    romdata   0x000004    program   0x000002
+                   .org_1       code   0x000008    program   0x000128
+.config_300001_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300001    program   0x000001
+.config_300002_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300002    program   0x000001
+.config_300003_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300003    program   0x000001
+.config_300005_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300005    program   0x000001
+.config_300006_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300006    program   0x000001
+.config_300008_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300008    program   0x000001
+.config_300009_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x300009    program   0x000001
+.config_30000A_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x30000a    program   0x000001
+.config_30000B_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x30000b    program   0x000001
+.config_30000C_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x30000c    program   0x000001
+.config_30000D_BUILD/DEFAULT/PRODUCTION/CALIBRA    romdata   0x30000d    program   0x000001
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000005      
+                            0x000008    0x00012f      
+                            0x300001    0x300003      
+                            0x300005    0x300006      
+                            0x300008    0x30000d      
+            313 out of 33048 program addresses used, program memory utilization is 0%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                CALIBRATE   0x000050    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+            CALIBRATE_SUB   0x00006e    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                DEBUG_SUB   0x0000c4    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  Go_off0   0x000114    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  Go_off1   0x000118    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  Go_off2   0x00011c    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                     INIT   0x00001c    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                     LEDS   0x0000a2    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                 SSDTABLE   0x0000ac    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             _.org_1_0018   0x000018    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             _.org_1_006A   0x00006a    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+           debugCalibrate   0x000106    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             debugMessage   0x0000e8    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             debugProgram   0x0000fc    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                debugRace   0x0000f2    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  delay1s   0x000110    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                    start   0x000014    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    start   0x000014    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             _.org_1_0018   0x000018    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                     INIT   0x00001c    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                CALIBRATE   0x000050    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             _.org_1_006A   0x00006a    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+            CALIBRATE_SUB   0x00006e    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                     LEDS   0x0000a2    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                 SSDTABLE   0x0000ac    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                DEBUG_SUB   0x0000c4    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             debugMessage   0x0000e8    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                debugRace   0x0000f2    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+             debugProgram   0x0000fc    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+           debugCalibrate   0x000106    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  delay1s   0x000110    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  Go_off0   0x000114    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  Go_off1   0x000118    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+                  Go_off2   0x00011c    program     static C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practical 1\Calibration Subsystem.X\calibrate.asm
+
+
