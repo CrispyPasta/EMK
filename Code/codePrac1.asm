@@ -124,6 +124,7 @@ setup:
 ;-------------------------------------------------
 ;		Initialize Port A
 ;-------------------------------------------------
+    
     ;<editor-fold defaultstate="collapsed" desc="Initialize Port A">
     
     ;Flashes an LED in my program     
@@ -133,6 +134,15 @@ setup:
     CLRF	LATA		; Alternate method to clear output data latches
     CLRF	TRISA		; clear bits for all pins
     CLRF	ANSELA		; clear bits for all pins	
+
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Initialize Port C
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port C">
+    	
     CLRF	LATC
     CLRF	TRISC
     CLRF	ANSELC
@@ -143,6 +153,7 @@ setup:
 ;-------------------------------------------------
 ;		Initialize Port B
 ;-------------------------------------------------
+    
     ;<editor-fold defaultstate="collapsed" desc="Initialize Port B">    
     
     ;SSD port
@@ -261,6 +272,48 @@ startup:
 	RCALL	READ
 	
 	LFSR	1,0x08	
+;</editor-fold>
+	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    ADC Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------    
+   
+;<editor-fold defaultstate="collapsed" desc="ADC Block">  
+    
+;This is an example procedure for using the ADC to perform an Analog-to-Digital conversion:
+
+						    ;1. Configure Port:
+						    ;	Disable pin output driver (See TRIS register) 
+						    ;	Configure pin as analog
+						    
+						    ;2. Configure the ADC module: 
+						    ;	Select ADC conversion clock 
+						    ;	Configure voltage reference 
+						    ;	Select ADC input channel 
+						    ;	Select result format 
+						    ;	Select acquisition delay 
+						    ;	Turn on ADC module
+						    
+						    ;3. Configure ADC interrupt (optional): 
+						    ;	Clear ADC interrupt flag 
+						    ;	Enable ADC interrupt 
+						    ;	Enable peripheral interrupt 
+						    ;	Enable global interrupt(1)
+						    
+						    ;4. Wait the required acquisition time(2). 
+						    
+						    ;5. Start conversion by setting the GO/DONE bit. 
+						    
+						    ;6. Wait for ADC conversion to complete by one of the following: 
+						    ;    Polling the GO/DONE bit 
+						    ;    Waiting for the ADC interrupt (interrupts enabled)
+						    
+						    ;7. Read ADC Result 
+						    
+						    ;8. Clear the ADC interrupt flag (required if interrupt is enabled).
+	
 ;</editor-fold>
 	
 ;-------------------------------------------------------------------------------
