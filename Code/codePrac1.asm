@@ -9,7 +9,7 @@
     CONFIG  FOSC = INTIO67        ; Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON
-     
+     ;yeet
     
     
 
