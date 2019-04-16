@@ -4,8 +4,7 @@
 ;-------------------------------------------------------------------------------	
 ;-------------------------------------------------------------------------------
     
-    
-;<editor-fold defaultstate="collapsed" desc="Include Code">   
+;<editor-fold defaultstate="collapsed" desc="Headers">   
     list p=PIC18F45K22
     #include "p18f45K22.inc"
 ;</editor-fold>
