@@ -70,25 +70,54 @@
     
     ;</editor-fold>
     
-    org 0h
-    GOTO setup   
-    org 8h  
-    RETURN
-    ;GOTO    startup
-;    BTFSC   PIR1,TMR2IF     ; Test the interrupt flag of timer 2
-;    GOTO    CALIBRATE_SUB   ; Got to cal subroutine
-;    BTFSC   INTCON,INT0IF      ; Test the interrupt flag of PORTB pin 0
-;    GOTO    DEBUG_SUB       ; Go to the debugging subroutine
-;nog comments vir die test branch 
+;-------------------------------------------------
+;		Reset Vectors
+;-------------------------------------------------
 
-setup
-    ;setup
-     ;oscillator setup
-	BSF	OSCCON,IRCF0
-	BCF	OSCCON,IRCF1
-	BSF	OSCCON,IRCF2
-     ; Initialize Port A	(just flashes an LED in my program)
-    MOVLB	0xF		    ; Set BSR for banked SFRs
+;<editor-fold defaultstate="collapsed" desc="Reset Vectors"> 
+    
+    
+    org 0h
+	GOTO setup   
+    
+	
+    org 8h  
+	RETURN
+    
+;</editor-fold>    
+
+;-------------------------------------------------
+;-------------------------------------------------
+;		Setup Block
+;-------------------------------------------------	
+;-------------------------------------------------	
+
+;<editor-fold defaultstate="collapsed" desc="Setup">	
+	
+setup:
+
+;-------------------------------------------------
+;		Oscillator Setup
+;-------------------------------------------------
+
+    ;<editor-fold defaultstate="collapsed" desc="Oscillator Setup"> 
+
+;Set up the oscillator frequency of the PIC to run at 4 MHz
+    
+    BSF	OSCCON,IRCF0
+    BCF	OSCCON,IRCF1
+    BSF	OSCCON,IRCF2
+	
+    ;</editor-fold> 
+	     
+;-------------------------------------------------
+;		Initialize Port A
+;-------------------------------------------------
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port A">
+    
+    ;Flashes an LED in my program     
+     
+    MOVLB	0xF		; Set BSR for banked SFRs
     CLRF	PORTA		; Initialize PORTA by clearing output data latches
     CLRF	LATA		; Alternate method to clear output data latches
     CLRF	TRISA		; clear bits for all pins
@@ -97,21 +126,46 @@ setup
     CLRF	TRISC
     CLRF	ANSELC
     CLRF	PORTC
-    ; Initialize Port B	(SSD port)
-     ; Initialize Port B (button interrupt for debugging subsystem)
+    
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Initialize Port B
+;-------------------------------------------------
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port B">    
+    
+    ;SSD port
+    ;Initialize Port B (button interrupt for debugging subsystem)
+    
     CLRF    PORTB
     CLRF    LATB
     MOVLW   0xFF 
     MOVWF   TRISB
     CLRF    ANSELB
     MOVLB   0xF
+
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Initialize Port D
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port D">
     
     ; Initialize Port D	(SSD port)
+    
     CLRF	PORTD		; Initialize PORTD by clearing output data latches
     CLRF	LATD		; Alternate method to clear output data latches
     CLRF	TRISD		; clear bits for all pins
     CLRF	ANSELD		; clear bits for all pins
     
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Enable Periphiral Interrupts
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Enable Periphiral Interrupts">
     
     BSF	    INTCON,PEIE		; Enable peripheral interrupts
     BSF	    INTCON,GIE		; Enable global interrupts
@@ -126,48 +180,69 @@ setup
     ;bsf     INTCON,PEIE ; Enable peripheral interrupts
     ;bsf     INTCON,GIE  ; Enable global interrupts
     ;setup port for transmission
-    CLRF    FSR0
-    MOVLW b'00100100'	;enable TXEN and BRGH
-    MOVWF TXSTA1
-    MOVLW b'10010000'	    ;enable serial port and continuous receive 
-    MOVWF RCSTA1
-    MOVLW D'25'
-    MOVWF SPBRG1
-    CLRF    SPBRGH1
-    BCF	    BAUDCON1,BRG16	; Use 8 bit baud generator
-    BSF	    TRISC,TX		; make TX an output pin
-    BSF	    TRISC,RX		; make RX an input pin
-    CLRF    PORTC
-    CLRF    ANSELC
-    MOVLW   b'11011000'  	; Setup port C for serial port.
-			    ; TRISC<7>=1 and TRISC<6>=1.
-    MOVWF   TRISC
     
-    CLRF    TRISB		; make PORTB an output
-    MOVLW   D'5'
-    MOVWF   size
+    ;</editor-fold>
+
+;-------------------------------------------------
+;		Serial Communication
+;-------------------------------------------------
+
+    ;<editor-fold defaultstate="collapsed" desc="Serial Communication">
     
-    ; INITIALISE VARIABLES
-	MOVLW 0xA0
-	MOVWF WRITE_CONTROL
-	MOVLW 0X00
-	MOVWF EEPROM_ADDRESS
-	CLRF EEPROM_DATA
-	MOVLW 0xA1
-	MOVWF READ_CONTROL
-	MOVLW D'255'
-	MOVWF WRITE_ACKNOWLEDGE_POLL_LOOPS
-	CLRF POLL_COUNTER
-	CLRF RX_BYTE
-	CLRF TX_BYTE
+	CLRF    FSR0
+	MOVLW   b'00100100'		;enable TXEN and BRGH
+	MOVWF   TXSTA1
+	MOVLW   b'10010000'		;enable serial port and continuous receive 
+	MOVWF   RCSTA1
+	MOVLW   D'25'
+	MOVWF   SPBRG1
+	CLRF    SPBRGH1
+	BCF	BAUDCON1,BRG16		; Use 8 bit baud generator
+	BSF	TRISC,TX		; make TX an output pin
+	BSF	TRISC,RX		; make RX an input pin
+	CLRF    PORTC
+	CLRF    ANSELC
+	MOVLW   b'11011000'		; Setup port C for serial port.
+					; TRISC<7>=1 and TRISC<6>=1.
+	MOVWF   TRISC
+
+	CLRF    TRISB			; make PORTB an output
+	MOVLW   D'5'
+	MOVWF   size
+	
+    ;</editor-fold>
+ 
+;-------------------------------------------------
+;		Initialize Variables
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Variables">
+
+	MOVLW	0xA0
+	MOVWF	WRITE_CONTROL
+	MOVLW	0X00
+	MOVWF	EEPROM_ADDRESS
+	CLRF	EEPROM_DATA
+	MOVLW	0xA1
+	MOVWF	READ_CONTROL
+	MOVLW	D'255'
+	MOVWF	WRITE_ACKNOWLEDGE_POLL_LOOPS
+	CLRF	POLL_COUNTER
+	CLRF	RX_BYTE
+	CLRF	TX_BYTE
 	call	I2C_INIT
-	GOTO    startup
+	
+	    GOTO    startup
+	    
+    ;</editor-fold>
     
-startup	
+;</editor-fold>
+	    
+startup:	
 	RCALL	READ
 	
 	LFSR	1,0x08	
-T1	MOVFF	INDF1,WREG
+T1:	MOVFF	INDF1,WREG
 	call trans
 	INCF	FSR1L,F
 	DECFSZ	size
