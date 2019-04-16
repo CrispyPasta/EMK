@@ -1,26 +1,36 @@
-;-------------------------------------------------
-;		Include Headers
-;-------------------------------------------------
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Headers
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
     
     
 ;<editor-fold defaultstate="collapsed" desc="Include Code">   
     list p=PIC18F45K22
     #include "p18f45K22.inc"
 ;</editor-fold>
-;-------------------------------------------------
-;		Configuration Bits
-;-------------------------------------------------
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Configuration Bits
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------        
+    
 ;<editor-fold defaultstate="collapsed" desc="Configuration Bits">  
+    
     ;--- Configuration bits ---
     CONFIG  FOSC = INTIO67        ; Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON
-;</editor-fold>
-
     
-;-------------------------------------------------
-;		CBlock
-;-------------------------------------------------    
+;</editor-fold>
+    
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    CBlock
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+    
 ;<editor-fold defaultstate="collapsed" desc="CBlock">      
     CBLOCK 0x00
     col
@@ -70,9 +80,11 @@
     
     ;</editor-fold>
     
-;-------------------------------------------------
-;		Reset Vectors
-;-------------------------------------------------
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Reset Vectors
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
 
 ;<editor-fold defaultstate="collapsed" desc="Reset Vectors"> 
     
@@ -86,11 +98,11 @@
     
 ;</editor-fold>    
 
-;-------------------------------------------------
-;-------------------------------------------------
-;		Setup Block
-;-------------------------------------------------	
-;-------------------------------------------------	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Setup Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------	
 
 ;<editor-fold defaultstate="collapsed" desc="Setup">	
 	
@@ -237,16 +249,35 @@ setup:
     ;</editor-fold>
     
 ;</editor-fold>
-	    
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Main
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------    
+   
+;<editor-fold defaultstate="collapsed" desc="Main">  
+    
 startup:	
 	RCALL	READ
 	
 	LFSR	1,0x08	
+;</editor-fold>
+	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Serial Communications Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="Serial Communications Block"> 	
+	
 T1:	MOVFF	INDF1,WREG
-	call trans
+	call	trans
 	INCF	FSR1L,F
 	DECFSZ	size
-	BRA T1
+	BRA	T1
+	
 	MOVLW	A' '
 	call	trans
 	MOVLW   42h			;set blue as default colour
@@ -254,7 +285,7 @@ T1:	MOVFF	INDF1,WREG
 	BSF	PORTA,7
 	GOTO	RCE
     
-RCE	MOVLW	b'10100100'
+RCE:	MOVLW	b'10100100'
 	MOVWF	PORTD
 	MOVLW	A'M'
 	call trans
@@ -285,18 +316,19 @@ RCE	MOVLW	b'10100100'
 	BCF	PORTA,4
 	GOTO	R1
 	
-R1	LFSR 0,0x02
+R1:	LFSR	0,0x02
 	MOVLW	D'3'
 	MOVWF	cnt
-R2	BTFSS PIR1,RC1IF	; check if something is received
-	BRA R2
-cat	MOVFF	RCREG, INDF0
+R2:	BTFSS	PIR1,RC1IF	; check if something is received
+	BRA	R2
+
+cat:	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
 	DCFSNZ	cnt 
 	GOTO	PRO
 	GOTO	R2
 	
-PRO	BSF	PORTA,5
+PRO:	BSF	PORTA,5
 	call	delay1s
 	BCF	PORTA,5
 	LFSR	0,0x02
@@ -318,7 +350,7 @@ PRO	BSF	PORTA,5
 	GOTO	Pro4
 	GOTO	err
 	
-Pro1	LFSR	0,0x03		    ;check if msg 
+Pro1:	LFSR	0,0x03		    ;check if msg 
 	MOVLW	A'S'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -330,7 +362,7 @@ Pro1	LFSR	0,0x03		    ;check if msg
 	GOTO	MSG
 	GOTO	err
 	
-Pro2	LFSR	0,0x03		    ;check if prc
+Pro2:	LFSR	0,0x03		    ;check if prc
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -342,7 +374,7 @@ Pro2	LFSR	0,0x03		    ;check if prc
 	GOTO	PRC
 	GOTO	err
 	
-Pro3	LFSR	0,0x03		    ;check if rce
+Pro3:	LFSR	0,0x03		    ;check if rce
 	MOVLW	A'C'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -354,7 +386,7 @@ Pro3	LFSR	0,0x03		    ;check if rce
 	GOTO	RCE1
 	GOTO	err
 	
-Pro4	LFSR	0,0x03		    ;check if cal
+Pro4:	LFSR	0,0x03		    ;check if cal
 	MOVLW	A'A'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -366,7 +398,7 @@ Pro4	LFSR	0,0x03		    ;check if cal
 	GOTO	CAL
 	GOTO	err
 	
-err	BSF	PORTA,5
+err:	BSF	PORTA,5
 	call	delay1s
 	BCF	PORTA,5
 	MOVLW	A'E'		    ;display error
@@ -381,19 +413,22 @@ err	BSF	PORTA,5
 	call trans
 	GOTO R1
 	
-MSG	MOVLW	b'11000000'
+MSG:	MOVLW	b'11000000'
 	MOVWF	PORTD
 	MOVLW	D'0'
 	MOVF	newsize,0
 	LFSR	0,0x08
 	MOVLW	D'10'
 	MOVWF	cnt
-clear	CLRF	INDF0
+
+clear:	CLRF	INDF0
 	DCFSNZ	cnt
 	GOTO	R6
 	GOTO	clear
-R6	LFSR	0,0x08
-R7	BTFSS	PIR1, RCIF	; check if something is received
+
+R6:	LFSR	0,0x08
+
+R7:	BTFSS	PIR1, RCIF	; check if something is received
 	BRA	R7
 	MOVFF	RCREG, INDF0
 	MOVLW	A'$'
@@ -411,7 +446,7 @@ R7	BTFSS	PIR1, RCIF	; check if something is received
 
 	
 	
-PRC	MOVLW	b'11111001'
+PRC:	MOVLW	b'11111001'
 	MOVWF	PORTD
 	MOVLW	A'W'
 	call trans
@@ -456,14 +491,14 @@ PRC	MOVLW	b'11111001'
 	MOVLW	A'?'
 	call trans
 
-R3	BTFSS PIR1, RCIF	; check if something is received
+R3:	BTFSS PIR1, RCIF	; check if something is received
 	BRA R3
 	MOVFF	RCREG, col
 	GOTO	REC
-R4	LFSR 0,0x02
+R4:	LFSR 0,0x02
 	MOVLW	D'3'
 	MOVWF	cnt
-R5	BTFSS PIR1, RCIF	; check if something is received
+R5:	BTFSS PIR1, RCIF	; check if something is received
 	BRA R5
 	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
@@ -471,7 +506,7 @@ R5	BTFSS PIR1, RCIF	; check if something is received
 	GOTO	PROC
 	GOTO	R5
 
-REC	LFSR	0,0x00
+REC:	LFSR	0,0x00
 	MOVLW	A'B'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
@@ -494,7 +529,7 @@ REC	LFSR	0,0x00
 	GOTO	R4
 	GOTO	err
 	
-PROC	LFSR	0,0x02
+PROC:	LFSR	0,0x02
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -510,15 +545,26 @@ PROC	LFSR	0,0x02
 	BTFSS	STATUS,Z
 	GOTO	err
 	GOTO	RCE
-RCE1
+RCE1:
 	
-trans
-S1	BTFSS PIR1, TX1IF
+trans:
+S1:	BTFSS PIR1, TX1IF
 	BRA S1
 	MOVWF TXREG
-	return	
-CAL
-CALIBRATE
+	return
+	
+;</editor-fold>
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Calibration Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------	
+
+;<editor-fold defaultstate="collapsed" desc="Calibration Block"> 	
+	
+CAL:
+CALIBRATE:
     CLRF    PORTA
     MOVLW   b'10000000'
     MOVWF   PORTD
@@ -561,7 +607,7 @@ CALIBRATE
     MOVWF   calRounds       ; We want to repeat the calibration routine five times, plus two for other shite
     GOTO    $               ; Wait here until the first interrupt
 
-CALIBRATE_SUB
+CALIBRATE_SUB:
     bcf     PIR1,TMR2IF     ; clear niterrupt flag
     CLRF    TMR2	        ; Clear timer 2 of any counts accumulated (this is as close as we can get I guess)
     DECFSZ  delayCounter    ; Decrement and skip if zero, store the answer in delayCounter
@@ -587,10 +633,18 @@ CALIBRATE_SUB
     MOVWF   PORTA           ; Turn off all the LEDs
     CLRF    TMR2	        ; Clear timer 2 of any counts accumulated during the ISR
     GOTO    RCE		            ; Return to main program
-;
 
+;</editor-fold>    
 
-SSDTABLE
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    SSD Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="SSD Block"> 
+    
+SSDTABLE:
     ADDWF   PCL             ; Add offset to the program counter
     RETLW   b'00010001'     ; Character "R" = 0
     RETLW   b'00000001'     ; Character "B" = 2
@@ -604,8 +658,17 @@ SSDTABLE
     RETLW   b'10011111'     ; Character "1" (maze racing) = 18
     RETLW   b'00100101'     ; Character "2" (maze racing) = 20
 
+;</editor-fold>
+    
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Debugging Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------    
 
-DEBUG_SUB
+;<editor-fold defaultstate="collapsed" desc="Debugging Block">      
+    
+DEBUG_SUB:
     bcf     INTCON,INT0IF      ; clear the interrupt flag
     MOVF    PORTA,w	    ; copy porta to w
     MOVWF   portAbackup     ; copy from w to the backup register 
@@ -621,40 +684,40 @@ DEBUG_SUB
     MOVWF   PORTA           ; restore port A contents
     RETFIE
 
-debugMessage
+debugMessage:
     MOVF    calOffset,w
     MOVWF   PORTA
     call    delay1s
     RETURN
 
-debugRace
+debugRace:
     MOVF    col,w
     MOVWF   PORTA
     call    delay1s
     RETURN
 
-debugProgram
+debugProgram:
     MOVF    col,w
     MOVWF   PORTA
     call    delay1s
     RETURN
 
-debugCalibrate
+debugCalibrate:
     MOVF    calOffset,w  
     MOVWF   PORTA
     call    delay1s
     RETURN 
 
-delay1s
+delay1s:
     MOVLW   0x0F
     MOVWF   delay3
-Go_off0
+Go_off0:
 	movlw	0xFF
 	movwf	delay2
-Go_off1				
+Go_off1:				
 	movlw	0xFF	
 	movwf	delay1
-Go_off2
+Go_off2:
 	decfsz	delay1,f
 	goto	Go_off2
 	decfsz	delay2,f
@@ -662,8 +725,24 @@ Go_off2
 	decfsz	delay3,f
 	goto	Go_off0
 	RETURN
+
+;</editor-fold>	
 	
-READ	MOVLW	0XFF
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    EEPROM Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="EEPROM Block">	
+
+;-------------------------------------------------
+;		EEPROM Read
+;-------------------------------------------------
+
+    ;<editor-fold defaultstate="collapsed" desc="EEPROM Read">
+	
+READ:	MOVLW	0XFF
 	MOVWF	EEPROM_ADDRESS	
 	RCALL	I2C_READ
 	MOVF	RX_BYTE,0
@@ -762,7 +841,15 @@ READ	MOVLW	0XFF
 	
 	RETURN
 	
-STORE	
+;</editor-fold>
+
+;-------------------------------------------------
+;		EEPROM Store
+;-------------------------------------------------	
+
+    ;<editor-fold defaultstate="collapsed" desc="EEPROM Store">
+	
+STORE:	
 	MOVF	newsize,0
 	MOVWF	EEPROM_DATA
 	MOVLW	0XFF
@@ -831,11 +918,27 @@ STORE
 	RCALL	I2C_WRITE
 	BSF	PORTA,6
 	
-	GOTO	R4
+	GOTO	R4S
 	
+;</editor-fold>
 	
-;------------------------------------------------------- INIT
-I2C_INIT     
+;</editor-fold>	
+	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    I2C Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="I2C Block">	
+
+;-------------------------------------------------
+;		I2C Initialization
+;-------------------------------------------------		
+
+;<editor-fold defaultstate="collapsed" desc="I2C Initialization">
+	
+I2C_INIT:     
     MOVLW   0x09			    
     MOVWF   SSP1ADD			   
     CLRF    SSP1STAT			    
@@ -846,62 +949,102 @@ I2C_INIT
     BCF	    PIR1, SSPIF			    
     BCF	    PIR2, BCLIF
     RETURN
+ 
+;</editor-fold>    
     
-;------------------------------------------------------- START
-I2C_START
+;-------------------------------------------------
+;		I2C Start
+;-------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="I2C Start">
+    
+I2C_START:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, SEN     
-wait_i2c_start    
+wait_i2c_start:    
     BTFSC   SSP1CON2, SEN
     BRA	    wait_i2c_start
     RETURN
+;</editor-fold> 
     
-;------------------------------------------------------- RESTART
-I2C_RESTART
+;-------------------------------------------------
+;		I2C Restart
+;-------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="I2C Restart">    
+    
+I2C_RESTART:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, RSEN    
-wait_i2c_restart
+wait_i2c_restart:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_restart
     RETURN
+
+;</editor-fold>     
+
+;-------------------------------------------------
+;		I2C Stop
+;-------------------------------------------------
     
-;-------------------------------------------------------  STOP
-I2C_STOP
+    ;<editor-fold defaultstate="collapsed" desc="I2C Stop">    
+    
+I2C_STOP:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, PEN
-wait_i2c_stop
+wait_i2c_stop:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_stop
     RETURN
+
+;</editor-fold>
     
-;-------------------------------------------------------  SEND
-I2C_TRANSMIT
+;-------------------------------------------------
+;		I2C Send
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Send">    
+    
+I2C_TRANSMIT:
     BCF	    PIR1, SSP1IF
     MOVF    TX_BYTE, 0
     MOVWF   SSP1BUF
-wait_i2c_trans
+wait_i2c_trans:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_trans
     RETURN
+
+;</editor-fold> 
     
-;-------------------------------------------------------  
-I2C_RECEIVE
+;-------------------------------------------------
+;		I2C Receive
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Receive">    
+    
+I2C_RECEIVE:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, RCEN
-wait_i2c_receive1
+wait_i2c_receive1:
     BTFSS   PIR1, SSP1IF
     BRA wait_i2c_receive1
     MOVF    SSP1BUF, 0
     MOVWF   RX_BYTE
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, ACKEN
-wait_i2c_receive2
+wait_i2c_receive2:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_receive2
     RETURN
+;</editor-fold> 
     
-;-------------------------------------------------------  WRITE
-I2C_WRITE
+;-------------------------------------------------
+;		I2C Write
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Write">    
+    
+I2C_WRITE:
         
     RCALL   I2C_START
     
@@ -920,9 +1063,16 @@ I2C_WRITE
     RCALL   I2C_ACK
         
     RETURN
+
+;</editor-fold>   
     
-;-------------------------------------------------------  RANDOM_READ
-I2C_READ
+;-------------------------------------------------
+;		I2C Random Read
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Random Read">    
+    
+I2C_READ:
      
     RCALL   I2C_START
     
@@ -946,11 +1096,18 @@ I2C_READ
     
     RETURN
     
-;------------------------------------------------------- ACK
-I2C_ACK
+;</editor-fold>
+    
+;-------------------------------------------------
+;		I2C Acknowledge
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Acknowledge">    
+    
+I2C_ACK:
     MOVF   WRITE_ACKNOWLEDGE_POLL_LOOPS, 0
     MOVWF   POLL_COUNTER
-poll_loop
+poll_loop:
     RCALL   I2C_RESTART
     
     MOVF   WRITE_CONTROL, 0
@@ -962,8 +1119,12 @@ poll_loop
     DECFSZ  POLL_COUNTER, 1
     BRA	    poll_loop
     
-poll_end
+poll_end:
     RCALL   I2C_STOP
-    RETURN 	
+    RETURN 
 
-end
+;</editor-fold>     
+ 
+;</editor-fold>
+
+    end
