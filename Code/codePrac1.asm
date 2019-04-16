@@ -2,20 +2,16 @@
     list p=PIC18F45K22
     #include "p18f45K22.inc"
 ;*******************************************************************************
-;
+; Code het 'n verandering hier ingesit
 ; TODO Step #2 - Configuration Word Setup
 ;
  ;--- Configuration bits ---
     CONFIG  FOSC = INTIO67        ; Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON
-     ;yeet
-	 ;test branch
-    
     
 
-     CBLOCK 0x00
-   
+    CBLOCK 0x00
     col
     count
     mes1
@@ -70,6 +66,7 @@
 ;    GOTO    CALIBRATE_SUB   ; Got to cal subroutine
 ;    BTFSC   INTCON,INT0IF      ; Test the interrupt flag of PORTB pin 0
 ;    GOTO    DEBUG_SUB       ; Go to the debugging subroutine
+;nog comments vir die test branch 
 
 setup
     ;setup
