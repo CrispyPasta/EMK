@@ -11,7 +11,10 @@
     CONFIG  LVP	= ON
      ;yeet
 	 ;test branch
-    
+	 ;yote
+	 ;park the car in starbourd yard
+	 ;car keys
+	 ;The quick brown fox junps over the lazy dog
     
 
      CBLOCK 0x00
@@ -70,6 +73,7 @@
 ;    GOTO    CALIBRATE_SUB   ; Got to cal subroutine
 ;    BTFSC   INTCON,INT0IF      ; Test the interrupt flag of PORTB pin 0
 ;    GOTO    DEBUG_SUB       ; Go to the debugging subroutine
+;nog comments vir die test branch 
 
 setup
     ;setup
