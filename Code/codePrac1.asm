@@ -75,6 +75,8 @@
     EEPROM_ADDRESS
     EEPROM_DATA
     readCount
+    ADCHIGH
+    ADCLOW
     ENDC
     
     ;</editor-fold>
@@ -233,7 +235,263 @@ setup:
 	MOVWF   size
 	
     ;</editor-fold>
+
+;-------------------------------------------------
+;		ADC Setup
+;-------------------------------------------------
+
+;Set up the ADC in such a way that there is a delay between channel select to allow capacitor discharge
+    
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN0">
+    
+ADC_SETUP_AN0:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BCF	    ADCON0, CHS0	    ;Select AN0
+    BCF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BSF	    ADCON2, ADFM	    ; Right Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN1">
+    
+ADC_SETUP_AN1:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BSF	    ADCON0, CHS0	    ;Select AN1
+    BCF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BSF	    ADCON2, ADFM	    ; Right Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
  
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN2">
+    
+ADC_SETUP_AN2:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BCF	    ADCON0, CHS0	    ;Select AN2
+    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BSF	    ADCON2, ADFM	    ; Right Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN3">
+    
+ADC_SETUP_AN3:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BSF	    ADCON0, CHS0	    ;Select AN3
+    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BSF	    ADCON2, ADFM	    ; Right Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+ 
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN3">
+    
+ADC_SETUP_AN4:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BCF	    ADCON0, CHS0	    ;Select AN4
+    BCF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BSF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BSF	    ADCON2, ADFM	    ; Right Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+     
 ;-------------------------------------------------
 ;		Initialize Variables
 ;-------------------------------------------------
@@ -282,37 +540,46 @@ startup:
    
 ;<editor-fold defaultstate="collapsed" desc="ADC Block">  
     
-;This is an example procedure for using the ADC to perform an Analog-to-Digital conversion:
+;-------------------------------------------------
+;		    ADC Read
+;-------------------------------------------------
+	
+;<editor-fold defaultstate="collapsed" desc="ADC Read"> 	
+ADC_Read:
+		
+;4. Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
-						    ;1. Configure Port:
-						    ;	Disable pin output driver (See TRIS register) 
-						    ;	Configure pin as analog
-						    
-						    ;2. Configure the ADC module: 
-						    ;	Select ADC conversion clock 
-						    ;	Configure voltage reference 
-						    ;	Select ADC input channel 
-						    ;	Select result format 
-						    ;	Select acquisition delay 
-						    ;	Turn on ADC module
-						    
-						    ;3. Configure ADC interrupt (optional): 
-						    ;	Clear ADC interrupt flag 
-						    ;	Enable ADC interrupt 
-						    ;	Enable peripheral interrupt 
-						    ;	Enable global interrupt(1)
-						    
-						    ;4. Wait the required acquisition time(2). 
-						    
-						    ;5. Start conversion by setting the GO/DONE bit. 
-						    
-						    ;6. Wait for ADC conversion to complete by one of the following: 
-						    ;    Polling the GO/DONE bit 
-						    ;    Waiting for the ADC interrupt (interrupts enabled)
-						    
-						    ;7. Read ADC Result 
-						    
-						    ;8. Clear the ADC interrupt flag (required if interrupt is enabled).
+				    
+;5. Start conversion by setting the GO/DONE bit.
+    BSF		ADCON0, GO
+				    
+;6. Wait for ADC conversion to complete by one of the following: 
+Poll_Go
+    BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA		Poll_Go
+
+;7. Read ADC Result 
+    MOVFW	ADRESH			    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCHIGH			    ;The Wreg is moved to ADCHIGH so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVFW	ADRESL			    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCLOW			    ;The Wreg is moved to ADCLOW so the 
+					    ;value of the analog pin is stored in a variable
+
+    CLRF	TXREG			    ;Clear TXREG before reading values to it
+					    
+    MOVFW	ADCHIGH			    ;The result stored in the ADCHIGH variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    
+    MOVFW	ADCLOW			    ;The result stored in the ADCLOW variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+	RETURN
+	
+;</editor-fold>	
+	
 	
 ;</editor-fold>
 	
