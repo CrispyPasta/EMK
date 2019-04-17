@@ -1,17 +1,36 @@
-; TODO INSERT INCLUDE CODE HERE
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Headers
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="Headers">   
     list p=PIC18F45K22
     #include "p18f45K22.inc"
-;*******************************************************************************
-; Code het 'n verandering hier ingesit
-; TODO Step #2 - Configuration Word Setup
-;
- ;--- Configuration bits ---
+;</editor-fold>
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Configuration Bits
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------        
+    
+;<editor-fold defaultstate="collapsed" desc="Configuration Bits">  
+    
+    ;--- Configuration bits ---
     CONFIG  FOSC = INTIO67        ; Oscillator Selection bits (Internal oscillator block, port function on RA6 and RA7)
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON
-
-	function{}
-
+    
+;</editor-fold>
+    
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    CBlock
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="CBlock">      
     CBLOCK 0x00
     col
     count
@@ -56,50 +75,121 @@
     EEPROM_ADDRESS
     EEPROM_DATA
     readCount
+    ADCHIGH
+    ADCLOW
     ENDC
     
-    org 0h
-    GOTO setup   
-    org 8h  
-    RETURN
-    ;GOTO    startup
-;    BTFSC   PIR1,TMR2IF     ; Test the interrupt flag of timer 2
-;    GOTO    CALIBRATE_SUB   ; Got to cal subroutine
-;    BTFSC   INTCON,INT0IF      ; Test the interrupt flag of PORTB pin 0
-;    GOTO    DEBUG_SUB       ; Go to the debugging subroutine
-;nog comments vir die test branch 
+    ;</editor-fold>
+    
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Reset Vectors
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
 
-setup
-    ;setup
-     ;oscillator setup
-	BSF	OSCCON,IRCF0
-	BCF	OSCCON,IRCF1
-	BSF	OSCCON,IRCF2
-     ; Initialize Port A	(just flashes an LED in my program)
-    MOVLB	0xF		    ; Set BSR for banked SFRs
+;<editor-fold defaultstate="collapsed" desc="Reset Vectors"> 
+    
+    
+    org 0h
+	GOTO setup   
+    
+	
+    org 8h  
+	RETURN
+    
+;</editor-fold>    
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Setup Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------	
+
+;<editor-fold defaultstate="collapsed" desc="Setup">	
+	
+setup:
+
+;-------------------------------------------------
+;		Oscillator Setup
+;-------------------------------------------------
+
+    ;<editor-fold defaultstate="collapsed" desc="Oscillator Setup"> 
+
+;Set up the oscillator frequency of the PIC to run at 4 MHz
+    
+    BSF	OSCCON,IRCF0
+    BCF	OSCCON,IRCF1
+    BSF	OSCCON,IRCF2
+	
+    ;</editor-fold> 
+	     
+;-------------------------------------------------
+;		Initialize Port A
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port A">
+    
+    ;Flashes an LED in my program     
+     
+    MOVLB	0xF		; Set BSR for banked SFRs
     CLRF	PORTA		; Initialize PORTA by clearing output data latches
     CLRF	LATA		; Alternate method to clear output data latches
     CLRF	TRISA		; clear bits for all pins
     CLRF	ANSELA		; clear bits for all pins	
+
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Initialize Port C
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port C">
+    	
     CLRF	LATC
     CLRF	TRISC
     CLRF	ANSELC
     CLRF	PORTC
-    ; Initialize Port B	(SSD port)
-     ; Initialize Port B (button interrupt for debugging subsystem)
+    
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Initialize Port B
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port B">    
+    
+    ;SSD port
+    ;Initialize Port B (button interrupt for debugging subsystem)
+    
     CLRF    PORTB
     CLRF    LATB
     MOVLW   0xFF 
     MOVWF   TRISB
     CLRF    ANSELB
     MOVLB   0xF
+
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Initialize Port D
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port D">
     
     ; Initialize Port D	(SSD port)
+    
     CLRF	PORTD		; Initialize PORTD by clearing output data latches
     CLRF	LATD		; Alternate method to clear output data latches
     CLRF	TRISD		; clear bits for all pins
     CLRF	ANSELD		; clear bits for all pins
     
+    ;</editor-fold>
+    
+;-------------------------------------------------
+;		Enable Periphiral Interrupts
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Enable Periphiral Interrupts">
     
     BSF	    INTCON,PEIE		; Enable peripheral interrupts
     BSF	    INTCON,GIE		; Enable global interrupts
@@ -114,52 +204,334 @@ setup
     ;bsf     INTCON,PEIE ; Enable peripheral interrupts
     ;bsf     INTCON,GIE  ; Enable global interrupts
     ;setup port for transmission
-    CLRF    FSR0
-    MOVLW b'00100100'	;enable TXEN and BRGH
-    MOVWF TXSTA1
-    MOVLW b'10010000'	    ;enable serial port and continuous receive 
-    MOVWF RCSTA1
-    MOVLW D'25'
-    MOVWF SPBRG1
-    CLRF    SPBRGH1
-    BCF	    BAUDCON1,BRG16	; Use 8 bit baud generator
-    BSF	    TRISC,TX		; make TX an output pin
-    BSF	    TRISC,RX		; make RX an input pin
-    CLRF    PORTC
-    CLRF    ANSELC
-    MOVLW   b'11011000'  	; Setup port C for serial port.
-			    ; TRISC<7>=1 and TRISC<6>=1.
-    MOVWF   TRISC
     
-    CLRF    TRISB		; make PORTB an output
-    MOVLW   D'5'
-    MOVWF   size
+    ;</editor-fold>
+
+;-------------------------------------------------
+;		Serial Communication
+;-------------------------------------------------
+
+    ;<editor-fold defaultstate="collapsed" desc="Serial Communication">
     
-    ; INITIALISE VARIABLES
-	MOVLW 0xA0
-	MOVWF WRITE_CONTROL
-	MOVLW 0X00
-	MOVWF EEPROM_ADDRESS
-	CLRF EEPROM_DATA
-	MOVLW 0xA1
-	MOVWF READ_CONTROL
-	MOVLW D'255'
-	MOVWF WRITE_ACKNOWLEDGE_POLL_LOOPS
-	CLRF POLL_COUNTER
-	CLRF RX_BYTE
-	CLRF TX_BYTE
+	CLRF    FSR0
+	MOVLW   b'00100100'		;enable TXEN and BRGH
+	MOVWF   TXSTA1
+	MOVLW   b'10010000'		;enable serial port and continuous receive 
+	MOVWF   RCSTA1
+	MOVLW   D'25'
+	MOVWF   SPBRG1
+	CLRF    SPBRGH1
+	BCF	BAUDCON1,BRG16		; Use 8 bit baud generator
+	BSF	TRISC,TX		; make TX an output pin
+	BSF	TRISC,RX		; make RX an input pin
+	CLRF    PORTC
+	CLRF    ANSELC
+	MOVLW   b'11011000'		; Setup port C for serial port.
+					; TRISC<7>=1 and TRISC<6>=1.
+	MOVWF   TRISC
+
+	CLRF    TRISB			; make PORTB an output
+	MOVLW   D'5'
+	MOVWF   size
+	
+    ;</editor-fold>
+
+;-------------------------------------------------
+;		Initialize Variables
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Variables">
+
+	MOVLW	0xA0
+	MOVWF	WRITE_CONTROL
+	MOVLW	0X00
+	MOVWF	EEPROM_ADDRESS
+	CLRF	EEPROM_DATA
+	MOVLW	0xA1
+	MOVWF	READ_CONTROL
+	MOVLW	D'255'
+	MOVWF	WRITE_ACKNOWLEDGE_POLL_LOOPS
+	CLRF	POLL_COUNTER
+	CLRF	RX_BYTE
+	CLRF	TX_BYTE
 	call	I2C_INIT
-	GOTO    startup
+	
+	    GOTO    startup
+	    
+    ;</editor-fold>
     
-startup	
+;</editor-fold>
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Main
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------    
+   
+;<editor-fold defaultstate="collapsed" desc="Main">  
+    
+startup:	
+	
+;	CALL	ADC_READ
+	CALL	Read_AN0
+	
 	RCALL	READ
 	
 	LFSR	1,0x08	
-T1	MOVFF	INDF1,WREG
-	call trans
+;</editor-fold>
+	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    ADC Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------    
+   
+;<editor-fold defaultstate="collapsed" desc="ADC Block">  
+    
+;-------------------------------------------------
+;		    ADC Read
+;-------------------------------------------------
+	
+;<editor-fold defaultstate="collapsed" desc="ADC Read"> 	
+
+;The ADC_Read function will, when it is called, read a value from the selectrd analog channel
+;then it will store that value in a vaiable. The variable will then be sent to the TXREG.
+;The TXREG should then send this value to the serial terminal of the computer connected to it.
+;The aim of this function is to read the voltage levels from the sensors and output them sequentially on a serial terminal.
+
+;ADC_Read:
+		
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN0"> 	
+
+;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
+Read_AN0:
+
+    CALL	ADC_SETUP_AN0		    ;Call ADC setup for reading analog input on pin AN0
+
+;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
+
+				    
+;Start conversion by setting the GO/DONE bit.
+    BSF		ADCON0, GO
+				    
+;Wait for ADC conversion to complete by one of the following: 
+Poll_Go0
+    BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA		Poll_Go0    
+    
+    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
+    CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
+    
+;Read ADC Result and store the results in variables
+    MOVF	ADRESH, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCHIGH			    ;The Wreg is moved to ADCHIGH so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF	ADRESL, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCLOW			    ;The Wreg is moved to ADCLOW so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF    	ADCHIGH, 0		    ;The result stored in the ADCHIGH variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    
+    MOVF	ADCLOW, 0		    ;The result stored in the ADCLOW variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    RETURN
+    
+    ;</editor-fold>
+     
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN1"> 	
+
+;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
+Read_AN1:
+
+    CALL	ADC_SETUP_AN1		    ;Call ADC setup for reading analog input on pin AN0
+
+;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
+
+				    
+;Start conversion by setting the GO/DONE bit.
+    BSF		ADCON0, GO
+				    
+;Wait for ADC conversion to complete by one of the following: 
+Poll_Go1
+    BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA		Poll_Go1 
+    
+    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
+    CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
+
+;Read ADC Result and store the results in variables
+    MOVF 	ADRESH, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCHIGH			    ;The Wreg is moved to ADCHIGH so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF	ADRESL, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCLOW			    ;The Wreg is moved to ADCLOW so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF 	ADCHIGH, 0		    ;The result stored in the ADCHIGH variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    
+    MOVF	ADCLOW, 0		    ;The result stored in the ADCLOW variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    RETURN
+    
+    ;</editor-fold>
+     
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN2"> 	
+
+;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
+Read_AN2:
+
+    CALL	ADC_SETUP_AN2		    ;Call ADC setup for reading analog input on pin AN0
+
+;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
+
+				    
+;Start conversion by setting the GO/DONE bit.
+    BSF		ADCON0, GO
+				    
+;Wait for ADC conversion to complete by one of the following: 
+Poll_Go2
+    BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA		Poll_Go2     
+    
+    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
+    CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
+
+;Read ADC Result and store the results in variables
+    MOVF	ADRESH, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCHIGH			    ;The Wreg is moved to ADCHIGH so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF	ADRESL, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCLOW			    ;The Wreg is moved to ADCLOW so the 
+					    ;value of the analog pin is stored in a variable    
+    
+    MOVF	ADCHIGH, 0		    ;The result stored in the ADCHIGH variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    
+    MOVF	ADCLOW, 0		    ;The result stored in the ADCLOW variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    RETURN
+    
+    ;</editor-fold>
+     
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN3"> 	
+
+;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
+Read_AN3:
+
+    CALL	ADC_SETUP_AN3		    ;Call ADC setup for reading analog input on pin AN0
+
+;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
+
+				    
+;Start conversion by setting the GO/DONE bit.
+    BSF		ADCON0, GO
+				    
+;Wait for ADC conversion to complete by one of the following: 
+Poll_Go3
+    BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA		Poll_Go3 
+    
+    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
+    CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
+
+;Read ADC Result and store the results in variables
+    MOVF	ADRESH, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCHIGH			    ;The Wreg is moved to ADCHIGH so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF	ADRESL, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCLOW			    ;The Wreg is moved to ADCLOW so the 
+					    ;value of the analog pin is stored in a variable    
+    
+    MOVF	ADCHIGH, 0		    ;The result stored in the ADCHIGH variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    
+    MOVF	ADCLOW, 0		    ;The result stored in the ADCLOW variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    RETURN
+    
+    ;</editor-fold>
+     
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN4"> 	
+
+;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
+Read_AN4:
+
+    CALL	ADC_SETUP_AN4		    ;Call ADC setup for reading analog input on pin AN0
+
+;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
+
+				    
+;Start conversion by setting the GO/DONE bit.
+    BSF		ADCON0, GO
+				    
+;Wait for ADC conversion to complete by one of the following: 
+Poll_Go4
+    BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA		Poll_Go4 
+    
+    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
+    CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
+
+;Read ADC Result and store the results in variables
+    MOVF	ADRESH, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCHIGH			    ;The Wreg is moved to ADCHIGH so the 
+					    ;value of the analog pin is stored in a variable
+    
+    MOVF	ADRESL, 0		    ;The result stored in ADRESH is moved to Wreg
+    MOVWF	ADCLOW			    ;The Wreg is moved to ADCLOW so the 
+					    ;value of the analog pin is stored in a variable    
+    
+    MOVF	ADCHIGH, 0		    ;The result stored in the ADCHIGH variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    
+    MOVF	ADCLOW, 0		    ;The result stored in the ADCLOW variable is moved to Wreg
+    MOVWF	TXREG			    ;The Wreg is moved to TXREG so the 
+					    ;value of the analog pin can be sent to the serial output
+    RETURN
+    
+    ;</editor-fold>
+     
+	RETURN
+	
+;</editor-fold>	
+	
+	
+;</editor-fold>
+	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Serial Communications Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="Serial Communications Block"> 	
+	
+T1:	MOVFF	INDF1,WREG
+	call	trans
 	INCF	FSR1L,F
 	DECFSZ	size
-	BRA T1
+	BRA	T1
+	
 	MOVLW	A' '
 	call	trans
 	MOVLW   42h			;set blue as default colour
@@ -167,7 +539,7 @@ T1	MOVFF	INDF1,WREG
 	BSF	PORTA,7
 	GOTO	RCE
     
-RCE	MOVLW	b'10100100'
+RCE:	MOVLW	b'10100100'
 	MOVWF	PORTD
 	MOVLW	A'M'
 	call trans
@@ -198,18 +570,19 @@ RCE	MOVLW	b'10100100'
 	BCF	PORTA,4
 	GOTO	R1
 	
-R1	LFSR 0,0x02
+R1:	LFSR	0,0x02
 	MOVLW	D'3'
 	MOVWF	cnt
-R2	BTFSS PIR1,RC1IF	; check if something is received
-	BRA R2
-cat	MOVFF	RCREG, INDF0
+R2:	BTFSS	PIR1,RC1IF	; check if something is received
+	BRA	R2
+
+cat:	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
 	DCFSNZ	cnt 
 	GOTO	PRO
 	GOTO	R2
 	
-PRO	BSF	PORTA,5
+PRO:	BSF	PORTA,5
 	call	delay1s
 	BCF	PORTA,5
 	LFSR	0,0x02
@@ -231,7 +604,7 @@ PRO	BSF	PORTA,5
 	GOTO	Pro4
 	GOTO	err
 	
-Pro1	LFSR	0,0x03		    ;check if msg 
+Pro1:	LFSR	0,0x03		    ;check if msg 
 	MOVLW	A'S'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -243,7 +616,7 @@ Pro1	LFSR	0,0x03		    ;check if msg
 	GOTO	MSG
 	GOTO	err
 	
-Pro2	LFSR	0,0x03		    ;check if prc
+Pro2:	LFSR	0,0x03		    ;check if prc
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -255,7 +628,7 @@ Pro2	LFSR	0,0x03		    ;check if prc
 	GOTO	PRC
 	GOTO	err
 	
-Pro3	LFSR	0,0x03		    ;check if rce
+Pro3:	LFSR	0,0x03		    ;check if rce
 	MOVLW	A'C'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -267,7 +640,7 @@ Pro3	LFSR	0,0x03		    ;check if rce
 	GOTO	RCE1
 	GOTO	err
 	
-Pro4	LFSR	0,0x03		    ;check if cal
+Pro4:	LFSR	0,0x03		    ;check if cal
 	MOVLW	A'A'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -279,7 +652,7 @@ Pro4	LFSR	0,0x03		    ;check if cal
 	GOTO	CAL
 	GOTO	err
 	
-err	BSF	PORTA,5
+err:	BSF	PORTA,5
 	call	delay1s
 	BCF	PORTA,5
 	MOVLW	A'E'		    ;display error
@@ -294,19 +667,22 @@ err	BSF	PORTA,5
 	call trans
 	GOTO R1
 	
-MSG	MOVLW	b'11000000'
+MSG:	MOVLW	b'11000000'
 	MOVWF	PORTD
 	MOVLW	D'0'
 	MOVF	newsize,0
 	LFSR	0,0x08
 	MOVLW	D'10'
 	MOVWF	cnt
-clear	CLRF	INDF0
+
+clear:	CLRF	INDF0
 	DCFSNZ	cnt
 	GOTO	R6
 	GOTO	clear
-R6	LFSR	0,0x08
-R7	BTFSS	PIR1, RCIF	; check if something is received
+
+R6:	LFSR	0,0x08
+
+R7:	BTFSS	PIR1, RCIF	; check if something is received
 	BRA	R7
 	MOVFF	RCREG, INDF0
 	MOVLW	A'$'
@@ -324,7 +700,7 @@ R7	BTFSS	PIR1, RCIF	; check if something is received
 
 	
 	
-PRC	MOVLW	b'11111001'
+PRC:	MOVLW	b'11111001'
 	MOVWF	PORTD
 	MOVLW	A'W'
 	call trans
@@ -369,14 +745,14 @@ PRC	MOVLW	b'11111001'
 	MOVLW	A'?'
 	call trans
 
-R3	BTFSS PIR1, RCIF	; check if something is received
+R3:	BTFSS PIR1, RCIF	; check if something is received
 	BRA R3
 	MOVFF	RCREG, col
 	GOTO	REC
-R4	LFSR 0,0x02
+R4:	LFSR 0,0x02
 	MOVLW	D'3'
 	MOVWF	cnt
-R5	BTFSS PIR1, RCIF	; check if something is received
+R5:	BTFSS PIR1, RCIF	; check if something is received
 	BRA R5
 	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
@@ -384,7 +760,7 @@ R5	BTFSS PIR1, RCIF	; check if something is received
 	GOTO	PROC
 	GOTO	R5
 
-REC	LFSR	0,0x00
+REC:	LFSR	0,0x00
 	MOVLW	A'B'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
@@ -407,7 +783,7 @@ REC	LFSR	0,0x00
 	GOTO	R4
 	GOTO	err
 	
-PROC	LFSR	0,0x02
+PROC:	LFSR	0,0x02
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -423,15 +799,26 @@ PROC	LFSR	0,0x02
 	BTFSS	STATUS,Z
 	GOTO	err
 	GOTO	RCE
-RCE1
+RCE1:
 	
-trans
-S1	BTFSS PIR1, TX1IF
+trans:
+S1:	BTFSS PIR1, TX1IF
 	BRA S1
 	MOVWF TXREG
-	return	
-CAL
-CALIBRATE
+	return
+	
+;</editor-fold>
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Calibration Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------	
+
+;<editor-fold defaultstate="collapsed" desc="Calibration Block"> 	
+	
+CAL:
+CALIBRATE:
     CLRF    PORTA
     MOVLW   b'10000000'
     MOVWF   PORTD
@@ -474,7 +861,7 @@ CALIBRATE
     MOVWF   calRounds       ; We want to repeat the calibration routine five times, plus two for other shite
     GOTO    $               ; Wait here until the first interrupt
 
-CALIBRATE_SUB
+CALIBRATE_SUB:
     bcf     PIR1,TMR2IF     ; clear niterrupt flag
     CLRF    TMR2	        ; Clear timer 2 of any counts accumulated (this is as close as we can get I guess)
     DECFSZ  delayCounter    ; Decrement and skip if zero, store the answer in delayCounter
@@ -500,10 +887,18 @@ CALIBRATE_SUB
     MOVWF   PORTA           ; Turn off all the LEDs
     CLRF    TMR2	        ; Clear timer 2 of any counts accumulated during the ISR
     GOTO    RCE		            ; Return to main program
-;
 
+;</editor-fold>    
 
-SSDTABLE
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    SSD Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="SSD Block"> 
+    
+SSDTABLE:
     ADDWF   PCL             ; Add offset to the program counter
     RETLW   b'00010001'     ; Character "R" = 0
     RETLW   b'00000001'     ; Character "B" = 2
@@ -517,8 +912,17 @@ SSDTABLE
     RETLW   b'10011111'     ; Character "1" (maze racing) = 18
     RETLW   b'00100101'     ; Character "2" (maze racing) = 20
 
+;</editor-fold>
+    
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    Debugging Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------    
 
-DEBUG_SUB
+;<editor-fold defaultstate="collapsed" desc="Debugging Block">      
+    
+DEBUG_SUB:
     bcf     INTCON,INT0IF      ; clear the interrupt flag
     MOVF    PORTA,w	    ; copy porta to w
     MOVWF   portAbackup     ; copy from w to the backup register 
@@ -534,40 +938,40 @@ DEBUG_SUB
     MOVWF   PORTA           ; restore port A contents
     RETFIE
 
-debugMessage
+debugMessage:
     MOVF    calOffset,w
     MOVWF   PORTA
     call    delay1s
     RETURN
 
-debugRace
+debugRace:
     MOVF    col,w
     MOVWF   PORTA
     call    delay1s
     RETURN
 
-debugProgram
+debugProgram:
     MOVF    col,w
     MOVWF   PORTA
     call    delay1s
     RETURN
 
-debugCalibrate
+debugCalibrate:
     MOVF    calOffset,w  
     MOVWF   PORTA
     call    delay1s
     RETURN 
 
-delay1s
+delay1s:
     MOVLW   0x0F
     MOVWF   delay3
-Go_off0
+Go_off0:
 	movlw	0xFF
 	movwf	delay2
-Go_off1				
+Go_off1:				
 	movlw	0xFF	
 	movwf	delay1
-Go_off2
+Go_off2:
 	decfsz	delay1,f
 	goto	Go_off2
 	decfsz	delay2,f
@@ -575,8 +979,24 @@ Go_off2
 	decfsz	delay3,f
 	goto	Go_off0
 	RETURN
+
+;</editor-fold>	
 	
-READ	MOVLW	0XFF
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    EEPROM Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="EEPROM Block">	
+
+;-------------------------------------------------
+;		EEPROM Read
+;-------------------------------------------------
+
+    ;<editor-fold defaultstate="collapsed" desc="EEPROM Read">
+	
+READ:	MOVLW	0XFF
 	MOVWF	EEPROM_ADDRESS	
 	RCALL	I2C_READ
 	MOVF	RX_BYTE,0
@@ -675,7 +1095,15 @@ READ	MOVLW	0XFF
 	
 	RETURN
 	
-STORE	
+;</editor-fold>
+
+;-------------------------------------------------
+;		EEPROM Store
+;-------------------------------------------------	
+
+    ;<editor-fold defaultstate="collapsed" desc="EEPROM Store">
+	
+STORE:	
 	MOVF	newsize,0
 	MOVWF	EEPROM_DATA
 	MOVLW	0XFF
@@ -746,9 +1174,25 @@ STORE
 	
 	GOTO	R4
 	
+;</editor-fold>
 	
-;------------------------------------------------------- INIT
-I2C_INIT     
+;</editor-fold>	
+	
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;			    I2C Block
+;-------------------------------------------------------------------------------	
+;-------------------------------------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="I2C Block">	
+
+;-------------------------------------------------
+;		I2C Initialization
+;-------------------------------------------------		
+
+;<editor-fold defaultstate="collapsed" desc="I2C Initialization">
+	
+I2C_INIT:     
     MOVLW   0x09			    
     MOVWF   SSP1ADD			   
     CLRF    SSP1STAT			    
@@ -759,62 +1203,102 @@ I2C_INIT
     BCF	    PIR1, SSPIF			    
     BCF	    PIR2, BCLIF
     RETURN
+ 
+;</editor-fold>    
     
-;------------------------------------------------------- START
-I2C_START
+;-------------------------------------------------
+;		I2C Start
+;-------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="I2C Start">
+    
+I2C_START:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, SEN     
-wait_i2c_start    
+wait_i2c_start:    
     BTFSC   SSP1CON2, SEN
     BRA	    wait_i2c_start
     RETURN
+;</editor-fold> 
     
-;------------------------------------------------------- RESTART
-I2C_RESTART
+;-------------------------------------------------
+;		I2C Restart
+;-------------------------------------------------
+    
+;<editor-fold defaultstate="collapsed" desc="I2C Restart">    
+    
+I2C_RESTART:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, RSEN    
-wait_i2c_restart
+wait_i2c_restart:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_restart
     RETURN
+
+;</editor-fold>     
+
+;-------------------------------------------------
+;		I2C Stop
+;-------------------------------------------------
     
-;-------------------------------------------------------  STOP
-I2C_STOP
+    ;<editor-fold defaultstate="collapsed" desc="I2C Stop">    
+    
+I2C_STOP:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, PEN
-wait_i2c_stop
+wait_i2c_stop:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_stop
     RETURN
+
+;</editor-fold>
     
-;-------------------------------------------------------  SEND
-I2C_TRANSMIT
+;-------------------------------------------------
+;		I2C Send
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Send">    
+    
+I2C_TRANSMIT:
     BCF	    PIR1, SSP1IF
     MOVF    TX_BYTE, 0
     MOVWF   SSP1BUF
-wait_i2c_trans
+wait_i2c_trans:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_trans
     RETURN
+
+;</editor-fold> 
     
-;-------------------------------------------------------  
-I2C_RECEIVE
+;-------------------------------------------------
+;		I2C Receive
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Receive">    
+    
+I2C_RECEIVE:
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, RCEN
-wait_i2c_receive1
+wait_i2c_receive1:
     BTFSS   PIR1, SSP1IF
     BRA wait_i2c_receive1
     MOVF    SSP1BUF, 0
     MOVWF   RX_BYTE
     BCF	    PIR1, SSP1IF
     BSF	    SSP1CON2, ACKEN
-wait_i2c_receive2
+wait_i2c_receive2:
     BTFSS   PIR1, SSP1IF
     BRA	    wait_i2c_receive2
     RETURN
+;</editor-fold> 
     
-;-------------------------------------------------------  WRITE
-I2C_WRITE
+;-------------------------------------------------
+;		I2C Write
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Write">    
+    
+I2C_WRITE:
         
     RCALL   I2C_START
     
@@ -833,9 +1317,16 @@ I2C_WRITE
     RCALL   I2C_ACK
         
     RETURN
+
+;</editor-fold>   
     
-;-------------------------------------------------------  RANDOM_READ
-I2C_READ
+;-------------------------------------------------
+;		I2C Random Read
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Random Read">    
+    
+I2C_READ:
      
     RCALL   I2C_START
     
@@ -859,11 +1350,18 @@ I2C_READ
     
     RETURN
     
-;------------------------------------------------------- ACK
-I2C_ACK
+;</editor-fold>
+    
+;-------------------------------------------------
+;		I2C Acknowledge
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="I2C Acknowledge">    
+    
+I2C_ACK:
     MOVF   WRITE_ACKNOWLEDGE_POLL_LOOPS, 0
     MOVWF   POLL_COUNTER
-poll_loop
+poll_loop:
     RCALL   I2C_RESTART
     
     MOVF   WRITE_CONTROL, 0
@@ -875,8 +1373,273 @@ poll_loop
     DECFSZ  POLL_COUNTER, 1
     BRA	    poll_loop
     
-poll_end
+poll_end:
     RCALL   I2C_STOP
-    RETURN 	
+    RETURN 
 
-end
+;</editor-fold>     
+ 
+;</editor-fold>
+    
+;-------------------------------------------------
+;		ADC Setup
+;-------------------------------------------------
+
+;<editor-fold defaultstate="collapsed" desc="ADC Setup">
+    
+;Set up the ADC in such a way that there is a delay between channel select to allow capacitor discharge
+    
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN0">
+    
+ADC_SETUP_AN0:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BCF	    ADCON0, CHS0	    ;Select AN0
+    BCF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BCF	    ADCON2, ADFM	    ;Left Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN1">
+    
+ADC_SETUP_AN1:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BSF	    ADCON0, CHS0	    ;Select AN1
+    BCF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BCF	    ADCON2, ADFM	    ;Left Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+ 
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN2">
+    
+ADC_SETUP_AN2:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BCF	    ADCON0, CHS0	    ;Select AN2
+    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BCF	    ADCON2, ADFM	    ;Left Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN3">
+    
+ADC_SETUP_AN3:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BSF	    ADCON0, CHS0	    ;Select AN3
+    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BCF	    ADCON2, ADFM	    ;Left Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+ 
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN3">
+    
+ADC_SETUP_AN4:
+
+;Configure Port:
+;    BSF	    TRISA, RA0	    ;Disable pin output driver (See TRIS register) 	    
+;    BSF	    ANSELA,AN0	    ;Configure pin as analog     
+				    
+    
+;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+;Configure voltage reference
+    
+;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+    BCF	    TRIGSEL		    ;Do this bit by bit
+    BCF	    PVCFG0		    ;so that you can be shure
+    BCF	    PVCFG1		    ;that you cleared all of the 
+    BCF	    NVCFG0		    ;bits in the register
+    BCF	    NVCFG1
+    
+    
+;Select ADC input channel
+    BCF	    ADCON0, CHS0	    ;Select AN4
+    BCF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BSF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS3
+    BCF	    ADCON0, CHS4
+
+;Select result format
+    BCF	    ADCON2, ADFM	    ;Left Justify
+
+;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+;Turn on ADC module
+    BSF	    ADCON0, ADON
+    
+	RETURN
+
+;link to read multiple ADC channels
+;https://www.edaboard.com/showthread.php?265549-How-to-use-multiple-ADC-channels-for-pic18f452-controller
+
+    ;</editor-fold>
+    
+    ;</editor-fold>
+     
+
+    end
