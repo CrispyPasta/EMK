@@ -229,8 +229,6 @@ setup:
 	MOVLW   b'11011000'		; Setup port C for serial port.
 					; TRISC<7>=1 and TRISC<6>=1.
 	MOVWF   TRISC
-
-	CLRF    TRISB			; make PORTB an output
 	MOVLW   D'5'
 	MOVWF   size
 	
@@ -294,7 +292,7 @@ startup:
 	
 ;<editor-fold defaultstate="collapsed" desc="ADC Read"> 	
 
-;The ADC_Read function will, when it is called, read a value from the selectrd analog channel
+;The ADC_Read function will, when it is called, read a value from the selected analog channel
 ;then it will store that value in a vaiable. The variable will then be sent to the TXREG.
 ;The TXREG should then send this value to the serial terminal of the computer connected to it.
 ;The aim of this function is to read the voltage levels from the sensors and output them sequentially on a serial terminal.
