@@ -310,6 +310,7 @@ Read_AN0:
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
+    ;add delay- if problems
 				    
 ;Start conversion by setting the GO/DONE bit.
     BSF		ADCON0, GO
@@ -319,7 +320,9 @@ Poll_Go0
     BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
     BRA		Poll_Go0    
     
-    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    ;RATHER USE POLL OF TMRT TO SEE IF ITS EMPTY
+    
+;    CLRF	TXREG			    ;Clear TXREG before reading values to it
     CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
     CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
     
