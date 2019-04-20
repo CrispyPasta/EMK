@@ -104,31 +104,32 @@ setup:
     ;</editor-fold>
     
 ;-------------------------------------------------
-;		Serial Communication
+;		Serial Transmit
 ;-------------------------------------------------
 
-    ;<editor-fold defaultstate="collapsed" desc="Serial Communication">
-    
-    CLRF    FSR0
-    MOVLW   b'00100100'		;enable TXEN and BRGH
-    MOVWF   TXSTA1
-    MOVLW   b'10010000'		;enable serial port and continuous receive 
-    MOVWF   RCSTA1
-    MOVLW   D'25'
-    MOVWF   SPBRG1
-    CLRF    SPBRGH1
-    BCF	    BAUDCON1,BRG16	; Use 8 bit baud generator
-    BSF	    TRISC,TX		; make TX an output pin
-    BSF	    TRISC,RX		; make RX an input pin
-    CLRF    PORTC
-    CLRF    ANSELC
-    MOVLW   b'11011000'		; Setup port C for serial port.
-					; TRISC<7>=1 and TRISC<6>=1.
-    MOVWF   TRISC
-    MOVLW   D'5'
-    MOVWF   size
-	
-    ;</editor-fold>
+    ;<editor-fold defaultstate="collapsed" desc="Serial Transmit">
+    ;setup transmission
+    BCF     TXSTA1,TX9      ;Use eight bits per transmission
+    BSF     TXSTA1,TXEN     ;Enable transmissions
+    BCF     TXSTA1,SYNC     ;Use asynchronous transmission
+    BSF     TXSTA1,SENDB    ;Send break character bit at end of current transmission
+    BSF     TXSTA1,BRGH     ;Flag for high baud rate 
+    BCF     TXSTA1,TRMT     ;Flag the transmit register as full 
+    BSF     RCSTA1,SPEN     ;Config Tx and Rx pins as serial pins
+
+    ;Setup port C
+    MOVLB   0xF
+    CLRF    ANSELC          ;We don't want any analogue operations going on
+    CLRF    PORTC           ;Clear the port so it's empty to begin with 
+    BSF     TRISC,7         ;Setting both these pins as 1 and also setting the SPEN
+    BSF     TRISC,6         ;bit lets the PIC set one as input and the other as output
+
+    ;Setup baud rate generator
+    BCF     BAUDCON1,BRG16  ;Don't use the 16 bit baud rate generator
+    MOVLW   d'12'           ;Select 19200 baud. For speed like sanic
+    MOVWF   SPBRG1          ;Move it to the baud rate speed selection register
+    CLRF    SPBRGH1         ;This shouldn't matter, but I'm adding it to be sure
+;</editor-fold>
     
     GOTO    start
 ;</editor-fold>
@@ -136,28 +137,16 @@ setup:
 start 
     MOVLW   0xFF
     MOVWF   PORTA
+    MOVLW   A'A'
+    CALL    writeChar
+    MOVLW   A'\n'
+    call    writeChar
     GOTO    start
    
+writeChar
+    BTFSS   PIR1,TX1IF      ;Checking this flag is like checking if the 
+    BRA     writeChar       ;Loop until the transmit register is empty
+    MOVWF   TXREG1          ;Move it to the sending register
+    return 
 
-;<editor-fold defaultstate="collapsed" desc="Serial Communications Block">
-    Transmit:	
-    MOVFF	INDF1,WREG
-	call	trans
-	INCF	FSR1L,F
-	DECFSZ	size
-	BRA	T1
-	
-	MOVLW	A' '
-	call	trans
-	MOVLW   42h			;set blue as default colour
-	MOVWF   col
-	BSF	PORTA,7
-	GOTO	RCE
-    
-Race:	
-    MOVLW	b'10100100'
-	MOVWF	PORTD
-	MOVLW	A'M'
-	call trans
-;</editor-fold>
 end
