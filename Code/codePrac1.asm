@@ -121,7 +121,7 @@ setup:
     BCF	OSCCON,IRCF1
     BSF	OSCCON,IRCF2
 	
-    ;</editor-fold> 
+;</editor-fold> 
 	     
 ;-------------------------------------------------
 ;		Initialize Port A
