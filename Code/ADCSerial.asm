@@ -1,5 +1,5 @@
-list p=PIC18F45K22
-#include "p18f45K22.inc"
+    list p=PIC18F45K22
+    #include "p18f45K22.inc"
     
     ;<editor-fold defaultstate="collapsed" desc="Configuration Bits">  
     
@@ -130,23 +130,26 @@ setup:
     MOVWF   SPBRG1          ;Move it to the baud rate speed selection register
     CLRF    SPBRGH1         ;This shouldn't matter, but I'm adding it to be sure
 ;</editor-fold>
-    
+	
+    MOVLW   0xF
+    MOVWF   count   ;Just a variable to we don't transmit forever
     GOTO    start
 ;</editor-fold>
 
+writeChar
+    MOVWF   TXREG1          ;Move it to the sending register
+    BTFSS   PIR1,TX1IF      ;Checking this flag is like checking if the 
+    BRA     writeChar       ;Loop until the transmit register is empty
+    return 
+    
 start 
     MOVLW   0xFF
     MOVWF   PORTA
-    MOVLW   A'A'
+    MOVLW   d'65'
     CALL    writeChar
     MOVLW   A'\n'
     call    writeChar
+    DECFSZ  count	;end the program after a few transmissions
     GOTO    start
-   
-writeChar
-    BTFSS   PIR1,TX1IF      ;Checking this flag is like checking if the 
-    BRA     writeChar       ;Loop until the transmit register is empty
-    MOVWF   TXREG1          ;Move it to the sending register
-    return 
 
 end
