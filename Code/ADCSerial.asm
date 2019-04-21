@@ -1,6 +1,6 @@
     list p=PIC18F45K22
     #include "p18f45K22.inc"
-    
+    title = "ADC to Serial beginnings"
     ;<editor-fold defaultstate="collapsed" desc="Configuration Bits">  
     
     ;--- Configuration bits ---
@@ -18,29 +18,8 @@
     
 ;<editor-fold defaultstate="collapsed" desc="CBlock">      
     CBLOCK 0x00
-    col
     count
-    mes1
-    mes2
-    mes3
-    cnt
-    reg
-    size
-    newsize
-    redValue    ; These will store the values read by the cal subroutine come prac 2
-    blueValue
-    greenValue
-    whiteValue
-    blackValue
-    TX_BYTE
-    RX_BYTE
-    WRITE_ACKNOWLEDGE_POLL_LOOPS
-    POLL_COUNTER
-    WRITE_CONTROL
-    READ_CONTROL
-    readCount
-    ADCHIGH
-    ADCLOW
+    ADCValue
     ENDC
     
     ;</editor-fold>
@@ -91,15 +70,16 @@ setup:
 ;		Initialize Port A
 ;-------------------------------------------------
     
-    ;<editor-fold defaultstate="collapsed" desc="Initialize Port A">
-    
-    ;Flashes an LED in my program     
+    ;<editor-fold defaultstate="collapsed" desc="Initialize Port A">  
      
     MOVLB	0xF		; Set BSR for banked SFRs
     CLRF	PORTA		; Initialize PORTA by clearing output data latches
     CLRF	LATA		; Alternate method to clear output data latches
     CLRF	TRISA		; clear bits for all pins
+    BSF     TRISA,0     ; Disable digital output driver
     CLRF	ANSELA		; clear bits for all pins	
+    BSF     ANSELA,0    ; Disable digital input buffer
+    MOVLW   0x0
 
     ;</editor-fold>
     
@@ -131,24 +111,62 @@ setup:
     CLRF    SPBRGH1         ;This shouldn't matter, but I'm adding it to be sure
 ;</editor-fold>
 	
+;-------------------------------------------------
+;		Initialize ADC
+;-------------------------------------------------
+    
+    ;<editor-fold defaultstate="collapsed" desc="Initialize ADC">
+    
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	;Conversion will take 11us
+    BSF	    ADCON2, ADCS2       ;Sampling and discharging are a different matter
+
+    ;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+    ;Select Voltage References
+    BCF     ADCON1,PVCFG0       ;Select internal input Vdd
+    BCF     ADCON1,PVCFG1
+    BCF     ADCON1,NVCFG0       ;Select internal input Vss
+    BCF     ADCON1,NVCFG1
+
+    ;Select the AN0 pin (Channel Selection)
+    MOVLW   b'00000'
+    MOVWF   ADCON0
+
+    BCF     ADCON2,ADFM         ;Left justified-MSB bits are in ADRESH
+    BSF     ADCON0,ADON         ;Turn on the ADC
+    ;</editor-fold>
+
+
     MOVLW   0xF
     MOVWF   count   ;Just a variable to we don't transmit forever
     GOTO    start
 ;</editor-fold>
 
-writeChar
+transChar:
     MOVWF   TXREG1          ;Move it to the sending register
     BTFSS   PIR1,TX1IF      ;Checking this flag is like checking if the 
-    BRA     writeChar       ;Loop until the transmit register is empty
+    BRA     transChar       ;Loop until the transmit register is empty
     return 
-    
-start 
-    MOVLW   0xFF
-    MOVWF   PORTA
-    MOVLW   d'65'
-    CALL    writeChar
+
+readPin0:
+    BSF     ADCON0,GO       ;Start a conversion
+
+adcPoll:
+    BTFSC   ADCON0,GO       ;When bit is 0 again, conversion is finished
+    BRA     adcPoll         ;Loop until done, approx 36us
+    MOVF    ADRESH,W        ;Copy result to WREG
+    return 
+
+start:
+    BSF	    PORTA,7	    ;Just so I can see it's on
+    CALL    readPin0
+    CALL    transChar
     MOVLW   A'\n'
-    call    writeChar
+    CALL    transChar
     DECFSZ  count	;end the program after a few transmissions
     GOTO    start
 
