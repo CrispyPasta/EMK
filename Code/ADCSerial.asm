@@ -167,7 +167,7 @@ start:
     CALL    transChar
     MOVLW   A'\n'
     CALL    transChar
-    DECFSZ  count	;end the program after a few transmissions
+    ;DECFSZ  count	;end the program after a few transmissions
     GOTO    start
 
 end
