@@ -20,6 +20,8 @@
     CBLOCK 0x00
     count
     ADCValue
+    delayCounter1        ; I want to make a 10ms delay
+    delayCounter2
     ENDC
     
     ;</editor-fold>
@@ -107,6 +109,7 @@ setup:
     ;Setup baud rate generator
     BCF     BAUDCON1,BRG16  ;Don't use the 16 bit baud rate generator
     MOVLW   d'12'           ;Select 19200 baud. For speed like sanic
+    ;MOVLW   d'25'           ;Select 2400 baud. For speed like sanic
     MOVWF   SPBRG1          ;Move it to the baud rate speed selection register
     CLRF    SPBRGH1         ;This shouldn't matter, but I'm adding it to be sure
 ;</editor-fold>
@@ -146,10 +149,24 @@ setup:
     GOTO    start
 ;</editor-fold>
 
-transChar:
-    MOVWF   TXREG1          ;Move it to the sending register
-    BTFSS   PIR1,TX1IF      ;Checking this flag is like checking if the 
-    BRA     transChar       ;Loop until the transmit register is empty
+tenmsDelay
+	movlw	.13		
+	movwf	delayCounter2		
+Go_on1			
+	movlw	0xFF
+	movwf	delayCounter1
+Go_on2
+	decfsz	delayCounter1,f	
+	goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+	decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+	goto	Go_on1		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
+
+	RETFIE
+
+transmitChar:
+    MOVWF   TXREG1              ;Move it to the sending register
+    BTFSS   PIR1,TX1IF          ;Checking this flag is like checking if the 
+    BRA     transmitChar        ;Loop until the transmit register is empty
     return 
 
 readPin0:
@@ -162,12 +179,13 @@ adcPoll:
     return 
 
 start:
-    BSF	    PORTA,7	    ;Just so I can see it's on
+    BSF	    PORTA,7	        ;Just so I can see it's on
     CALL    readPin0
-    CALL    transChar
+    CALL    transmitChar
     MOVLW   A'\n'
-    CALL    transChar
-    ;DECFSZ  count	;end the program after a few transmissions
+    CALL    transmitChar
+    CALL    tenmsDelay
+    ;DECFSZ  count	        ;end the program after a few transmissions
     GOTO    start
 
 end
