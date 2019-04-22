@@ -18,8 +18,8 @@ def setupSerial(baud):
 data = []
 def animate(i):
     global data
-    if len(data) > 5000:
-        data = []
+    if len(data) > 3000:
+        data = data[1000:]
     points = 0
     while ser.is_open and points < 100:
         line = ser.readline()
