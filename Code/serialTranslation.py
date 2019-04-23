@@ -15,7 +15,7 @@ def setupSerial(baud):
     ser.timeout = None
     ser.open()
 
-data = [[],[],[],[],[]]
+data = [[]]
 def animate(i):
     global data
     if len(data[0]) > 3000:
