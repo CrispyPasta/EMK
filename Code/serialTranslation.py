@@ -15,21 +15,21 @@ def setupSerial(baud):
     ser.timeout = None
     ser.open()
 
-data = []
+data = [[],[],[],[],[]]
 def animate(i):
     global data
-    if len(data) > 3000:
-        data = data[1000:]
+    if len(data[0]) > 3000:
+        data[0] = data[0][1000:]
     points = 0
-    while ser.is_open and points < 100:
+    while ser.is_open and points < 50:
         line = ser.readline()
         voltage = 5 * ord(line[0]) / 255.0
-        data.append(voltage)
+        data[0].append(voltage)
 	points += 1
     ax1.clear()
-    ax1.plot(data)
+    ax1.plot(data[0])
     return 
-style.use('fivethirtyeight')
+style.use('fast')
 fig = plt.figure()
 
 ax1 = fig.add_subplot(1,1,1)
