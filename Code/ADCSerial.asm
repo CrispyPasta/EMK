@@ -170,6 +170,19 @@ transmitChar:
     return 
 
 readPin0:
+    MOVLW   b'00000'
+    MOVWF   ADCON0
+    BSF     ADCON0,GO       ;Start a conversion
+
+adcPoll:
+    BTFSC   ADCON0,GO       ;When bit is 0 again, conversion is finished
+    BRA     adcPoll         ;Loop until done, approx 36us
+    MOVF    ADRESH,W        ;Copy result to WREG
+    return 
+
+readPin1:
+    MOVLW   b'00001'
+    MOVWF   ADCON0
     BSF     ADCON0,GO       ;Start a conversion
 
 adcPoll:

@@ -22,12 +22,19 @@ def animate(i):
         data[0] = data[0][1000:]
     points = 0
     while ser.is_open and points < 50:
-        line = ser.readline()
-        voltage = 5 * ord(line[0]) / 255.0
-        data[0].append(voltage)
-	points += 1
+        for a in range(0, 5):
+            line = ser.readline()
+            voltage = 5 * ord(line[0]) / 255.0
+            data[a].append(voltage)
+        points += 1
+        
     ax1.clear()
     ax1.plot(data[0])
+    ax1.plot(data[1])
+    ax1.plot(data[2])
+    ax1.plot(data[3])
+    ax1.plot(data[4])
+
     return 
 style.use('fast')
 fig = plt.figure()
@@ -35,7 +42,7 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 setupSerial(19600)
 plt.ylabel("Voltage")
-ani = animation.FuncAnimation(fig, animate, interval = 500)
+ani = animation.FuncAnimation(fig, animate, interval = 600)
 plt.show()
 ser.close()
 
