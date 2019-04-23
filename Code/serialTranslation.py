@@ -9,7 +9,7 @@ ser = serial.Serial()
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM9' 
+    ser.port = 'COM6' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -40,7 +40,7 @@ style.use('fast')
 fig = plt.figure()
 
 ax1 = fig.add_subplot(1,1,1)
-setupSerial(19600)
+setupSerial(9600)
 plt.ylabel("Voltage")
 ani = animation.FuncAnimation(fig, animate, interval = 600)
 plt.show()

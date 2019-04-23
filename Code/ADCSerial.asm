@@ -185,7 +185,7 @@ readPin1:
     MOVWF   ADCON0
     BSF     ADCON0,GO       ;Start a conversion
 
-adcPoll:
+adcPoll1:
     BTFSC   ADCON0,GO       ;When bit is 0 again, conversion is finished
     BRA     adcPoll         ;Loop until done, approx 36us
     MOVF    ADRESH,W        ;Copy result to WREG
