@@ -271,13 +271,20 @@ START
     MOVLB   0X0F		    ;Tell PIC to work in bank where SFRs are
 				    ;Because new PIC is fussy 
 
-;Initialize Port B
+;Initialize Port E
 
+    CLRF    PORTE 		; Initialize PORTA by clearing output data latches
+    CLRF    LATE 		; Alternate method to clear output data latches
+    CLRF    ANSELE 		; Configure I/O
+    CLRF    TRISE		; All digital outputs
+    
+;Initialize Port B
+    
     CLRF    PORTB 		; Initialize PORTA by clearing output data latches
     CLRF    LATB 		; Alternate method to clear output data latches
     CLRF    ANSELB 		; Configure I/O
-    CLRF    TRISB		; All digital outputs				    
-				    
+    CLRF    TRISB		; All digital outputs
+		    
 				    
 ;Initialize clock speed    
     
@@ -345,57 +352,61 @@ Headers:
     
 MAIN:
 
-    MOVLW   0x08 		
-    MOVWF   PORTB
-    
-;Send AN0 reading then send an enter to the serial port
-    
-    CALL    Read_AN0			;For Testing just read AN0
-    CALL    SEND_BYTE
-    
-    MOVLW   .13				;Send an enter
-    CALL    SEND_BYTE
-    
-;Send 5 sensor values to the serial port seperated by a semicolon, then send an enter for a newline
+    MOVLW   0x4 		
+    MOVWF   PORTE
+
+;    ;<editor-fold defaultstate="collapsed" desc="Read AN0 for testing">
 ;    
-;    ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
+;;Send AN0 reading then send an enter to the serial port
 ;    
-;    CALL    Read_AN14
-;    CALL    SEND_BYTE
-;    
-;    MOVLW   A';'
-;    CALL    SEND_BYTE
-;
-;    CALL    Read_AN15
-;    CALL    SEND_BYTE
-;    
-;    MOVLW   A';'
-;    CALL    SEND_BYTE
-;
-;    CALL    Read_AN16
-;    CALL    SEND_BYTE
-;    
-;    MOVLW   A';'
-;    CALL    SEND_BYTE
-;
-;    CALL    Read_AN17
-;    CALL    SEND_BYTE
-;    
-;    MOVLW   A';'
-;    CALL    SEND_BYTE
-;       
-;    CALL    Read_AN18
-;    CALL    SEND_BYTE
-;    
-;    MOVLW   A';'
+;    CALL    Read_AN0			;For Testing just read AN0
 ;    CALL    SEND_BYTE
 ;    
 ;    MOVLW   .13				;Send an enter
 ;    CALL    SEND_BYTE
-;   
-;    ; </editor-fold>  
 ;    
-;    MOVLW   A';'
+;    ; </editor-fold>
+;    
+;Send 5 sensor values to the serial port seperated by a semicolon, then send an enter for a newline
+    
+    ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
+    
+    CALL    Read_AN12
+    CALL    SEND_BYTE
+    
+    MOVLW   A';'
+    CALL    SEND_BYTE
+
+    CALL    Read_AN10
+    CALL    SEND_BYTE
+    
+    MOVLW   A';'
+    CALL    SEND_BYTE
+
+    CALL    Read_AN8
+    CALL    SEND_BYTE
+    
+    MOVLW   A';'
+    CALL    SEND_BYTE
+
+    CALL    Read_AN9
+    CALL    SEND_BYTE
+    
+    MOVLW   A';'
+    CALL    SEND_BYTE
+       
+    CALL    Read_AN13
+    CALL    SEND_BYTE
+    
+    MOVLW   A';'
+    CALL    SEND_BYTE
+    
+    MOVLW   .13				;Send an enter
+    CALL    SEND_BYTE
+   
+    ; </editor-fold>  
+    
+;    MOVLW   A'H'
 ;    CALL    SEND_BYTE
 ;    MOVLW   A'L'
 ;    CALL    SEND_BYTE
@@ -486,20 +497,20 @@ Poll_Go0
 					    ;value of the analog pin can be sent to the serial output
     RETURN
     
-    ;</editor-fold>
+    ;</editor-fold>				;RA0
 		
-    ;<editor-fold defaultstate="collapsed" desc="Read_AN14"> 	
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN12"> 	
 
 ;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
 
 
-Read_AN14:
+Read_AN12:
 
 ;poll to see if the TMRT is empty
     BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA		Read_AN14
+    BRA		Read_AN12
     
-    CALL	ADC_SETUP_AN14		    ;Call ADC setup for reading analog input on pin AN0
+    CALL	ADC_SETUP_AN12		    ;Call ADC setup for reading analog input on pin AN0
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
@@ -544,20 +555,20 @@ Poll_Go1
 					    ;value of the analog pin can be sent to the serial output
     RETURN
     
-    ;</editor-fold>
+    ;</editor-fold>				;RB0
 		
-    ;<editor-fold defaultstate="collapsed" desc="Read_AN15"> 	
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN10"> 	
 
 ;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
 
 
-Read_AN15:
+Read_AN10:
 
 ;poll to see if the TMRT is empty
     BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA		Read_AN15
+    BRA		Read_AN10
     
-    CALL	ADC_SETUP_AN15		    ;Call ADC setup for reading analog input on pin AN0
+    CALL	ADC_SETUP_AN10		    ;Call ADC setup for reading analog input on pin AN0
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
@@ -602,20 +613,20 @@ Poll_Go2
 					    ;value of the analog pin can be sent to the serial output
     RETURN
     
-    ;</editor-fold>
+    ;</editor-fold>				;RB1
 		
-    ;<editor-fold defaultstate="collapsed" desc="Read_AN16"> 	
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN8"> 	
 
 ;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
 
 
-Read_AN16:
+Read_AN8:
 
 ;poll to see if the TMRT is empty
     BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA		Read_AN16
+    BRA		Read_AN8
     
-    CALL	ADC_SETUP_AN16		    ;Call ADC setup for reading analog input on pin AN0
+    CALL	ADC_SETUP_AN8		    ;Call ADC setup for reading analog input on pin AN0
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
@@ -660,20 +671,20 @@ Poll_Go3
 					    ;value of the analog pin can be sent to the serial output
     RETURN
     
-    ;</editor-fold>
+    ;</editor-fold>				;RB2
 		
-    ;<editor-fold defaultstate="collapsed" desc="Read_AN17"> 	
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN9"> 	
 
 ;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
 
 
-Read_AN17:
+Read_AN9:
 
 ;poll to see if the TMRT is empty
     BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA		Read_AN17
+    BRA		Read_AN9
     
-    CALL	ADC_SETUP_AN17		    ;Call ADC setup for reading analog input on pin AN0
+    CALL	ADC_SETUP_AN9		    ;Call ADC setup for reading analog input on pin AN0
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
@@ -718,20 +729,20 @@ Poll_Go4
 					    ;value of the analog pin can be sent to the serial output
     RETURN
     
-    ;</editor-fold>
+    ;</editor-fold>				;RB3
 		
-    ;<editor-fold defaultstate="collapsed" desc="Read_AN18"> 	
+    ;<editor-fold defaultstate="collapsed" desc="Read_AN13"> 	
 
 ;To read a value from multiple pins, one has to call the ADC setup function to select the desired channel to read from    
 
 
-Read_AN18:
+Read_AN13:
 
 ;poll to see if the TMRT is empty
     BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA		Read_AN18
+    BRA		Read_AN13
     
-    CALL	ADC_SETUP_AN18		    ;Call ADC setup for reading analog input on pin AN0
+    CALL	ADC_SETUP_AN13		    ;Call ADC setup for reading analog input on pin AN0
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
@@ -776,7 +787,7 @@ Poll_Go5
 					    ;value of the analog pin can be sent to the serial output
     RETURN
     
-    ;</editor-fold>
+    ;</editor-fold>				;RB5
      
  
      
@@ -956,13 +967,13 @@ ADC_SETUP_AN0:
 
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN14">
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN12">
     
-ADC_SETUP_AN14:
+ADC_SETUP_AN12:
 
-;Configure Port RC2:
-    BSF    TRISC,   TRISC2  ;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,  ANSC2   ;Configure pin as analog     
+;Configure Port RB0:
+    BSF    TRISB,   TRISB0  ;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELB,  ANSB0   ;Configure pin as analog     
 				    
     
 ;Configure the ADC module: 
@@ -982,11 +993,11 @@ ADC_SETUP_AN14:
     
     
 ;Select ADC input channel
-    BCF	    ADCON0, CHS0	    ;Select AN14 - 01110
-    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
     BSF	    ADCON0, CHS2
-    BSF	    ADCON0, CHS3
-    BCF	    ADCON0, CHS4
+    BCF	    ADCON0, CHS1
+    BCF	    ADCON0, CHS0
 
 ;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
@@ -1006,13 +1017,13 @@ ADC_SETUP_AN14:
 
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN15">
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN10">
     
-ADC_SETUP_AN15:
+ADC_SETUP_AN10:
 
-;Configure Port RC3:
-    BSF    TRISC,   TRISC3  ;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,  ANSC3   ;Configure pin as analog     
+;Configure Port RB1:
+    BSF    TRISB,   TRISB1  ;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELB,  ANSB1   ;Configure pin as analog       
 				    
     
 ;Configure the ADC module: 
@@ -1032,11 +1043,11 @@ ADC_SETUP_AN15:
     
     
 ;Select ADC input channel
-    BCF	    ADCON0, CHS0	    ;Select AN14 - 01110
-    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
-    BSF	    ADCON0, CHS2
-    BSF	    ADCON0, CHS3
-    BCF	    ADCON0, CHS4
+    BCF	    ADCON0, CHS4	    ;Select AN10 - 01010
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BSF	    ADCON0, CHS1
+    BCF	    ADCON0, CHS0
 
 ;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
@@ -1056,13 +1067,13 @@ ADC_SETUP_AN15:
 
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN16">
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN8">
     
-ADC_SETUP_AN16:
+ADC_SETUP_AN8:
 
-;Configure Port RC4:
-    BSF    TRISC,   TRISC4  ;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,  ANSC4   ;Configure pin as analog     
+;Configure Port RB2:
+    BSF    TRISB,   TRISB2  ;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELB,  ANSB2   ;Configure pin as analog         
 				    
     
 ;Configure the ADC module: 
@@ -1082,11 +1093,11 @@ ADC_SETUP_AN16:
     
     
 ;Select ADC input channel
-    BCF	    ADCON0, CHS0	    ;Select AN14 - 01110
-    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
-    BSF	    ADCON0, CHS2
-    BSF	    ADCON0, CHS3
-    BCF	    ADCON0, CHS4
+    BCF	    ADCON0, CHS4	    ;Select AN8 - 01000
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS1
+    BCF	    ADCON0, CHS0
 
 ;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
@@ -1106,13 +1117,13 @@ ADC_SETUP_AN16:
 
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN17">
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup A9">
     
-ADC_SETUP_AN17:
+ADC_SETUP_AN9:
 
-;Configure Port RC5:
-    BSF    TRISC,   TRISC5  ;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,  ANSC5   ;Configure pin as analog     
+;Configure Port RB3:
+    BSF    TRISB,   TRISB3  ;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELB,  ANSB3   ;Configure pin as analog         
 				    
     
 ;Configure the ADC module: 
@@ -1132,11 +1143,11 @@ ADC_SETUP_AN17:
     
     
 ;Select ADC input channel
-    BCF	    ADCON0, CHS0	    ;Select AN14 - 01110
-    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
-    BSF	    ADCON0, CHS2
-    BSF	    ADCON0, CHS3
-    BCF	    ADCON0, CHS4
+    BCF	    ADCON0, CHS4	    ;Select AN9 - 01001
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS2
+    BCF	    ADCON0, CHS1
+    BSF	    ADCON0, CHS0
 
 ;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
@@ -1156,13 +1167,14 @@ ADC_SETUP_AN17:
 
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN18">
+    ;<editor-fold defaultstate="collapsed" desc="ADC Setup AN13">
     
-ADC_SETUP_AN18:
+ADC_SETUP_AN13:
 
-;Configure Port RC2:
-    BSF    TRISC,   TRISC6  ;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,  ANSC6   ;Configure pin as analog     
+    
+;Configure Port RB5:
+    BSF    TRISB,   TRISB5  ;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELB,  ANSB5   ;Configure pin as analog         
 				    
     
 ;Configure the ADC module: 
@@ -1182,11 +1194,11 @@ ADC_SETUP_AN18:
     
     
 ;Select ADC input channel
-    BCF	    ADCON0, CHS0	    ;Select AN14 - 01110
-    BSF	    ADCON0, CHS1	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS4	    ;Select AN11 - 01101
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
     BSF	    ADCON0, CHS2
-    BSF	    ADCON0, CHS3
-    BCF	    ADCON0, CHS4
+    BCF	    ADCON0, CHS1
+    BSF	    ADCON0, CHS0
 
 ;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
