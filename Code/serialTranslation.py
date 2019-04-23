@@ -15,7 +15,7 @@ def setupSerial(baud):
     ser.timeout = None
     ser.open()
 
-data = [[]]
+data = []
 def animate(i):
     global data
     if len(data[0]) > 3000:
@@ -30,10 +30,10 @@ def animate(i):
         
     ax1.clear()
     ax1.plot(data[0])
-    ax1.plot(data[1])
-    ax1.plot(data[2])
-    ax1.plot(data[3])
-    ax1.plot(data[4])
+    # ax1.plot(data[1])
+    # ax1.plot(data[2])
+    # ax1.plot(data[3])
+    # ax1.plot(data[4])
 
     return 
 style.use('fast')
