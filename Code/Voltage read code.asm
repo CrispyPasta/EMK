@@ -362,14 +362,14 @@ MAIN:
     CALL    Read_AN0			;For Testing just read AN0
     CALL    SEND_BYTE
     
-    MOVLW   .13				;Send an enter
-    CALL    SEND_BYTE
+;    MOVLW   '\n'				;Send an enter
+;    CALL    SEND_BYTE
     
     ; </editor-fold>
     
 ;Send 5 sensor values to the serial port seperated by a semicolon, then send an enter for a newline
     
-;    ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
+    ;    ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
 ;    
 ;    CALL    Read_AN12
 ;    CALL    SEND_BYTE
@@ -405,7 +405,7 @@ MAIN:
 ;    CALL    SEND_BYTE
 ;   
 ;    ; </editor-fold>  
-;    
+    ;    
 ;    MOVLW   A'H'
 ;    CALL    SEND_BYTE
 ;    MOVLW   A'L'

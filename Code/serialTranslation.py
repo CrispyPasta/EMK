@@ -14,6 +14,9 @@ def setupSerial(baud):
     ser.stopbits = 1
     ser.timeout = None
     ser.open()
+    ser.isOpen()
+
+
 
 data = []
 def animate(i):
@@ -23,7 +26,7 @@ def animate(i):
     points = 0
     while ser.is_open and points < 50:
         for a in range(0, 5):
-            line = ser.readline()
+            line = ser.read()
             voltage = 5 * ord(line[0]) / 255.0
             data[a].append(voltage)
         points += 1
