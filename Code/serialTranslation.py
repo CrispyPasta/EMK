@@ -33,7 +33,7 @@ def animate(i):
     global data
     global pos
     points = 0
-    while ser.is_open and points < 30:
+    while ser.is_open and points < 50:
         line = ser.readline()
         for a in range(0, 5):
             try:
@@ -66,7 +66,7 @@ fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 setupSerial(19600)
 plt.ylabel("Voltage")
-ani = animation.FuncAnimation(fig, animate, interval = 310)
+ani = animation.FuncAnimation(fig, animate, interval = 510)
 plt.show()
 dumpData(data, 'dataDump.csv')
 ser.close()

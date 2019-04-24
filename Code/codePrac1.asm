@@ -308,6 +308,7 @@ Read_AN0:
 
 ;Wait the required acquisition time(2). - we dont want this now (0 seconds) 
 
+    ;add delay- if problems
 				    
 ;Start conversion by setting the GO/DONE bit.
     BSF		ADCON0, GO
@@ -317,7 +318,9 @@ Poll_Go0
     BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
     BRA		Poll_Go0    
     
-    CLRF	TXREG			    ;Clear TXREG before reading values to it
+    ;RATHER USE POLL OF TMRT TO SEE IF ITS EMPTY
+    
+;    CLRF	TXREG			    ;Clear TXREG before reading values to it
     CLRF	ADCHIGH			    ;Clear ADCHIGH before reading values to it
     CLRF	ADCLOW			    ;Clear ADCLOW before reading values to it
     
@@ -1403,13 +1406,13 @@ ADC_SETUP_AN0:
 
 ;Configure voltage reference
     
-;   CLRF    ADCON1		            ;Clear the adcon1 register - in a test do this bit by bit
-				                    ;Below it is done bit by bit
-    BCF	    ADCON1,TRIGSEL		    ;Do this bit by bit
-    BCF	    ADCON1,PVCFG0		    ;so that you can be shure
-    BCF	    ADCON1,PVCFG1		    ;that you cleared all of the 
-    BCF	    ADCON1,NVCFG0		    ;bits in the register
-    BCF	    ADCON1,NVCFG1
+   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+				    ;Below it is done bit by bit
+;    BCF	    TRIGSEL		    ;Do this bit by bit
+;    BCF	    PVCFG0		    ;so that you can be shure
+;    BCF	    PVCFG1		    ;that you cleared all of the 
+;    BCF	    NVCFG0		    ;bits in the register
+;    BCF	    NVCFG1
     
     
 ;Select ADC input channel
@@ -1453,13 +1456,13 @@ ADC_SETUP_AN1:
 
 ;Configure voltage reference
     
-;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
 				    ;Below it is done bit by bit
-    BCF	    ADCON1,TRIGSEL		    ;Do this bit by bit
-    BCF	    ADCON1,PVCFG0		    ;so that you can be shure
-    BCF	    ADCON1,PVCFG1		    ;that you cleared all of the 
-    BCF	    ADCON1,NVCFG0		    ;bits in the register
-    BCF	    ADCON1,NVCFG1
+;    BCF	    TRIGSEL		    ;Do this bit by bit
+;    BCF	    PVCFG0		    ;so that you can be shure
+;    BCF	    PVCFG1		    ;that you cleared all of the 
+;    BCF	    NVCFG0		    ;bits in the register
+;    BCF	    NVCFG1
     
     
 ;Select ADC input channel
@@ -1503,13 +1506,13 @@ ADC_SETUP_AN2:
 
 ;Configure voltage reference
     
-;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
 				    ;Below it is done bit by bit
-    BCF	    ADCON1,TRIGSEL		    ;Do this bit by bit
-    BCF	    ADCON1,PVCFG0		    ;so that you can be shure
-    BCF	    ADCON1,PVCFG1		    ;that you cleared all of the 
-    BCF	    ADCON1,NVCFG0		    ;bits in the register
-    BCF	    ADCON1,NVCFG1
+;    BCF	    TRIGSEL		    ;Do this bit by bit
+;    BCF	    PVCFG0		    ;so that you can be shure
+;    BCF	    PVCFG1		    ;that you cleared all of the 
+;    BCF	    NVCFG0		    ;bits in the register
+;    BCF	    NVCFG1
     
     
 ;Select ADC input channel
@@ -1553,13 +1556,13 @@ ADC_SETUP_AN3:
 
 ;Configure voltage reference
     
-;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
 				    ;Below it is done bit by bit
-    BCF	    ADCON1,TRIGSEL		    ;Do this bit by bit
-    BCF	    ADCON1,PVCFG0		    ;so that you can be shure
-    BCF	    ADCON1,PVCFG1		    ;that you cleared all of the 
-    BCF	    ADCON1,NVCFG0		    ;bits in the register
-    BCF	    ADCON1,NVCFG1
+;    BCF	    TRIGSEL		    ;Do this bit by bit
+;    BCF	    PVCFG0		    ;so that you can be shure
+;    BCF	    PVCFG1		    ;that you cleared all of the 
+;    BCF	    NVCFG0		    ;bits in the register
+;    BCF	    NVCFG1
     
     
 ;Select ADC input channel
@@ -1603,13 +1606,13 @@ ADC_SETUP_AN4:
 
 ;Configure voltage reference
     
-;   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
+   CLRF    ADCON1		    ;Clear the adcon1 register - in a test do this bit by bit
 				    ;Below it is done bit by bit
-    BCF	    ADCON1,TRIGSEL		    ;Do this bit by bit
-    BCF	    ADCON1,PVCFG0		    ;so that you can be shure
-    BCF	    ADCON1,PVCFG1		    ;that you cleared all of the 
-    BCF	    ADCON1,NVCFG0		    ;bits in the register
-    BCF	    ADCON1,NVCFG1
+;    BCF	    TRIGSEL		    ;Do this bit by bit
+;    BCF	    PVCFG0		    ;so that you can be shure
+;    BCF	    PVCFG1		    ;that you cleared all of the 
+;    BCF	    NVCFG0		    ;bits in the register
+;    BCF	    NVCFG1
     
     
 ;Select ADC input channel
