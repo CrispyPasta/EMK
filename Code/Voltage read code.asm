@@ -355,57 +355,57 @@ MAIN:
     MOVLW   0x4 		
     MOVWF   PORTE
 
-    ;<editor-fold defaultstate="collapsed" desc="Read AN0 for testing">
-    
-;Send AN0 reading then send an enter to the serial port
-    
-    CALL    Read_AN0			;For Testing just read AN0
-    CALL    SEND_BYTE
-    
-;    MOVLW   '\n'				;Send an enter
+;    ;<editor-fold defaultstate="collapsed" desc="Read AN0 for testing">
+;    
+;;Send AN0 reading then send an enter to the serial port
+;    
+;    CALL    Read_AN0			;For Testing just read AN0
 ;    CALL    SEND_BYTE
-    
-    ; </editor-fold>
-    
+;    
+;;    MOVLW   '\n'				;Send an enter
+;;    CALL    SEND_BYTE
+;    
+;    ; </editor-fold>
+;    
 ;Send 5 sensor values to the serial port seperated by a semicolon, then send an enter for a newline
     
-    ;    ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
-;    
-;    CALL    Read_AN12
-;    CALL    SEND_BYTE
-;    
+        ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
+    
+    CALL    Read_AN12
+    CALL    SEND_BYTE
+    
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-;
-;    CALL    Read_AN10
-;    CALL    SEND_BYTE
-;    
+
+    CALL    Read_AN10
+    CALL    SEND_BYTE
+    
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-;
-;    CALL    Read_AN8
-;    CALL    SEND_BYTE
-;    
+
+    CALL    Read_AN8
+    CALL    SEND_BYTE
+    
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-;
-;    CALL    Read_AN9
-;    CALL    SEND_BYTE
-;    
+
+    CALL    Read_AN9
+    CALL    SEND_BYTE
+    
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-;       
-;    CALL    Read_AN13
-;    CALL    SEND_BYTE
-;    
+       
+    CALL    Read_AN13
+    CALL    SEND_BYTE
+    
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-;    
-;    MOVLW   .13				;Send an enter
-;    CALL    SEND_BYTE
-;   
-;    ; </editor-fold>  
-    ;    
+    
+    MOVLW   '\n'				;Send an enter
+    CALL    SEND_BYTE
+   
+    ; </editor-fold>  
+        
 ;    MOVLW   A'H'
 ;    CALL    SEND_BYTE
 ;    MOVLW   A'L'
