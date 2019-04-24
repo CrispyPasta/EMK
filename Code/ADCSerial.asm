@@ -143,9 +143,7 @@ setup:
     BSF     ADCON0,ADON         ;Turn on the ADC
     ;</editor-fold>
 
-
-    MOVLW   0xF
-    MOVWF   count   ;Just a variable to we don't transmit forever
+    BSF	    PORTA,7	        ;Just so I can see it's on
     GOTO    start
 ;</editor-fold>
 
@@ -161,28 +159,19 @@ Go_on2
 	decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
 	goto	Go_on1		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
 
-	RETFIE
+	RETURN
 
 transmitChar:
-    MOVWF   TXREG1              ;Move it to the sending register
-    BTFSS   PIR1,TX1IF          ;Checking this flag is like checking if the 
-    BRA     transmitChar        ;Loop until the transmit register is empty
+trans1
+    BTFSS   PIR1,TX1IF          ;Finish transmitting if there's still something
+    BRA     trans1		;left to be sent
+trans2
+    MOVWF   TXREG1              ;Move new char to the sending register
+    BTFSS   PIR1,TX1IF          
+    BRA     trans2		;Loop until the transmit register is empty
     return 
 
 readPin0:
-    MOVLW   b'00000'
-    MOVWF   ADCON0
-    BSF     ADCON0,GO       ;Start a conversion
-
-adcPoll:
-    BTFSC   ADCON0,GO       ;When bit is 0 again, conversion is finished
-    BRA     adcPoll         ;Loop until done, approx 36us
-    MOVF    ADRESH,W        ;Copy result to WREG
-    return 
-
-readPin1:
-    MOVLW   b'00001'
-    MOVWF   ADCON0
     BSF     ADCON0,GO       ;Start a conversion
 
 adcPoll:
@@ -192,13 +181,24 @@ adcPoll:
     return 
 
 start:
-    BSF	    PORTA,7	        ;Just so I can see it's on
     CALL    readPin0
     CALL    transmitChar
+    
+    CALL    readPin0
+    CALL    transmitChar
+    
+    CALL    readPin0
+    CALL    transmitChar
+    
+    CALL    readPin0
+    CALL    transmitChar
+    
+    CALL    readPin0
+    CALL    transmitChar
+
     MOVLW   A'\n'
     CALL    transmitChar
     CALL    tenmsDelay
-    ;DECFSZ  count	        ;end the program after a few transmissions
     GOTO    start
 
 end
