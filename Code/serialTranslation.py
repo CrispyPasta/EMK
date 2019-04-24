@@ -40,7 +40,7 @@ def animate(i):
                 voltage = 5 * ord(line[a]) / 255.0
                 data[a].append(voltage)
             except:
-                data[a].append(data[a][len(data[a])-2]) #append prev voltage if too few bits
+                data[a].append(0) #append prev voltage if too few bits
         points += 1
 
     if len(data[0]) % 2000 == 0:
