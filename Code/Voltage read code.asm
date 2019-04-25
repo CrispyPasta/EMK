@@ -192,6 +192,8 @@
     CBLOCK	0X00
 	    ADCHIGH
 	    ADCLOW
+	    delayCounter1        ; I want to make a 10ms delay
+	    delayCounter2
     ENDC
 
 ;*******************************************************************************
@@ -417,6 +419,7 @@ MAIN:
 ;    MOVLW   A'O'
 ;    CALL    SEND_BYTE
 ;    GOTO    $
+    CALL    tenmsDelay
     
     GOTO MAIN
     
@@ -1240,5 +1243,20 @@ ISR:
     RETFIE
     
     ;</editor-fold>
+   
+    
+tenmsDelay:
+    movlw	.13		
+    movwf	delayCounter2		
+Go_on1			
+    movlw	0xFF
+    movwf	delayCounter1
+Go_on2
+    decfsz	delayCounter1,f	
+    goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
+
+    RETURN
     
     END

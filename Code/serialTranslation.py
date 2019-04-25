@@ -29,18 +29,28 @@ def setupSerial(baud):
     ser.open()
 
 
+sensors = [0,1,2,3,4]
 def animate(i):
     global data
     global pos
+    sensors
     points = 0
+    voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
-        for a in range(0, 5):
+        for a in range(0,5):
+            #for b in range(0, 8):
+            #    line = ser.readline()
+            #    voltages += 5 * ord(line[a]) / 255.0
+
             try:
                 voltage = 5 * ord(line[a]) / 255.0
                 data[a].append(voltage)
             except:
-                data[a].append(0) #append prev voltage if too few bits
+                try:
+                    data[a].append(data[a][len(data[a]) - 1])
+                except:
+                    data[a].append(0)  # append prev voltage if too few bits
         points += 1
 
     if len(data[0]) % 2000 == 0:
@@ -52,11 +62,12 @@ def animate(i):
         pos += 1
 
     ax1.clear()
-    ax1.plot(data[0][2000 * pos:])
-    ax1.plot(data[1][2000 * pos:])
-    ax1.plot(data[2][2000 * pos:])
-    ax1.plot(data[3][2000 * pos:])
-    ax1.plot(data[4][2000 * pos:])
+    for a in sensors:
+        ax1.plot(data[a][2000 * pos:])
+        #ax1.plot(data[1][2000 * pos:])
+        #ax1.plot(data[2][2000 * pos:])
+        #ax1.plot(data[3][2000 * pos:])
+        #ax1.plot(data[4][2000 * pos:])
 
 
     return 
@@ -64,7 +75,7 @@ style.use('fast')
 fig = plt.figure()
 
 ax1 = fig.add_subplot(1,1,1)
-setupSerial(19600)
+setupSerial(9600)
 plt.ylabel("Voltage")
 ani = animation.FuncAnimation(fig, animate, interval = 510)
 plt.show()
