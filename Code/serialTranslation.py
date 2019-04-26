@@ -1,6 +1,7 @@
 import serial 
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation
+import matplotlib.legend as lgnd 
 from matplotlib import style
 import numpy as np
 import csv
@@ -22,7 +23,7 @@ def dumpData(d, fname):
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM10' 
+    ser.port = 'COM9' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -63,8 +64,10 @@ def animate(i):
         pos += 1
 
     ax1.clear()
+    labels = ['LL', 'L', 'M', 'R', 'RR']
     for a in sensors:
-        ax1.plot(data[a][2000 * pos:])
+        ax1.plot(data[a][2000 * pos:], label= labels[a])
+        ax1.legend()
         #ax1.plot(data[1][2000 * pos:])
         #ax1.plot(data[2][2000 * pos:])
         #ax1.plot(data[3][2000 * pos:])

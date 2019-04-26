@@ -194,6 +194,11 @@
 	    ADCLOW
 	    delayCounter1        ; I want to make a 10ms delay
 	    delayCounter2
+        sensor1
+        sensor2
+        sensor3
+        sensor4
+        sensor5
     ENDC
 
 ;*******************************************************************************
