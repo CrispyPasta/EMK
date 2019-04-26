@@ -8,7 +8,7 @@ import csv
 ser = serial.Serial()
 data = [[], [], [], [], []]
 pos = 0
-
+backupData = []
 def dumpData(d, fname):
     global data
 
@@ -38,6 +38,7 @@ def animate(i):
     voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
+        backupData.append(line)
         for a in range(0,5):
             #for b in range(0, 8):
             #    line = ser.readline()
@@ -80,5 +81,6 @@ plt.ylabel("Voltage")
 ani = animation.FuncAnimation(fig, animate, interval = 510)
 plt.show()
 dumpData(data, 'dataDump.csv')
+dumpData(backupData, 'backupdata.csv')
 ser.close()
 
