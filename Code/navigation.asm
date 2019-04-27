@@ -49,6 +49,9 @@
     McolorSensed      ; blue   = bit 2      red   = bit 3
     RcolorSensed      ; black  = bit 4
     RRcolorSensed
+
+    raceColour        ; One-hot encoded colour of that the marv will race
+    raceLinePosition  ; position of the race line -  LL-L-M-R-RR
     ENDC
     ;~~~~~~~~~~~~~~~~~~~~~~~CBLOCK~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -65,7 +68,6 @@ init:
     MOVLB   0x0
 
 getColor:
-    
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     MOVLW   LLwhiteValue
     CPFSGT  LLsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
@@ -165,5 +167,7 @@ getColor:
 
     BSF     RRcolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+;
 return  
+    
+getRaceLinePosition:
