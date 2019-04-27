@@ -64,7 +64,7 @@ def animate(i):
         pos += 1
 
     ax1.clear()
-    labels = ['LL', 'L', 'M', 'R', 'RR']
+    labels = ['RR', 'R', 'M', 'L', 'LL']
     for a in sensors:
         ax1.plot(data[a][2000 * pos:], label= labels[a])
         ax1.legend()
