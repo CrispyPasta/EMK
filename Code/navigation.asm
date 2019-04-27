@@ -50,7 +50,7 @@
     RcolorSensed      ; black  = bit 4
     RRcolorSensed
 
-    raceColour        ; One-hot encoded colour of that the marv will race
+    raceColor        ; One-hot encoded colour of that the marv will race
     raceLinePosition  ; position of the race line -  LL-L-M-R-RR
     ENDC
     ;~~~~~~~~~~~~~~~~~~~~~~~CBLOCK~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,6 +168,43 @@ getColor:
     BSF     RRcolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;
-return  
-    
+    return                             ; Return from getColor (determine color sensed by each sensor)
+
 getRaceLinePosition:
+    MOVLW   0xFF
+    MOVWF   raceLinePosition        ;raceLinePosition is vol ones 
+    MOVLW   raceColor               ;move die one-hot encoded race color in die wreg in, vir comparisons 
+
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CPFSEQ  LLcolorSensed
+    BCF     raceLinePosition
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CPFSEQ  LcolorSensed
+    BCF     raceLinePosition
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CPFSEQ  McolorSensed
+    BCF     raceLinePosition
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CPFSEQ  RcolorSensed
+    BCF     raceLinePosition
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    CPFSEQ  RRcolorSensed
+    BCF     raceLinePosition
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    COMF    raceLinePosition        ;invert die position, dan behoort hy te wys waar die race line opgetel word
+    ; compare elke sensor se colour met die race color
+    ; if eq, set that sensor's bit in the line position vector
+    return                  ; return from getRaceLinePosition (determine where the line is that we want to race on)
+
+determineDirection:
+    
+
