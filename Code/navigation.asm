@@ -57,6 +57,7 @@
     
     delay1
     delay2
+    delay3
     ENDC
     ;</editor-fold>
     ;~~~~~~~~~~~~~~~~~~~~~~~CBLOCK~~~~~~~~~~~~~~~~~~~~~~~
@@ -95,18 +96,18 @@ init:
     MOVWF   RRgreenValue    ;move hardcoded voltage values into their registers
 
     MOVLW   .150
-    MOVWF   LLredValue
-    MOVWF   LredValue
-    MOVWF   MredValue
-    MOVWF   RredValue
-    MOVWF   RRredValue    ;move hardcoded voltage values into their registers
-
-    MOVLW   .200
     MOVWF   LLblueValue
     MOVWF   LblueValue
     MOVWF   MblueValue
     MOVWF   RblueValue
     MOVWF   RRblueValue    ;move hardcoded voltage values into their registers
+
+    MOVLW   .200
+    MOVWF   LLredValue
+    MOVWF   LredValue
+    MOVWF   MredValue
+    MOVWF   RredValue
+    MOVWF   RRredValue    ;move hardcoded voltage values into their registers
 
     MOVLW   .250
     MOVWF   LLblackValue
@@ -115,18 +116,18 @@ init:
     MOVWF   RblackValue
     MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .40             ;set hardcoded values for sensor outputs (for testing)
+    MOVLW   .190             ;set hardcoded values for sensor outputs (for testing)
     MOVWF   LLsensorVal
     MOVLW   .40
     MOVWF   LsensorVal
-    MOVLW   .40
+    MOVLW   .250
     MOVWF   MsensorVal
     MOVLW   .40
     MOVWF   RsensorVal
-    MOVLW   .40
+    MOVLW   .90
     MOVWF   RRsensorVal
     
-    MOVLW   b'00000010'
+    MOVLW   b'00001000'
     MOVWF   raceColor
     GOTO    start
 
@@ -350,20 +351,30 @@ getRaceLinePosition:
 
     ;<editor-fold defaultstate="collapsed" desc="Determine Direction">
 determineDirection:
+;forward = middle sensor is die regte kleur
+;forward = race color is nie opgetel nie
+;left = L of LL is getrigger
+;right = R of RR is getrigger
+    BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
+    BSF     PORTA,6
+    
+    
     BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
     BSF     PORTA,7
     BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
     BSF     PORTA,7
 
-    BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
-    BSF     PORTA,6
 
     BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
     BSF     PORTA,5
     BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
     BSF     PORTA,5
 
+    MOVLW   0x0
+    CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
     return 
+    BSF	    PORTA,4
+    return
 
     ;</editor-fold>
 
@@ -376,8 +387,11 @@ navigate:
 ; navigate doesn't end, it must be interruted 
 
     ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
-hunnitMilDelay
-	movlw	.130	
+hunnitMilDelay: ;(actually now 333ms)
+    movlw   .3
+    movwf   delay3
+Go_on0
+	movlw	.144	
 	movwf	delay2		
 Go_on1			
 	movlw	0xFF
@@ -387,6 +401,8 @@ Go_on2
 	goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
 	decfsz	delay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
 	goto	Go_on1		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+	decfsz  delay3,f
+	goto    Go_on0
 
 	RETURN
 
