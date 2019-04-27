@@ -177,34 +177,64 @@ getRaceLinePosition:
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  LLcolorSensed
-    BCF     raceLinePosition
+    BCF     raceLinePosition,0
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  LcolorSensed
-    BCF     raceLinePosition
+    BCF     raceLinePosition,1
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  McolorSensed
-    BCF     raceLinePosition
+    BCF     raceLinePosition,2
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  RcolorSensed
-    BCF     raceLinePosition
+    BCF     raceLinePosition,3
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  RRcolorSensed
-    BCF     raceLinePosition
+    BCF     raceLinePosition,4
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     COMF    raceLinePosition        ;invert die position, dan behoort hy te wys waar die race line opgetel word
-    ; compare elke sensor se colour met die race color
-    ; if eq, set that sensor's bit in the line position vector
-    return                  ; return from getRaceLinePosition (determine where the line is that we want to race on)
+    
+    return                          ; return from getRaceLinePosition (determine where the line is that we want to race on)
 
 determineDirection:
+    BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
+    BSF     PORTA,7
+    BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
+    BSF     PORTA,7
+
+    BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
+    BSF     PORTA,6
+
+    BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
+    BSF     PORTA,5
+    BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
+    BSF     PORTA,5
+
+return 
+
+navigate:
+    CALL    getColor
+    CALL    getRaceLinePosition
+    CALL    determineDirection
+    CALL    hunnitMilDelay
+    GOTO    navigate
+; navigate doesn't end, it must be interruted 
+
+
+start:
+    GOTO    navigate
+
+
+
+
+    end
     
 
