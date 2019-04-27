@@ -124,104 +124,179 @@ init:
     GOTO    start
 
 getColor:
+    CLRF    LLcolorSensed       ; so that the 
+    CLRF    LcolorSensed
+    CLRF    McolorSensed
+    CLRF    RcolorSensed
+    CLRF    RRcolorSensed
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   LLwhiteValue
+    MOVF    LLwhiteValue,w
     CPFSGT  LLsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
     BSF     LLcolorSensed,0     ; if it is white, set that bit
 
-    MOVLW   LLgreenValue
+    MOVF    LLgreenValue,w
     CPFSGT  LLsensorVal         
-    BSF     LLcolorSensed,1     
+    BSF     LLcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+    MOVF    LLwhiteValue,w    
+    CPFSGT  LLsensorVal         ; it it's smaller than white, it's not green
+    BCF     LLcolorSensed,1     
 
-    MOVLW   LLblueValue
+    MOVF    LLblueValue,w
     CPFSGT  LLsensorVal         
     BSF     LLcolorSensed,2     
+    MOVF    LLgreenValue,w
+    CPFSGT  LLsensorVal         
+    BCF     LLcolorSensed,2     
 
-    MOVLW   LLredValue
+    MOVF    LLredValue,w
     CPFSGT  LLsensorVal         
     BSF     LLcolorSensed,3     
+    MOVF    LLblueValue,w
+    CPFSGT  LLsensorVal         
+    BCF     LLcolorSensed,3     
 
+    MOVF    LLblackValue,w
+    CPFSGT  LLsensorVal
     BSF     LLcolorSensed,4     ; else, it's black
+    MOVF    LLredValue,w
+    CPFSGT  LLsensorVal
+    BCF     LLcolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   LwhiteValue
-    CPFSGT  LsensorVal         ; if LLSensorVal is > whiteValue, it's not white
+    MOVF    LwhiteValue,w
+    CPFSGT  LsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
     BSF     LcolorSensed,0     ; if it is white, set that bit
 
-    MOVLW   LgreenValue
+    MOVF    LgreenValue,w
     CPFSGT  LsensorVal         
-    BSF     LcolorSensed,1     
+    BSF     LcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+    MOVF    LwhiteValue,w    
+    CPFSGT  LsensorVal         ; it it's smaller than white, it's not green
+    BCF     LcolorSensed,1     
 
-    MOVLW   LblueValue
+    MOVF    LblueValue,w
     CPFSGT  LsensorVal         
     BSF     LcolorSensed,2     
+    MOVF    LgreenValue,w
+    CPFSGT  LsensorVal         
+    BCF     LcolorSensed,2     
 
-    MOVLW   LredValue
+    MOVF    LredValue,w
     CPFSGT  LsensorVal         
     BSF     LcolorSensed,3     
+    MOVF    LblueValue,w
+    CPFSGT  LsensorVal         
+    BCF     LcolorSensed,3     
 
+    MOVF    LblackValue,w
+    CPFSGT  LsensorVal
     BSF     LcolorSensed,4     ; else, it's black
+    MOVF    LredValue,w
+    CPFSGT  LsensorVal
+    BCF     LcolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   MwhiteValue
-    CPFSGT  MsensorVal         ; if LLSensorVal is > whiteValue, it's not white
+    MOVF    MwhiteValue,w
+    CPFSGT  MsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
     BSF     McolorSensed,0     ; if it is white, set that bit
 
-    MOVLW   MgreenValue
+    MOVF    MgreenValue,w
     CPFSGT  MsensorVal         
-    BSF     McolorSensed,1     
+    BSF     McolorSensed,1     ; if it's smaller than the max for green, it's could be green
+    MOVF    MwhiteValue,w    
+    CPFSGT  MsensorVal         ; it it's smaller than white, it's not green
+    BCF     McolorSensed,1     
 
-    MOVLW   MblueValue
+    MOVF    MblueValue,w
     CPFSGT  MsensorVal         
     BSF     McolorSensed,2     
+    MOVF    MgreenValue,w
+    CPFSGT  MsensorVal         
+    BCF     McolorSensed,2     
 
-    MOVLW   MredValue
+    MOVF    MredValue,w
     CPFSGT  MsensorVal         
     BSF     McolorSensed,3     
+    MOVF    MblueValue,w
+    CPFSGT  MsensorVal         
+    BCF     McolorSensed,3     
 
+    MOVF    MblackValue,w
+    CPFSGT  MsensorVal
     BSF     McolorSensed,4     ; else, it's black
+    MOVF    MredValue,w
+    CPFSGT  MsensorVal
+    BCF     McolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   RwhiteValue
-    CPFSGT  RsensorVal         ; if LLSensorVal is > whiteValue, it's not white
+    MOVF    RwhiteValue,w
+    CPFSGT  RsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
     BSF     RcolorSensed,0     ; if it is white, set that bit
 
-    MOVLW   RgreenValue
+    MOVF    RgreenValue,w
     CPFSGT  RsensorVal         
-    BSF     RcolorSensed,1     
+    BSF     RcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+    MOVF    RwhiteValue,w    
+    CPFSGT  RsensorVal         ; it it's smaller than white, it's not green
+    BCF     RcolorSensed,1     
 
-    MOVLW   RblueValue
+    MOVF    RblueValue,w
     CPFSGT  RsensorVal         
     BSF     RcolorSensed,2     
+    MOVF    RgreenValue,w
+    CPFSGT  RsensorVal         
+    BCF     RcolorSensed,2     
 
-    MOVLW   RredValue
+    MOVF    RredValue,w
     CPFSGT  RsensorVal         
     BSF     RcolorSensed,3     
+    MOVF    RblueValue,w
+    CPFSGT  RsensorVal         
+    BCF     RcolorSensed,3     
 
+    MOVF    RblackValue,w
+    CPFSGT  RsensorVal
     BSF     RcolorSensed,4     ; else, it's black
+    MOVF    RredValue,w
+    CPFSGT  RsensorVal
+    BCF     RcolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   RRwhiteValue
-    CPFSGT  RRsensorVal         ; if LLSensorVal is > whiteValue, it's not white
+    MOVF    RRwhiteValue,w
+    CPFSGT  RRsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
     BSF     RRcolorSensed,0     ; if it is white, set that bit
 
-    MOVLW   RRgreenValue
+    MOVF    RRgreenValue,w
     CPFSGT  RRsensorVal         
-    BSF     RRcolorSensed,1     
+    BSF     RRcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+    MOVF    RRwhiteValue,w    
+    CPFSGT  RRsensorVal         ; it it's smaller than white, it's not green
+    BCF     RRcolorSensed,1     
 
-    MOVLW   RRblueValue
+    MOVF    RRblueValue,w
     CPFSGT  RRsensorVal         
     BSF     RRcolorSensed,2     
+    MOVF    RRgreenValue,w
+    CPFSGT  RRsensorVal         
+    BCF     RRcolorSensed,2     
 
-    MOVLW   RRredValue
+    MOVF    RRredValue,w
     CPFSGT  RRsensorVal         
     BSF     RRcolorSensed,3     
+    MOVF    RRblueValue,w
+    CPFSGT  RRsensorVal         
+    BCF     RRcolorSensed,3     
 
+    MOVF    RRblackValue,w
+    CPFSGT  RRsensorVal
     BSF     RRcolorSensed,4     ; else, it's black
+    MOVF    RRredValue,w
+    CPFSGT  RRsensorVal
+    BCF     RRcolorSensed,4     ; else, it's black
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ;
     return                             ; Return from getColor (determine color sensed by each sensor)
@@ -229,12 +304,12 @@ getColor:
 getRaceLinePosition:
     MOVLW   0xFF
     MOVWF   raceLinePosition        ;raceLinePosition is vol ones 
-    MOVLW   raceColor               ;move die one-hot encoded race color in die wreg in, vir comparisons 
+    MOVF    raceColor,w               ;move die one-hot encoded race color in die wreg in, vir comparisons 
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  LLcolorSensed
     BCF     raceLinePosition,0
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     CPFSEQ  LcolorSensed
@@ -284,8 +359,20 @@ navigate:
     GOTO    navigate
 ; navigate doesn't end, it must be interruted 
 
-hunnitMilDelay:
-    return 
+hunnitMilDelay
+	movlw	.130	
+	movwf	delay2		
+Go_on1			
+	movlw	0xFF
+	movwf	delay1
+Go_on2
+	decfsz	delay1,f	
+	goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+	decfsz	delay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+	goto	Go_on1		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+
+	RETURN
+
 start:
     GOTO    navigate
 
