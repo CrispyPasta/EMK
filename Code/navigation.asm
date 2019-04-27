@@ -52,20 +52,76 @@
 
     raceColor        ; One-hot encoded colour of that the marv will race
     raceLinePosition  ; position of the race line -  LL-L-M-R-RR
+    
+    delay1
+    delay2
     ENDC
     ;~~~~~~~~~~~~~~~~~~~~~~~CBLOCK~~~~~~~~~~~~~~~~~~~~~~~
 
+    org     0h
+    GOTO    init
+    ;interrupt vector
+    org     8h  
+    RETURN
+    
 init:
     BSF	OSCCON,IRCF0
-	BCF	OSCCON,IRCF1
-	BSF	OSCCON,IRCF2
+    BCF	OSCCON,IRCF1
+    BSF	OSCCON,IRCF2
 
     MOVLB   0xF
-    CLRF	PORTA		; Initialize PORTA by clearing output data latches
-    CLRF	LATA		; Alternate method to clear output data latches
-    CLRF	TRISA		; clear bits for all pins
-    CLRF	ANSELA		; clear bits for all pins	
+    CLRF    PORTA		; Initialize PORTA by clearing output data latches
+    CLRF    LATA		; Alternate method to clear output data latches
+    CLRF    TRISA		; clear bits for all pins
+    CLRF    ANSELA		; clear bits for all pins	
     MOVLB   0x0
+    
+    MOVLW   .50
+    MOVWF   LLwhiteValue
+    MOVWF   LwhiteValue
+    MOVWF   MwhiteValue
+    MOVWF   RwhiteValue
+    MOVWF   RRwhiteValue    ;move hardcoded voltage values into their registers
+
+    MOVLW   .100
+    MOVWF   LLgreenValue
+    MOVWF   LgreenValue
+    MOVWF   MgreenValue
+    MOVWF   RgreenValue
+    MOVWF   RRgreenValue    ;move hardcoded voltage values into their registers
+
+    MOVLW   .150
+    MOVWF   LLredValue
+    MOVWF   LredValue
+    MOVWF   MredValue
+    MOVWF   RredValue
+    MOVWF   RRredValue    ;move hardcoded voltage values into their registers
+
+    MOVLW   .200
+    MOVWF   LLblueValue
+    MOVWF   LblueValue
+    MOVWF   MblueValue
+    MOVWF   RblueValue
+    MOVWF   RRblueValue    ;move hardcoded voltage values into their registers
+
+    MOVLW   .250
+    MOVWF   LLblackValue
+    MOVWF   LblackValue
+    MOVWF   MblackValue
+    MOVWF   RblackValue
+    MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
+
+    MOVLW   .40             ;set hardcoded values for sensor outputs (for testing)
+    MOVWF   LLsensorVal
+    MOVLW   .40
+    MOVWF   LsensorVal
+    MOVLW   .90
+    MOVWF   MsensorVal
+    MOVLW   .40
+    MOVWF   RsensorVal
+    MOVLW   .40
+    MOVWF   RRsensorVal
+    GOTO    start
 
 getColor:
 ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -218,7 +274,7 @@ determineDirection:
     BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
     BSF     PORTA,5
 
-return 
+    return 
 
 navigate:
     CALL    getColor
@@ -228,12 +284,10 @@ navigate:
     GOTO    navigate
 ; navigate doesn't end, it must be interruted 
 
-
+hunnitMilDelay:
+    return 
 start:
     GOTO    navigate
-
-
-
 
     end
     
