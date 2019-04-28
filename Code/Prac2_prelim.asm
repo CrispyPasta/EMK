@@ -14,57 +14,6 @@
     
     ;<editor-fold defaultstate="collapsed" desc="CBLOCK">
     CBLOCK 0x00
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor
-	LLgreenValue
-	LLblueValue
-	LLredValue
-	LLblackValue
-
-	LwhiteValue      ; Hardcoded voltage values for each color for Left sensor
-	LgreenValue
-	LblueValue
-	LredValue
-	LblackValue
-
-	MwhiteValue      ; Hardcoded voltage values for each color for Middle sensor
-	MgreenValue
-	MblueValue
-	MredValue
-	MblackValue
-
-	RwhiteValue      ; Hardcoded voltage values for each color for Right sensor
-	RgreenValue
-	RblueValue
-	RredValue
-	RblackValue
-
-	RRwhiteValue      ; Hardcoded voltage values for each color for Right Right sensor
-	RRgreenValue
-	RRblueValue
-	RRredValue
-	RRblackValue
-
-	LLsensorVal     ; Voltage value received from sensors
-	LsensorVal
-	MsensorVal
-	RsensorVal
-	RRsensorVal
-
-	LLcolorSensed     ; One-hot encoded colour of each sensor
-	LcolorSensed      ; white  = bit 0      green = bit 1
-	McolorSensed      ; blue   = bit 2      red   = bit 3
-	RcolorSensed      ; black  = bit 4
-	RRcolorSensed
-
-	raceColor	  ; One-hot encoded colour of that the marv will race
-	raceLinePosition  ; position of the race line -  LL-L-M-R-RR
-
-	hdelay1
-	hdelay2
-	hdelay3
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 	col			;variable to program race colour (for serial transmissions)
 	count		
 	mes1		;received message command character 1	
@@ -97,6 +46,57 @@
 	EEPROM_DATA
 	readCount
 	newdelay
+
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor
+	LLgreenValue
+	LLblueValue
+	LLredValue
+	LLblackValue	 ;.34
+
+	LwhiteValue      ; Hardcoded voltage values for each color for Left sensor
+	LgreenValue
+	LblueValue
+	LredValue
+	LblackValue	 ;.39
+
+	MwhiteValue      ; Hardcoded voltage values for each color for Middle sensor
+	MgreenValue
+	MblueValue
+	MredValue
+	MblackValue	 ;.44
+
+	RwhiteValue      ; Hardcoded voltage values for each color for Right sensor
+	RgreenValue
+	RblueValue
+	RredValue
+	RblackValue	 ;.49
+
+	RRwhiteValue      ; Hardcoded voltage values for each color for Right Right sensor
+	RRgreenValue
+	RRblueValue
+	RRredValue
+	RRblackValue	 ;.54
+
+	LLsensorVal     ; Voltage value received from sensors
+	LsensorVal
+	MsensorVal
+	RsensorVal
+	RRsensorVal	 ;.59
+
+	LLcolorSensed     ; One-hot encoded colour of each sensor
+	LcolorSensed      ; white  = bit 0      green = bit 1
+	McolorSensed      ; blue   = bit 2      red   = bit 3
+	RcolorSensed      ; black  = bit 4
+	RRcolorSensed	  ;.64
+
+	raceColor	  ; One-hot encoded colour of that the marv will race
+	raceLinePosition  ; position of the race line -  LL-L-M-R-RR
+
+	hdelay1
+	hdelay2
+	hdelay3
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ENDC
     ;</editor-fold>
     
@@ -237,21 +237,21 @@ setup
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 	
-    ;<editor-fold defaultstate="collapsed" desc="Startup">
-startup
-	LFSR	1,0x08		; set pointer to address of character that must be transmitted
-T1	MOVFF	INDF1,WREG	;transmission loop for startup message
-	call 	trans			; transmit startup message character
-	INCF	FSR1L,F
-	DECFSZ	size
-	BRA 	T1
-	MOVLW	A' '		;transmit a space character
-	call	trans		; trans is the actual transmission function
-	MOVLW   42h			;set blue as default colour
-	MOVWF   col
-	BSF		PORTA,7
-	GOTO	RCE
-;</editor-fold>
+;     ;<editor-fold defaultstate="collapsed" desc="Startup">
+; startup
+; 	LFSR	1,0x08		; set pointer to address of character that must be transmitted
+; T1	MOVFF	INDF1,WREG	;transmission loop for startup message
+; 	call 	trans			; transmit startup message character
+; 	INCF	FSR1L,F
+; 	DECFSZ	size
+; 	BRA 	T1
+; 	MOVLW	A' '		;transmit a space character
+; 	call	trans		; trans is the actual transmission function
+; 	MOVLW   42h			;set blue as default colour
+; 	MOVWF   col
+; 	BSF		PORTA,7
+; 	GOTO	RCE
+; ;</editor-fold>
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
@@ -282,7 +282,7 @@ RCE	MOVLW	b'10100100'			;hard coded transmission of RCE mode message
 	call    trans
 	MOVLW	A' '
 	call    trans
-	MOVF	col,0	
+	MOVF	col,w	
 	call    trans				
 	MOVLW	A'\n'
 	call    trans			;until here
@@ -401,7 +401,7 @@ err
     
     ;<editor-fold defaultstate="collapsed" desc="getColor">
 getColor:
-    CLRF    LLcolorSensed       ; so that the 
+    CLRF    LLcolorSensed       ; so that we can repeat this without bits being left over
     CLRF    LcolorSensed
     CLRF    McolorSensed
     CLRF    RcolorSensed
@@ -623,13 +623,13 @@ determineDirection:
 ;left = L of LL is getrigger
 ;right = R of RR is getrigger
     BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
-    BSF     PORTA,6
+    BSF     PORTA,4
     
     
     BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
-    BSF     PORTA,7
+    BSF     PORTA,3
     BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
-    BSF     PORTA,7
+    BSF     PORTA,3
 
 
     BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
