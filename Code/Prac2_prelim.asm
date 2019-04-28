@@ -10,11 +10,10 @@
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON
      
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   
     
-    
-
-     CBLOCK 0x00
-   
+    ;<editor-fold defaultstate="collapsed" desc="CBLOCK">
+    CBLOCK 0x00
     col			;variable to program race colour
     count		
     mes1		;received message command character 1	
@@ -23,29 +22,17 @@
     cnt			;character count for receive
     reg
     size		;startup message size variable
-    eep1		;variables to store characters to send to eeprom
-    eep2
-    eep3
-    eep4
-    eep5
-    eep6
-    eep7
-    eep8
-    eep9
-    eep10
+    
     loop
-    newsize		;used to store new message size
-    redValue    ; These will store the values read by the cal subroutine come prac 2
+    newsize	    ; used to store new message size
+    redValue	    ; These will store the values read by the cal subroutine come prac 2
     blueValue
     greenValue
     whiteValue
     blackValue
-    delayCounter    ; Used to make a 3s delay for calibration subroutine
-    calOffset   ; The offset used to display the right character on the SSD
-    calRounds   ; The number of times the calibration subroutine must be run = 5
-    stateBits   ; One-hot encoding indicating the current state
-                    ; 7 = MSG, 6 = RCE, 5 = PRC, 4 = CAL
-    portAbackup ; this stores whatever was in PORTA before the debugging interrupt so it can be restored
+    stateBits	    ; One-hot encoding indicating the current state
+		    ; 7 = MSG, 6 = RCE, 5 = PRC, 4 = CAL
+    portAbackup	    ; this stores whatever was in PORTA before the debugging interrupt so it can be restored
     delay1
     delay2
     delay3
@@ -58,27 +45,34 @@
     EEPROM_ADDRESS
     EEPROM_DATA
     readCount
-    CapRead
     newdelay
     ENDC
+    ;</editor-fold>
     
-    org 0h
-    GOTO setup   
-    org 8h  
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    ;<editor-fold defaultstate="collapsed" desc="Reset and Interrupt Vectors">
+    org 	0h
+    GOTO 	setup   
+    org 	8h  
     BTFSC   INTCON,RBIF      ; Test the interrupt flag of PORTB pin 0
     BTG	    PORTA,7
     return
-    org	18h
+    org		18h
     BTFSC   INTCON,RBIF      ; Test the interrupt flag of PORTB pin 0
     GOTO    DEBUG_SUB       ; Go to the debugging subroutine
     RETURN
-    ;GOTO    startup
+    ;</editor-fold>
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
+    
+    ;<editor-fold defaultstate="collapsed" desc="Setup">
 setup
     ;setup
      ;oscillator setup
-	BSF	OSCCON,IRCF0
-	BCF	OSCCON,IRCF1
-	BSF	OSCCON,IRCF2
+	BSF		OSCCON,IRCF0
+	BCF		OSCCON,IRCF1
+	BSF		OSCCON,IRCF2
      ; Initialize Port A	(just flashes an LED in my program)
     MOVLB	0xF		    ; Set BSR for banked SFRs
     CLRF	PORTA		; Initialize PORTA by clearing output data latches
@@ -118,12 +112,12 @@ setup
     
     ;setup port for transmission
     CLRF    FSR0
-    MOVLW b'00100100'	;enable TXEN and BRGH
-    MOVWF TXSTA1
-    MOVLW b'10010000'	    ;enable serial port and continuous receive 
-    MOVWF RCSTA1
-    MOVLW D'25'
-    MOVWF SPBRG1
+    MOVLW 	b'00100100'	;enable TXEN and BRGH
+    MOVWF 	TXSTA1
+    MOVLW 	b'10010000'	    ;enable serial port and continuous receive 
+    MOVWF 	RCSTA1
+    MOVLW 	D'25'
+    MOVWF 	SPBRG1
     CLRF    SPBRGH1
     BCF	    BAUDCON1,BRG16	; Use 8 bit baud generator
     BSF	    TRISC,TX		; make TX an output pin
@@ -137,67 +131,74 @@ setup
     MOVWF   size
     
     ; INITIALISE VARIABLES
-	MOVLW 0xA0
-	MOVWF WRITE_CONTROL
-	MOVLW 0X00
-	MOVWF EEPROM_ADDRESS
-	CLRF EEPROM_DATA
-	MOVLW 0xA1
-	MOVWF READ_CONTROL
-	MOVLW D'255'
-	MOVWF WRITE_ACKNOWLEDGE_POLL_LOOPS
-	CLRF POLL_COUNTER
-	CLRF RX_BYTE
-	CLRF TX_BYTE
+	MOVLW 	0xA0
+	MOVWF 	WRITE_CONTROL
+	MOVLW 	0X00
+	MOVWF 	EEPROM_ADDRESS
+	CLRF 	EEPROM_DATA
+	MOVLW 	0xA1
+	MOVWF 	READ_CONTROL
+	MOVLW 	D'255'
+	MOVWF 	WRITE_ACKNOWLEDGE_POLL_LOOPS
+	CLRF 	POLL_COUNTER
+	CLRF 	RX_BYTE
+	CLRF 	TX_BYTE
 ;	call	I2C_INIT
 	GOTO    RCE
-    
-startup	
-	;RCALL	READ		;read startup message from eeprom
 	
+	;</editor-fold>
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+	
+    ;<editor-fold defaultstate="collapsed" desc="Startup">
+startup
 	LFSR	1,0x08		; set pointer to address of character that must be transmitted
 T1	MOVFF	INDF1,WREG	;transmission loop for startup message
-	call trans			; transmit startup message character
+	call 	trans			; transmit startup message character
 	INCF	FSR1L,F
 	DECFSZ	size
-	BRA T1
+	BRA 	T1
 	MOVLW	A' '		;transmit a space character
 	call	trans		; trans is the actual transmission function
 	MOVLW   42h			;set blue as default colour
 	MOVWF   col
-	BSF	PORTA,7
+	BSF		PORTA,7
 	GOTO	RCE
- ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   
+;</editor-fold>
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+ 
+    ;<editor-fold defaultstate="collapsed" desc="RCE">
 RCE	MOVLW	b'10100100'			;hard coded transmission of RCE mode message
 	MOVWF	PORTD
 	MOVLW	A'\n'
-	call trans
+	call     trans
 	MOVLW	A'M'
-	call trans
+	call    trans
 	MOVLW	A'A'
-	call trans
+	call    trans
 	MOVLW	A'R'
-	call trans
+	call    trans
 	MOVLW	A'V'
-	call trans
+	call    trans
 	MOVLW	A' '
-	call trans
+	call    trans
 	MOVLW	A'r'
-	call trans
+	call    trans
 	MOVLW	A'a'
-	call trans
+	call    trans
 	MOVLW	A'c'
-	call trans
+	call    trans
 	MOVLW	A'e'
-	call trans
+	call    trans
 	MOVLW	A's'
-	call trans
+	call    trans
 	MOVLW	A' '
-	call trans
+	call    trans
 	MOVF	col,0	
-	call trans				
+	call    trans				
 	MOVLW	A'\n'
-	call trans			;until here
+	call    trans			;until here
 	bcf	PIR1,TXIF
 	bcf	PIE1,TXIE
 	BSF	PORTA,4
@@ -284,24 +285,32 @@ Pro4	LFSR	0,0x03		    ;check if rest of cal is received
 	BTFSC	STATUS,Z
 	GOTO	CAL
 	GOTO	err
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+;</editor-fold
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+;<editor-fold defaultstate="collapsed" desc="ERROR Message">	
 err	
 	MOVLW	A'\n'
-	call trans
+	call    trans
 	MOVLW	A'E'		    ;display error message if wrong serial command entered
-	call trans
+	call    trans
 	MOVLW	A'R'
-	call trans
+	call    trans
 	MOVLW	A'R'
-	call trans
+	call    trans
 	MOVLW	A'O'
-	call trans
+	call    trans
 	MOVLW	A'R'
-	call trans
+	call    trans
 	MOVLW	A'\n'
-	call trans
+	call    trans
 	GOTO R1
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+;</editor-fold>	
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	
+;<editor-fold defaultstate="collapsed" desc="Startup Message">	
 MSG	MOVLW	b'11000000'		;program startup message 
 	MOVWF	PORTD
 	MOVLW	D'0'
@@ -309,7 +318,8 @@ MSG	MOVLW	b'11000000'		;program startup message
 	LFSR	0,0x08
 	MOVLW	D'10'
 	MOVWF	cnt
-clear	CLRF	INDF0
+clear	
+	CLRF	INDF0
 	DCFSNZ	cnt
 	GOTO	R6
 	GOTO	clear
@@ -327,68 +337,68 @@ R7	BTFSS	PIR1, RCIF	;receive new startup message
 	CPFSEQ	newsize
 	GOTO	R7 
 ;	GOTO	STORE		;go store the new startup message
-	
+;</editor-fold>	
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	
-	
+;<editor-fold defaultstate="collapsed" desc="Program Color PRC">
 PRC	
 	MOVLW	A'\n'
-	call trans
+	call    trans
 	MOVLW	A'W'
-	call trans
+	call    trans
 	MOVLW	A'h'
-	call trans
+	call    trans
 	MOVLW	A'a'
-	call trans
+	call    trans
 	MOVLW	A't'
-	call trans
+	call    trans
 	MOVLW	A' '
-	call trans
+	call    trans
 	MOVLW	A's'
-	call trans
+	call    trans
 	MOVLW	A'h'
-	call trans
+	call    trans
 	MOVLW	A'a'
-	call trans
+	call    trans
 	MOVLW	A'l'
-	call trans
+	call    trans
 	MOVLW	A'l'
-	call trans
+	call    trans
 	MOVLW	A' '
-	call trans
+	call    trans
 	MOVLW	A'M'
-	call trans
+	call    trans
 	MOVLW	A'A'
-	call trans
+	call    trans
 	MOVLW	A'R'
-	call trans
+	call    trans
 	MOVLW	A'V'
-	call trans
+	call    trans
 	MOVLW	A' '
-	call trans
+	call    trans
 	MOVLW	A'r'
-	call trans
+	call    trans
 	MOVLW	A'a'
-	call trans
+	call    trans
 	MOVLW	A'c'
-	call trans
+	call    trans
 	MOVLW	A'e'
-	call trans
+	call    trans
 	MOVLW	A'?'
-	call trans		
+	call    trans		
 	MOVLW	A'\n'
-	call trans		;until here
+	call    trans		;until here
 
-R3	BTFSS PIR1, RCIF	; receive new color to race 
-	BRA R3
+R3	BTFSS	PIR1, RCIF	; receive new color to race 
+	BRA 	R3
 	MOVFF	RCREG, col
 	GOTO	REC				; go chech if it is a valid race color 
-R4	LFSR 0,0x02
+R4	LFSR 	0,0x02
 	MOVLW	D'3'
 	MOVWF	cnt
-R5	BTFSS PIR1, RCIF	; check if something is received
-	BRA R5
+R5	BTFSS 	PIR1, RCIF	; check if something is received
+	BRA 	R5
 	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
 	DCFSNZ	cnt 
@@ -418,7 +428,8 @@ REC	LFSR	0,0x00			; check if a valid race color is received
 	GOTO	R4				;until here
 	GOTO	err				; if it is not valid show error message
 	
-PROC	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
+PROC	
+	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -434,6 +445,7 @@ PROC	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
 	BTFSS	STATUS,Z
 	GOTO	err
 	GOTO	RCE
+;</editor-fold>
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -442,14 +454,14 @@ PROC	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
 
 
 trans						;general transmission function
-S1	BTFSS PIR1, TX1IF
-	BRA S1
-	MOVWF TXREG
+S1	BTFSS 	PIR1, TX1IF
+	BRA 	S1
+	MOVWF 	TXREG
 	return	
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-	
+;<editor-fold defaultstate="Calibration Subroutine">	
 CAL							;calibrate the sensors here
 CALIBRATE
     CLRF    PORTA
@@ -476,71 +488,11 @@ CALIBRATE
     call    delay1s
     CLRF    PORTA
     GOTO    RCE				
-	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
-	
-    ; Initialize Timer 2 registers and so on
-    bsf	    PIE1,TMR2IE     ; Enable Timer2 interrups
-    MOVLW   b'01111111'     ; Set the prescaler to 16x and the postscaler to 16x
-    MOVWF   T2CON           ; Move to the Timer2 control register
-    MOVLW   d'245'          ; Using 245 rollovers to get to 3s
-    MOVWF   PR2             ; Move that value to the period register
-
-    MOVLW   b'00010000'     ; indicates calibrate sub
-    MOVWF   stateBits       ; Store this incase debugging is called
-    ; Initialize calibration subroutine variables
-    MOVLW   d'12'
-    MOVWF   delayCounter    ; After 12 interrups, 3s have passed
-    MOVLW   0x0
-    MOVWF   calOffset       ; Initialize the offset to zero, so it doesn't skip the first character
-    MOVLW   0x7             
-    MOVWF   calRounds       ; We want to repeat the calibration routine five times, plus two for other shite
-    GOTO    $               ; Wait here until the first interrupt
-
-CALIBRATE_SUB
-    bcf     PIR1,TMR2IF     ; clear niterrupt flag
-    CLRF    TMR2	        ; Clear timer 2 of any counts accumulated (this is as close as we can get I guess)
-    DECFSZ  delayCounter    ; Decrement and skip if zero, store the answer in delayCounter
-    RETFIE 
-
-    ;CALL    LEDS
-    MOVLW   d'12'
-    MOVWF   delayCounter    ; Reset deulayCounter so that it can continue looping at the same rate
-
-    MOVF    calOffset,w	    ; move the offset into wreg
-    CALL    SSDTABLE	    ; call the lookup table
-    MOVWF   PORTD           ; move the bits to port B to display them on the SSD
-
-    MOVLW   d'2'	        ; move 2 into wreg
-    ADDWF   calOffset	    ; add 2 to the offset - We want to post increment, because the first offset should b 0
-    DCFSNZ  calRounds       ; calRounds represents how many rounds of this routine we have left
-    bcf	    PIE1,TMR2IE     ; Disable Timer2 interrups. We're done with this subroutine now
-    MOVLW   0xFF
-    BTFSS   PIE1,TMR2IE	    ; If the timer 2 interrupt enable is ON, then skip the next line
-    MOVWF   PORTD           ; Turn off all the lights on the SSD
-    MOVLW   0x00
-    BTFSS   PIE1,TMR2IE	    ; If the timer 2 interrupt enable is ON, then skip the next line
-    MOVWF   PORTA           ; Turn off all the LEDs
-    CLRF    TMR2	        ; Clear timer 2 of any counts accumulated during the ISR
-    GOTO    RCE		            ; Return to main program
-;
-
-
-SSDTABLE
-    ADDWF   PCL             ; Add offset to the program counter
-    RETLW   b'00010001'     ; Character "R" = 0
-    RETLW   b'00000001'     ; Character "B" = 2
-    RETLW   b'01000001'     ; Character "G" = 4
-    RETLW   b'00010011'     ; Character "|^|"" (blac calibration) = 6
-    RETLW   b'10000011'     ; Character "|_|" (white) = 8
-    RETLW   b'11111111'     ; Dummy variable for the calibration subroutine = 10
-    RETLW   b'11010101'     ; Character "n" (black track racing) = 12
-    RETLW   b'11100011'     ; Character "L" (maze racing) = 14
-    RETLW   b'00000011'     ; Character "0" (maze racing) = 16
-    RETLW   b'10011111'     ; Character "1" (maze racing) = 18
-    RETLW   b'00100101'     ; Character "2" (maze racing) = 20
-
-
+;</editor-fold>
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    ;<editor-fold defaultstate="collapsed" desc="Debugging subroutine">
 DEBUG_SUB
     bcf     INTCON,INT0IF      ; clear the interrupt flag
     bcf	    INTCON,RBIF
@@ -582,7 +534,12 @@ debugCalibrate
     MOVWF   PORTA
     call    delay1s
     RETURN 
-
+   
+;</editor-fold>
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+    ;<editor-fold defaultstate="collapsed" desc="One second delay">
 delay1s
     MOVLW   0x0F
     MOVWF   delay3
@@ -600,7 +557,7 @@ Go_off2
 	decfsz	delay3,f
 	goto	Go_off0
 	RETURN
-
+;</editor-fold>
    	
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     end

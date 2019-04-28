@@ -23,7 +23,7 @@ def dumpData(d, fname):
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM9' 
+    ser.port = 'COM10' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -79,11 +79,11 @@ style.use('fast')
 fig = plt.figure()
 
 ax1 = fig.add_subplot(1,1,1)
-setupSerial(9600)
+setupSerial(19200)
 plt.ylabel("Voltage")
 ani = animation.FuncAnimation(fig, animate, interval = 510)
 plt.show()
-dumpData(data, 'dataDump.csv')
-dumpData(backupData, 'backupdata.csv')
+#dumpData(data, 'dataDump.csv')
+#dumpData(backupData, 'backupdata.csv')
 ser.close()
 
