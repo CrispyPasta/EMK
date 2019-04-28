@@ -383,7 +383,7 @@ Pro4
 	MOVLW	A'L'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	CAL
+	GOTO	pyCal
 	GOTO	err
 ;</editor-fold>
 
@@ -960,7 +960,7 @@ Go_off2
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python">
 	
-;<editor-fold defaultstate="collapsed" desc="Setup RB0">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RB0">
 ADC_SETUP_AN12:
 
 	;Configure Port RA0:
@@ -997,7 +997,7 @@ ADC_SETUP_AN12:
 	RETURN
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Setup RB1">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RB1">
 ADC_SETUP_AN10:
 
 	;Configure Port RA0:
@@ -1034,7 +1034,7 @@ ADC_SETUP_AN10:
 	RETURN
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Setup RB2">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RB2">
 ADC_SETUP_AN8:
 
 	;Configure Port RA0:
@@ -1071,7 +1071,7 @@ ADC_SETUP_AN8:
 	RETURN
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Setup RB3">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RB3">
 ADC_SETUP_AN9:
 
 	;Configure Port RA0:
@@ -1108,7 +1108,7 @@ ADC_SETUP_AN9:
 	RETURN
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Setup RB5">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RB5">
 ADC_SETUP_AN13:
 
 	;Configure Port RA0:
@@ -1146,7 +1146,7 @@ ADC_SETUP_AN13:
 ;</editor-fold>
 
 
-;<editor-fold defaultstate="collapsed" desc="READ RB0">
+    ;<editor-fold defaultstate="collapsed" desc="READ RB0">
 Read_AN12:
 	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
 	BRA	Read_AN12
@@ -1164,7 +1164,7 @@ Poll_Go1
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="READ RB1">
+    ;<editor-fold defaultstate="collapsed" desc="READ RB1">
 Read_AN10:
 	BTFSS	TXSTA1, TRMT	;Check if TMRT is set, to ensure that shift register is empty (p263)
 	BRA	Read_AN10
@@ -1182,7 +1182,7 @@ Poll_Go2
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="READ RB2">
+    ;<editor-fold defaultstate="collapsed" desc="READ RB2">
 Read_AN8:
 	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
 	BRA	Read_AN8
@@ -1200,7 +1200,7 @@ Poll_Go3
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="READ RB3">
+    ;<editor-fold defaultstate="collapsed" desc="READ RB3">
 Read_AN9:
 	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
 	BRA	Read_AN9
@@ -1218,7 +1218,7 @@ Poll_Go4
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="READ RB5">
+    ;<editor-fold defaultstate="collapsed" desc="READ RB5">
 Read_AN13:
 	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
 	BRA	Read_AN13
@@ -1236,7 +1236,7 @@ Poll_Go5
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="10ms Delay">
+    ;<editor-fold defaultstate="collapsed" desc="10ms Delay">
 tenmsDelay:
     movlw	.13		
     movwf	delayCounter2		
@@ -1252,7 +1252,8 @@ Go_on2_10
     RETURN
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="10ms Delay">
+    ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
+pyCal:
     movlw	.24		;24 * 250 * 0.01s = 60s
     movwf	pythonCounter2		
 pythonLoop1
