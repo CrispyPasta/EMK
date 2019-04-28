@@ -55,9 +55,9 @@
     raceColor        ; One-hot encoded colour of that the marv will race
     raceLinePosition  ; position of the race line -  LL-L-M-R-RR
     
-    delay1
-    delay2
-    delay3
+    hdelay1
+    hdelay2
+    hdelay3
     ENDC
     ;</editor-fold>
     ;~~~~~~~~~~~~~~~~~~~~~~~CBLOCK~~~~~~~~~~~~~~~~~~~~~~~
@@ -350,6 +350,7 @@ getRaceLinePosition:
     ;</editor-fold>
 
     ;<editor-fold defaultstate="collapsed" desc="Determine Direction">
+
 determineDirection:
 ;forward = middle sensor is die regte kleur
 ;forward = race color is nie opgetel nie
@@ -389,19 +390,19 @@ navigate:
     ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
 hunnitMilDelay: ;(actually now 333ms)
     movlw   .3
-    movwf   delay3
+    movwf   hhdelay3
 Go_on0
 	movlw	.144	
-	movwf	delay2		
+	movwf	hhdelay2		
 Go_on1			
 	movlw	0xFF
-	movwf	delay1
+	movwf	hhdelay1
 Go_on2
-	decfsz	delay1,f	
+	decfsz	hhdelay1,f	
 	goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-	decfsz	delay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+	decfsz	hhdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
 	goto	Go_on1		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
-	decfsz  delay3,f
+	decfsz  hhdelay3,f
 	goto    Go_on0
 
 	RETURN
