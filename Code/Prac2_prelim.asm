@@ -57,13 +57,13 @@
 	RcolorSensed      ; black  = bit 4
 	RRcolorSensed
 
-	raceColor        ; One-hot encoded colour of that the marv will race
+	raceColor	  ; One-hot encoded colour of that the marv will race
 	raceLinePosition  ; position of the race line -  LL-L-M-R-RR
 
 	hdelay1
 	hdelay2
 	hdelay3
-	    ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	col			;variable to program race colour (for serial transmissions)
 	count		
@@ -82,7 +82,7 @@
 	whiteValue
 	blackValue
 	stateBits	    ; One-hot encoding indicating the current state
-			; 7 = MSG, 6 = RCE, 5 = PRC, 4 = CAL
+			    ; 7 = MSG, 6 = RCE, 5 = PRC, 4 = CAL
 	portAbackup	    ; this stores whatever was in PORTA before the debugging interrupt so it can be restored
 	delay1
 	delay2
@@ -217,7 +217,7 @@ setup
     MOVWF   RblackValue
     MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .190             ;set hardcoded values for sensor outputs (for testing)
+    MOVLW   .140             ;set hardcoded values for sensor outputs (for testing)
     MOVWF   LLsensorVal
     MOVLW   .40
     MOVWF   LsensorVal
@@ -228,7 +228,7 @@ setup
     MOVLW   .90
     MOVWF   RRsensorVal
     
-    MOVLW   b'00001000'
+    MOVLW   b'00000100'	;blue
     MOVWF   raceColor
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GOTO    RCE
@@ -640,8 +640,66 @@ determineDirection:
     MOVLW   0x0
     CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
     return 
-    BSF	    PORTA,4
+	CALL	searchModeLights		; flash die LEDs
     return
+
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="Search mode">
+searchModeLights:
+	bsf		PORTA,0
+	bcf		PORTA,1
+	bcf		PORTA,2
+	CALL 	threeMilDelay
+	
+	bcf		PORTA,0
+	bsf		PORTA,1
+	bcf		PORTA,2
+	CALL 	threeMilDelay
+	
+	bcf		PORTA,0
+	bcf		PORTA,1
+	bsf		PORTA,2
+	CALL 	threeMilDelay
+	RETURN 
+    ;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
+threeMilDelay: ;(actually now 333ms)
+    movlw   .3
+    movwf   hdelay3
+Go_on0_3
+    movlw	.144	
+    movwf	hdelay2		
+Go_on1_3			
+    movlw	0xFF
+    movwf	hdelay1
+Go_on2_3
+    decfsz	hdelay1,f	
+    goto	Go_on2_3		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1_3		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+    decfsz  hdelay3,f
+    goto    Go_on0_3
+
+    RETURN
+
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
+hunnitMilDelay: ;(actually now 100ms)
+    movlw	.130	
+    movwf	hdelay2		
+Go_on1			
+    movlw	0xFF
+    movwf	hdelay1
+Go_on2
+    decfsz	hdelay1,f	
+    goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+
+    RETURN
 
     ;</editor-fold>
     

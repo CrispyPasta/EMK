@@ -390,19 +390,19 @@ navigate:
     ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
 hunnitMilDelay: ;(actually now 333ms)
     movlw   .3
-    movwf   hhdelay3
+    movwf   hdelay3
 Go_on0
 	movlw	.144	
-	movwf	hhdelay2		
+	movwf	hdelay2		
 Go_on1			
 	movlw	0xFF
-	movwf	hhdelay1
+	movwf	hdelay1
 Go_on2
-	decfsz	hhdelay1,f	
+	decfsz	hdelay1,f	
 	goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-	decfsz	hhdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+	decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
 	goto	Go_on1		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
-	decfsz  hhdelay3,f
+	decfsz  hdelay3,f
 	goto    Go_on0
 
 	RETURN
