@@ -28,6 +28,7 @@ def setupSerial(baud):
     ser.stopbits = 1
     ser.timeout = None
     ser.open()
+    ser.write("CAL".encode())
 
 
 sensors = [0,1,2,3,4]
@@ -79,7 +80,7 @@ style.use('fast')
 fig = plt.figure()
 
 ax1 = fig.add_subplot(1,1,1)
-setupSerial(19200)
+setupSerial(9600)
 plt.ylabel("Voltage")
 ani = animation.FuncAnimation(fig, animate, interval = 510)
 plt.show()

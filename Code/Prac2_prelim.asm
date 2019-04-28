@@ -12,7 +12,7 @@
      
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;   
     
-    ;<editor-fold defaultstate="collapsed" desc="CBLOCK">
+;<editor-fold defaultstate="collapsed" desc="CBLOCK">
     CBLOCK 0x00
 	col			;variable to program race colour (for serial transmissions)
 	count		
@@ -93,16 +93,22 @@
 	raceColor	  ; One-hot encoded colour of that the marv will race
 	raceLinePosition  ; position of the race line -  LL-L-M-R-RR
 
-	hdelay1
+	hdelay1			;
 	hdelay2
 	hdelay3
+
+	delayCounter1	; for 10 ms delay
+	delayCounter2
+
+	pythonCounter1	;variables for calibration with python
+	pythonCounter2
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    ENDC
-    ;</editor-fold>
+ 	ENDC
+;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     
-    ;<editor-fold defaultstate="collapsed" desc="Reset and Interrupt Vectors">
+;<editor-fold defaultstate="collapsed" desc="Reset and Interrupt Vectors">
     org 	0h
     GOTO 	setup   
     org 	8h  
@@ -113,14 +119,12 @@
     BTFSC   INTCON,RBIF      ; Test the interrupt flag of PORTB pin 0
     GOTO    DEBUG_SUB       ; Go to the debugging subroutine
     RETURN
-    ;</editor-fold>
+;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
     
-    ;<editor-fold defaultstate="collapsed" desc="Setup">
+;<editor-fold defaultstate="collapsed" desc="Setup">
 setup
-    ;setup
-    ;oscillator setup
     BSF		OSCCON,IRCF0
     BCF		OSCCON,IRCF1
     BSF		OSCCON,IRCF2
@@ -233,7 +237,7 @@ setup
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GOTO    RCE
 	
-	;</editor-fold>
+;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 	
@@ -255,8 +259,9 @@ setup
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
-    ;<editor-fold defaultstate="collapsed" desc="RCE">
-RCE	MOVLW	b'10100100'			;hard coded transmission of RCE mode message
+;<editor-fold defaultstate="collapsed" desc="RCE">
+RCE	
+	MOVLW	b'10100100'			;hard coded transmission of RCE mode message
 	MOVWF	PORTD
 	MOVLW	A'\n'
 	call     trans
@@ -293,20 +298,24 @@ RCE	MOVLW	b'10100100'			;hard coded transmission of RCE mode message
 	BCF	PORTA,4
 	GOTO	R1
 	
-R1	LFSR	0,0x02			;set pointer to where serial command characters are stored
+R1
+	LFSR	0,0x02			;set pointer to where serial command characters are stored
 	BCF	INTCON,GIE
 	BCF	INTCON,PEIE
 	MOVLW	D'3'
 	MOVWF	cnt
-R2	BTFSS	PIR1,RC1IF		; check if something is received loop
+R2
+	BTFSS	PIR1,RC1IF		; check if something is received loop
 	BRA	R2
-cat	MOVFF	RCREG, INDF0		; catches the character
+cat
+	MOVFF	RCREG, INDF0		; catches the character
 	INCF	FSR0L,F
 	DCFSNZ	cnt 			; if 3 characters received goto processing function
 	GOTO	PRO
 	GOTO	R2
 	
-PRO	LFSR	0,0x02
+PRO
+	LFSR	0,0x02
 	MOVLW	A'N'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
@@ -325,7 +334,8 @@ PRO	LFSR	0,0x02
 	GOTO	Pro4		;if C is received goto CAL processing branch
 	GOTO	err			; if none of the serial commands is received goto error message
 	
-Pro1	LFSR	0,0x03		    ;check if  rest of NAV is received
+Pro1
+	LFSR	0,0x03		    ;check if  rest of NAV is received
 	MOVLW	A'A'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -337,7 +347,8 @@ Pro1	LFSR	0,0x03		    ;check if  rest of NAV is received
 	GOTO	navigate
 	GOTO	err
 	
-Pro2	LFSR	0,0x03		    ;check if rest of prc is received
+Pro2
+	LFSR	0,0x03		    ;check if rest of prc is received
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -349,7 +360,8 @@ Pro2	LFSR	0,0x03		    ;check if rest of prc is received
 	GOTO	PRC
 	GOTO	err
 	
-Pro3	LFSR	0,0x03		    ;check if rest of rce is received
+Pro3
+	LFSR	0,0x03		    ;check if rest of rce is received
 	MOVLW	A'C'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -361,7 +373,8 @@ Pro3	LFSR	0,0x03		    ;check if rest of rce is received
 	GOTO	RCE
 	GOTO	err
 	
-Pro4	LFSR	0,0x03		    ;check if rest of cal is received
+Pro4
+	LFSR	0,0x03		    ;check if rest of cal is received
 	MOVLW	A'A'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
@@ -372,12 +385,13 @@ Pro4	LFSR	0,0x03		    ;check if rest of cal is received
 	BTFSC	STATUS,Z
 	GOTO	CAL
 	GOTO	err
-    ;</editor-fold>
+;</editor-fold>
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	
-    ;<editor-fold defaultstate="collapsed" desc="ERROR Message">	
-err	
+;<editor-fold defaultstate="collapsed" desc="ERROR Message">	
+err
+
 	MOVLW	A'\n'
 	call    trans
 	MOVLW	A'E'		    ;display error message if wrong serial command entered
@@ -397,255 +411,255 @@ err
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	
-    ;<editor-fold defaultstate="collapsed" desc="Navigation Functions">	
+;<editor-fold defaultstate="collapsed" desc="Navigation Functions">	
     
-    ;<editor-fold defaultstate="collapsed" desc="getColor">
+;<editor-fold defaultstate="collapsed" desc="getColor">
 getColor:
-    CLRF    LLcolorSensed       ; so that we can repeat this without bits being left over
-    CLRF    LcolorSensed
-    CLRF    McolorSensed
-    CLRF    RcolorSensed
-    CLRF    RRcolorSensed
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVF    LLwhiteValue,w
-    CPFSGT  LLsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
-    BSF     LLcolorSensed,0     ; if it is white, set that bit
+	CLRF    LLcolorSensed       ; so that we can repeat this without bits being left over
+	CLRF    LcolorSensed
+	CLRF    McolorSensed
+	CLRF    RcolorSensed
+	CLRF    RRcolorSensed
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    LLwhiteValue,w
+	CPFSGT  LLsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
+	BSF     LLcolorSensed,0     ; if it is white, set that bit
 
-    MOVF    LLgreenValue,w
-    CPFSGT  LLsensorVal         
-    BSF     LLcolorSensed,1     ; if it's smaller than the max for green, it's could be green
-    MOVF    LLwhiteValue,w    
-    CPFSGT  LLsensorVal         ; it it's smaller than white, it's not green
-    BCF     LLcolorSensed,1     
+	MOVF    LLgreenValue,w
+	CPFSGT  LLsensorVal         
+	BSF     LLcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    LLwhiteValue,w    
+	CPFSGT  LLsensorVal         ; it it's smaller than white, it's not green
+	BCF     LLcolorSensed,1     
 
-    MOVF    LLblueValue,w
-    CPFSGT  LLsensorVal         
-    BSF     LLcolorSensed,2     
-    MOVF    LLgreenValue,w
-    CPFSGT  LLsensorVal         
-    BCF     LLcolorSensed,2     
+	MOVF    LLblueValue,w
+	CPFSGT  LLsensorVal         
+	BSF     LLcolorSensed,2     
+	MOVF    LLgreenValue,w
+	CPFSGT  LLsensorVal         
+	BCF     LLcolorSensed,2     
 
-    MOVF    LLredValue,w
-    CPFSGT  LLsensorVal         
-    BSF     LLcolorSensed,3     
-    MOVF    LLblueValue,w
-    CPFSGT  LLsensorVal         
-    BCF     LLcolorSensed,3     
+	MOVF    LLredValue,w
+	CPFSGT  LLsensorVal         
+	BSF     LLcolorSensed,3     
+	MOVF    LLblueValue,w
+	CPFSGT  LLsensorVal         
+	BCF     LLcolorSensed,3     
 
-    MOVF    LLblackValue,w
-    CPFSGT  LLsensorVal
-    BSF     LLcolorSensed,4     ; else, it's black
-    MOVF    LLredValue,w
-    CPFSGT  LLsensorVal
-    BCF     LLcolorSensed,4     ; else, it's black
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVF    LwhiteValue,w
-    CPFSGT  LsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
-    BSF     LcolorSensed,0     ; if it is white, set that bit
+	MOVF    LLblackValue,w
+	CPFSGT  LLsensorVal
+	BSF     LLcolorSensed,4     ; else, it's black
+	MOVF    LLredValue,w
+	CPFSGT  LLsensorVal
+	BCF     LLcolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    LwhiteValue,w
+	CPFSGT  LsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
+	BSF     LcolorSensed,0     ; if it is white, set that bit
 
-    MOVF    LgreenValue,w
-    CPFSGT  LsensorVal         
-    BSF     LcolorSensed,1     ; if it's smaller than the max for green, it's could be green
-    MOVF    LwhiteValue,w    
-    CPFSGT  LsensorVal         ; it it's smaller than white, it's not green
-    BCF     LcolorSensed,1     
+	MOVF    LgreenValue,w
+	CPFSGT  LsensorVal         
+	BSF     LcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    LwhiteValue,w    
+	CPFSGT  LsensorVal         ; it it's smaller than white, it's not green
+	BCF     LcolorSensed,1     
 
-    MOVF    LblueValue,w
-    CPFSGT  LsensorVal         
-    BSF     LcolorSensed,2     
-    MOVF    LgreenValue,w
-    CPFSGT  LsensorVal         
-    BCF     LcolorSensed,2     
+	MOVF    LblueValue,w
+	CPFSGT  LsensorVal         
+	BSF     LcolorSensed,2     
+	MOVF    LgreenValue,w
+	CPFSGT  LsensorVal         
+	BCF     LcolorSensed,2     
 
-    MOVF    LredValue,w
-    CPFSGT  LsensorVal         
-    BSF     LcolorSensed,3     
-    MOVF    LblueValue,w
-    CPFSGT  LsensorVal         
-    BCF     LcolorSensed,3     
+	MOVF    LredValue,w
+	CPFSGT  LsensorVal         
+	BSF     LcolorSensed,3     
+	MOVF    LblueValue,w
+	CPFSGT  LsensorVal         
+	BCF     LcolorSensed,3     
 
-    MOVF    LblackValue,w
-    CPFSGT  LsensorVal
-    BSF     LcolorSensed,4     ; else, it's black
-    MOVF    LredValue,w
-    CPFSGT  LsensorVal
-    BCF     LcolorSensed,4     ; else, it's black
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVF    MwhiteValue,w
-    CPFSGT  MsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
-    BSF     McolorSensed,0     ; if it is white, set that bit
+	MOVF    LblackValue,w
+	CPFSGT  LsensorVal
+	BSF     LcolorSensed,4     ; else, it's black
+	MOVF    LredValue,w
+	CPFSGT  LsensorVal
+	BCF     LcolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    MwhiteValue,w
+	CPFSGT  MsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
+	BSF     McolorSensed,0     ; if it is white, set that bit
 
-    MOVF    MgreenValue,w
-    CPFSGT  MsensorVal         
-    BSF     McolorSensed,1     ; if it's smaller than the max for green, it's could be green
-    MOVF    MwhiteValue,w    
-    CPFSGT  MsensorVal         ; it it's smaller than white, it's not green
-    BCF     McolorSensed,1     
+	MOVF    MgreenValue,w
+	CPFSGT  MsensorVal         
+	BSF     McolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    MwhiteValue,w    
+	CPFSGT  MsensorVal         ; it it's smaller than white, it's not green
+	BCF     McolorSensed,1     
 
-    MOVF    MblueValue,w
-    CPFSGT  MsensorVal         
-    BSF     McolorSensed,2     
-    MOVF    MgreenValue,w
-    CPFSGT  MsensorVal         
-    BCF     McolorSensed,2     
+	MOVF    MblueValue,w
+	CPFSGT  MsensorVal         
+	BSF     McolorSensed,2     
+	MOVF    MgreenValue,w
+	CPFSGT  MsensorVal         
+	BCF     McolorSensed,2     
 
-    MOVF    MredValue,w
-    CPFSGT  MsensorVal         
-    BSF     McolorSensed,3     
-    MOVF    MblueValue,w
-    CPFSGT  MsensorVal         
-    BCF     McolorSensed,3     
+	MOVF    MredValue,w
+	CPFSGT  MsensorVal         
+	BSF     McolorSensed,3     
+	MOVF    MblueValue,w
+	CPFSGT  MsensorVal         
+	BCF     McolorSensed,3     
 
-    MOVF    MblackValue,w
-    CPFSGT  MsensorVal
-    BSF     McolorSensed,4     ; else, it's black
-    MOVF    MredValue,w
-    CPFSGT  MsensorVal
-    BCF     McolorSensed,4     ; else, it's black
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVF    RwhiteValue,w
-    CPFSGT  RsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
-    BSF     RcolorSensed,0     ; if it is white, set that bit
+	MOVF    MblackValue,w
+	CPFSGT  MsensorVal
+	BSF     McolorSensed,4     ; else, it's black
+	MOVF    MredValue,w
+	CPFSGT  MsensorVal
+	BCF     McolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    RwhiteValue,w
+	CPFSGT  RsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
+	BSF     RcolorSensed,0     ; if it is white, set that bit
 
-    MOVF    RgreenValue,w
-    CPFSGT  RsensorVal         
-    BSF     RcolorSensed,1     ; if it's smaller than the max for green, it's could be green
-    MOVF    RwhiteValue,w    
-    CPFSGT  RsensorVal         ; it it's smaller than white, it's not green
-    BCF     RcolorSensed,1     
+	MOVF    RgreenValue,w
+	CPFSGT  RsensorVal         
+	BSF     RcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    RwhiteValue,w    
+	CPFSGT  RsensorVal         ; it it's smaller than white, it's not green
+	BCF     RcolorSensed,1     
 
-    MOVF    RblueValue,w
-    CPFSGT  RsensorVal         
-    BSF     RcolorSensed,2     
-    MOVF    RgreenValue,w
-    CPFSGT  RsensorVal         
-    BCF     RcolorSensed,2     
+	MOVF    RblueValue,w
+	CPFSGT  RsensorVal         
+	BSF     RcolorSensed,2     
+	MOVF    RgreenValue,w
+	CPFSGT  RsensorVal         
+	BCF     RcolorSensed,2     
 
-    MOVF    RredValue,w
-    CPFSGT  RsensorVal         
-    BSF     RcolorSensed,3     
-    MOVF    RblueValue,w
-    CPFSGT  RsensorVal         
-    BCF     RcolorSensed,3     
+	MOVF    RredValue,w
+	CPFSGT  RsensorVal         
+	BSF     RcolorSensed,3     
+	MOVF    RblueValue,w
+	CPFSGT  RsensorVal         
+	BCF     RcolorSensed,3     
 
-    MOVF    RblackValue,w
-    CPFSGT  RsensorVal
-    BSF     RcolorSensed,4     ; else, it's black
-    MOVF    RredValue,w
-    CPFSGT  RsensorVal
-    BCF     RcolorSensed,4     ; else, it's black
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVF    RRwhiteValue,w
-    CPFSGT  RRsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
-    BSF     RRcolorSensed,0     ; if it is white, set that bit
+	MOVF    RblackValue,w
+	CPFSGT  RsensorVal
+	BSF     RcolorSensed,4     ; else, it's black
+	MOVF    RredValue,w
+	CPFSGT  RsensorVal
+	BCF     RcolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    RRwhiteValue,w
+	CPFSGT  RRsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
+	BSF     RRcolorSensed,0     ; if it is white, set that bit
 
-    MOVF    RRgreenValue,w
-    CPFSGT  RRsensorVal         
-    BSF     RRcolorSensed,1     ; if it's smaller than the max for green, it's could be green
-    MOVF    RRwhiteValue,w    
-    CPFSGT  RRsensorVal         ; it it's smaller than white, it's not green
-    BCF     RRcolorSensed,1     
+	MOVF    RRgreenValue,w
+	CPFSGT  RRsensorVal         
+	BSF     RRcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    RRwhiteValue,w    
+	CPFSGT  RRsensorVal         ; it it's smaller than white, it's not green
+	BCF     RRcolorSensed,1     
 
-    MOVF    RRblueValue,w
-    CPFSGT  RRsensorVal         
-    BSF     RRcolorSensed,2     
-    MOVF    RRgreenValue,w
-    CPFSGT  RRsensorVal         
-    BCF     RRcolorSensed,2     
+	MOVF    RRblueValue,w
+	CPFSGT  RRsensorVal         
+	BSF     RRcolorSensed,2     
+	MOVF    RRgreenValue,w
+	CPFSGT  RRsensorVal         
+	BCF     RRcolorSensed,2     
 
-    MOVF    RRredValue,w
-    CPFSGT  RRsensorVal         
-    BSF     RRcolorSensed,3     
-    MOVF    RRblueValue,w
-    CPFSGT  RRsensorVal         
-    BCF     RRcolorSensed,3     
+	MOVF    RRredValue,w
+	CPFSGT  RRsensorVal         
+	BSF     RRcolorSensed,3     
+	MOVF    RRblueValue,w
+	CPFSGT  RRsensorVal         
+	BCF     RRcolorSensed,3     
 
-    MOVF    RRblackValue,w
-    CPFSGT  RRsensorVal
-    BSF     RRcolorSensed,4     ; else, it's black
-    MOVF    RRredValue,w
-    CPFSGT  RRsensorVal
-    BCF     RRcolorSensed,4     ; else, it's black
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-;
-    return                             ; Return from getColor (determine color sensed by each sensor)
-    ;</editor-fold>
+	MOVF    RRblackValue,w
+	CPFSGT  RRsensorVal
+	BSF     RRcolorSensed,4     ; else, it's black
+	MOVF    RRredValue,w
+	CPFSGT  RRsensorVal
+	BCF     RRcolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    ;<editor-fold defaultstate="collapsed" desc="getRaceLinePosition">
+	return                             ; Return from getColor (determine color sensed by each sensor)
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="getRaceLinePosition">
 getRaceLinePosition:
-    MOVLW   b'11100000'
-    MOVWF   raceLinePosition        ;raceLinePosition is vol ones 
-    MOVF    raceColor,w               ;move die one-hot encoded race color in die wreg in, vir comparisons 
+	MOVLW   b'11100000'
+	MOVWF   raceLinePosition        ;raceLinePosition is vol ones 
+	MOVF    raceColor,w               ;move die one-hot encoded race color in die wreg in, vir comparisons 
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CPFSEQ  LLcolorSensed
-    BSF     raceLinePosition,0
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  LLcolorSensed
+	BSF     raceLinePosition,0
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CPFSEQ  LcolorSensed
-    BSF     raceLinePosition,1
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  LcolorSensed
+	BSF     raceLinePosition,1
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CPFSEQ  McolorSensed
-    BSF     raceLinePosition,2
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  McolorSensed
+	BSF     raceLinePosition,2
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CPFSEQ  RcolorSensed
-    BSF     raceLinePosition,3
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  RcolorSensed
+	BSF     raceLinePosition,3
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CPFSEQ  RRcolorSensed
-    BSF     raceLinePosition,4
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  RRcolorSensed
+	BSF     raceLinePosition,4
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    COMF    raceLinePosition        ;invert die position, dan behoort hy te wys waar die race line opgetel word
-    
-    return                          ; return from getRaceLinePosition (determine where the line is that we want to race on)
-    ;</editor-fold>
+	COMF    raceLinePosition        ;invert die position, dan behoort hy te wys waar die race line opgetel word
+	
+	return                          ; return from getRaceLinePosition (determine where the line is that we want to race on)
+;</editor-fold>
 
-    ;<editor-fold defaultstate="collapsed" desc="Determine Direction">
+;<editor-fold defaultstate="collapsed" desc="Determine Direction">
 
 determineDirection:
-;forward = middle sensor is die regte kleur
-;forward = race color is nie opgetel nie
-;left = L of LL is getrigger
-;right = R of RR is getrigger
-    BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
-    BSF     PORTA,4
-    
-    
-    BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
-    BSF     PORTA,3
-    BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
-    BSF     PORTA,3
+	;forward = middle sensor is die regte kleur
+	;forward = race color is nie opgetel nie
+	;left = L of LL is getrigger
+	;right = R of RR is getrigger
+	BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
+	BSF     PORTA,4
+	
+	
+	BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
+	BSF     PORTA,3
+	BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
+	BSF     PORTA,3
 
 
-    BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
-    BSF     PORTA,5
-    BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
-    BSF     PORTA,5
+	BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
+	BSF     PORTA,5
+	BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
+	BSF     PORTA,5
 
-    MOVLW   0x0
-    CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
-    return 
+	MOVLW   0x0
+	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
+	return 
 	CALL	searchModeLights		; flash die LEDs
-    return
+	return
 
-    ;</editor-fold>
+;</editor-fold>
 
-    ;<editor-fold defaultstate="collapsed" desc="Search mode">
+;<editor-fold defaultstate="collapsed" desc="Search mode">
 searchModeLights:
 	bsf		PORTA,0
 	bcf		PORTA,1
@@ -662,46 +676,46 @@ searchModeLights:
 	bsf		PORTA,2
 	CALL 	threeMilDelay
 	RETURN 
-    ;</editor-fold>
-    
-    ;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
+;</editor-fold>
+	
+;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
 threeMilDelay: ;(actually now 333ms)
-    movlw   .3
-    movwf   hdelay3
-Go_on0_3
-    movlw	.144	
-    movwf	hdelay2		
-Go_on1_3			
-    movlw	0xFF
-    movwf	hdelay1
-Go_on2_3
-    decfsz	hdelay1,f	
-    goto	Go_on2_3		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
-    goto	Go_on1_3		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
-    decfsz  hdelay3,f
-    goto    Go_on0_3
+	movlw   .3
+	movwf   hdelay3
+Go_on0_333
+	movlw	.144	
+	movwf	hdelay2		
+Go_on1_333			
+	movlw	0xFF
+	movwf	hdelay1
+Go_on2_333
+	decfsz	hdelay1,f	
+	goto	Go_on2_333		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+	decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+	goto	Go_on1_333		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+	decfsz  hdelay3,f
+	goto    Go_on0_333
 
-    RETURN
+	RETURN
 
-    ;</editor-fold>
+;</editor-fold>
 
-    ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
+;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
 hunnitMilDelay: ;(actually now 100ms)
-    movlw	.130	
-    movwf	hdelay2		
-Go_on1			
-    movlw	0xFF
-    movwf	hdelay1
-Go_on2
-    decfsz	hdelay1,f	
-    goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
-    goto	Go_on1		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+	movlw	.130	
+	movwf	hdelay2		
+Go_on1_100			
+	movlw	0xFF
+	movwf	hdelay1
+Go_on2_100
+	decfsz	hdelay1,f	
+	goto	Go_on2_100		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+	decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+	goto	Go_on1_100		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
 
-    RETURN
+	RETURN
 
-    ;</editor-fold>
+;</editor-fold>
     
 navigate:
     CALL    getColor
@@ -709,13 +723,13 @@ navigate:
     CALL    determineDirection
     CALL    hunnitMilDelay
     GOTO    navigate
-; navigate doesn't end, it must be interruted 
+	; navigate doesn't end, it must be interruted 
 
 ;</editor-fold>	
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	
-    ;<editor-fold defaultstate="collapsed" desc="Program Color (PRC)">
+;<editor-fold defaultstate="collapsed" desc="Program Color (PRC)">
 PRC	
 	MOVLW	A'\n'
 	call    trans
@@ -764,14 +778,17 @@ PRC
 	MOVLW	A'\n'
 	call    trans		;until here
 
-R3	BTFSS	PIR1, RCIF	; receive new color to race 
+R3
+	BTFSS	PIR1, RCIF	; receive new color to race 
 	BRA 	R3
 	MOVFF	RCREG, col
 	GOTO	REC				; go chech if it is a valid race color 
-R4	LFSR 	0,0x02
+R4
+	LFSR 	0,0x02
 	MOVLW	D'3'
 	MOVWF	cnt
-R5	BTFSS 	PIR1, RCIF	; check if something is received
+R5
+	BTFSS 	PIR1, RCIF	; check if something is received
 	BRA 	R5
 	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
@@ -779,7 +796,8 @@ R5	BTFSS 	PIR1, RCIF	; check if something is received
 	GOTO	PROC
 	GOTO	R5
 
-REC	LFSR	0,0x00			; check if a valid race color is received 
+REC
+	LFSR	0,0x00			; check if a valid race color is received 
 	MOVLW	A'B'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
@@ -802,7 +820,7 @@ REC	LFSR	0,0x00			; check if a valid race color is received
 	GOTO	R4				;until here
 	GOTO	err				; if it is not valid show error message
 	
-PROC	
+PROC
 	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
 	MOVLW	A'R'
 	XORWF	INDF0,W
@@ -826,9 +844,10 @@ PROC
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;<editor-fold defaultstate="collapsed" desc="Transmit Character Via Serial">
+;<editor-fold defaultstate="collapsed" desc="Transmit Character Via Serial">
 trans						;general transmission function
-S1	BTFSS 	PIR1, TX1IF
+S1
+	BTFSS 	PIR1, TX1IF
 	BRA 	S1
 	MOVWF 	TXREG
 	return	
@@ -836,95 +855,98 @@ S1	BTFSS 	PIR1, TX1IF
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-    ;<editor-fold defaultstate="collapsed" desc="Calibration Subroutine">	
+;<editor-fold defaultstate="collapsed" desc="Calibration Subroutine">	
 CAL							;calibrate the sensors here
 CALIBRATE
-    CLRF    PORTA
-    MOVLW   b'10000000'
-    MOVWF   PORTD
-    call    delay1s
-    BSF	    PORTA,0
-    MOVLW   b'10001000'
-    MOVWF   PORTD
-    call    delay1s
-    BSF	    PORTA,1
-    MOVLW   b'10000010'
-    MOVWF   PORTD
-    call    delay1s
-    BSF	    PORTA,2
-    MOVLW   b'11000001'
-    MOVWF   PORTD
-    call    delay1s
-    BSF	    PORTA,3
-    MOVLW   b'11001000'
-    MOVWF   PORTD
-    call    delay1s
-    BSF	    PORTA,4
-    call    delay1s
-    CLRF    PORTA
-    GOTO    RCE				
+		CLRF    PORTA
+		MOVLW   b'10000000'
+		MOVWF   PORTD
+		call    delay1s
+		BSF	    PORTA,0
+		MOVLW   b'10001000'
+		MOVWF   PORTD
+		call    delay1s
+		BSF	    PORTA,1
+		MOVLW   b'10000010'
+		MOVWF   PORTD
+		call    delay1s
+		BSF	    PORTA,2
+		MOVLW   b'11000001'
+		MOVWF   PORTD
+		call    delay1s
+		BSF	    PORTA,3
+		MOVLW   b'11001000'
+		MOVWF   PORTD
+		call    delay1s
+		BSF	    PORTA,4
+		call    delay1s
+		CLRF    PORTA
+		GOTO    RCE				
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     
-    ;<editor-fold defaultstate="collapsed" desc="Debugging subroutine">
+;<editor-fold defaultstate="collapsed" desc="Debugging subroutine">
 DEBUG_SUB
-    bcf     INTCON,INT0IF      ; clear the interrupt flag
-    bcf	    INTCON,RBIF
-    MOVF    PORTA,w	    	; copy porta to w
-    MOVWF   portAbackup     ; copy from w to the backup register 
-    BTFSC   stateBits,7     ; check if it's in message mode
-    CALL    debugMessage
-    BTFSC   stateBits,6     ; check if it's in race mode
-    CALL    debugRace
-    BTFSC   stateBits,5     ; check if it's in programming mode
-    CALL    debugProgram
-    BTFSC   stateBits,4     ; check if it's in calibration mode
-    CALL    debugCalibrate
-    MOVF    portAbackup,w
-    MOVWF   PORTA           ; restore port A contents
-    bcf	    INTCON,RBIF
-    RETFIE
+		bcf     INTCON,INT0IF      ; clear the interrupt flag
+		bcf	    INTCON,RBIF
+		MOVF    PORTA,w	    	; copy porta to w
+		MOVWF   portAbackup     ; copy from w to the backup register 
+		BTFSC   stateBits,7     ; check if it's in message mode
+		CALL    debugMessage
+		BTFSC   stateBits,6     ; check if it's in race mode
+		CALL    debugRace
+		BTFSC   stateBits,5     ; check if it's in programming mode
+		CALL    debugProgram
+		BTFSC   stateBits,4     ; check if it's in calibration mode
+		CALL    debugCalibrate
+		MOVF    portAbackup,w
+		MOVWF   PORTA           ; restore port A contents
+		bcf	    INTCON,RBIF
+		RETFIE
 
 debugMessage
-    MOVF    0x08,w
-    MOVWF   PORTA
-    call    delay1s
-    RETURN
+		MOVF    0x08,w
+		MOVWF   PORTA
+		call    delay1s
+		RETURN
 
 debugRace
-    MOVF    col,w
-    MOVWF   PORTA
-    call    delay1s
-    RETURN
+		MOVF    col,w
+		MOVWF   PORTA
+		call    delay1s
+		RETURN
 
 debugProgram
-    MOVF    col,w
-    MOVWF   PORTA
-    call    delay1s
-    RETURN
+		MOVF    col,w
+		MOVWF   PORTA
+		call    delay1s
+		RETURN
 
 debugCalibrate
-    ;MOVF    calOffset,w  
-    MOVWF   PORTA
-    call    delay1s
-    RETURN 
+		;MOVF    calOffset,w  
+		MOVWF   PORTA
+		call    delay1s
+		RETURN 
    
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     
-    ;<editor-fold defaultstate="collapsed" desc="One second delay">
+;<editor-fold defaultstate="collapsed" desc="One second delay">
 delay1s
-    MOVLW   0x0F
-    MOVWF   delay3
+
+	MOVLW   0x0F
+	MOVWF   delay3
 Go_off0
+
 	movlw	0xFF
 	movwf	delay2
-Go_off1				
+Go_off1					
 	movlw	0xFF	
 	movwf	delay1
 Go_off2
+
 	decfsz	delay1,f
 	goto	Go_off2
 	decfsz	delay2,f
@@ -933,6 +955,338 @@ Go_off2
 	goto	Go_off0
 	RETURN
 ;</editor-fold>
-   	
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;<editor-fold defaultstate="collapsed" desc="Calibrate with python">
+	
+;<editor-fold defaultstate="collapsed" desc="Setup RB0">
+ADC_SETUP_AN12:
+
+	;Configure Port RA0:
+	BSF    TRISB,   TRISB0  ;Disable pin output driver (See TRIS register) 	    
+	BSF    ANSELB,  ANSB0   ;Configure pin as analog       
+					
+	
+	;Configure the ADC module: 
+	BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+	BCF	    ADCON2, ADCS1	   	
+	BSF	    ADCON2, ADCS2	    			    				    	    
+
+	;Configure voltage reference
+	CLRF	    ADCON1
+	
+	;Select ADC input channel
+	BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+	BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+	BSF	    ADCON0, CHS2
+	BCF	    ADCON0, CHS1
+	BCF	    ADCON0, CHS0
+
+	;Select result format
+	BCF	    ADCON2, ADFM	    ;Left Justify
+
+	;Select acquisition delay
+	BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+	BCF	    ADCON2, ACQT1
+	BSF	    ADCON2, ACQT2
+
+	;Turn on ADC module
+	BSF	    ADCON0, ADON
+	
+	RETURN
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="Setup RB1">
+ADC_SETUP_AN10:
+
+	;Configure Port RA0:
+	BSF    TRISB,   TRISB1  ;Disable pin output driver (See TRIS register) 	    
+	BSF    ANSELB,  ANSB1   ;Configure pin as analog      
+					
+	
+	;Configure the ADC module: 
+	BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+	BCF	    ADCON2, ADCS1	   	
+	BSF	    ADCON2, ADCS2	    			    				    	    
+
+	;Configure voltage reference
+	CLRF	    ADCON1
+	
+	;Select ADC input channel
+	BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+	BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+	BCF	    ADCON0, CHS2
+	BSF	    ADCON0, CHS1
+	BCF	    ADCON0, CHS0
+
+	;Select result format
+	BCF	    ADCON2, ADFM	    ;Left Justify
+
+	;Select acquisition delay
+	BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+	BCF	    ADCON2, ACQT1
+	BSF	    ADCON2, ACQT2
+
+	;Turn on ADC module
+	BSF	    ADCON0, ADON
+	
+	RETURN
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="Setup RB2">
+ADC_SETUP_AN8:
+
+	;Configure Port RA0:
+	BSF    TRISB,   TRISB2  ;Disable pin output driver (See TRIS register) 	    
+	BSF    ANSELB,  ANSB2   ;Configure pin as analog     
+					
+	
+	;Configure the ADC module: 
+	BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+	BCF	    ADCON2, ADCS1	   	
+	BSF	    ADCON2, ADCS2	    			    				    	    
+
+	;Configure voltage reference
+	CLRF	    ADCON1
+	
+	;Select ADC input channel
+	BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+	BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+	BCF	    ADCON0, CHS2
+	BCF	    ADCON0, CHS1
+	BCF	    ADCON0, CHS0
+
+	;Select result format
+	BCF	    ADCON2, ADFM	    ;Left Justify
+
+	;Select acquisition delay
+	BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+	BCF	    ADCON2, ACQT1
+	BSF	    ADCON2, ACQT2
+
+	;Turn on ADC module
+	BSF	    ADCON0, ADON
+	
+	RETURN
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="Setup RB3">
+ADC_SETUP_AN9:
+
+	;Configure Port RA0:
+	BSF    TRISB,   TRISB3  ;Disable pin output driver (See TRIS register) 	    
+	BSF    ANSELB,  ANSB3   ;Configure pin as analog     
+					
+	
+	;Configure the ADC module: 
+	BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+	BCF	    ADCON2, ADCS1	   	
+	BSF	    ADCON2, ADCS2	    			    				    	    
+
+	;Configure voltage reference
+	CLRF	    ADCON1
+	
+	;Select ADC input channel
+	BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+	BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+	BCF	    ADCON0, CHS2
+	BCF	    ADCON0, CHS1
+	BSF	    ADCON0, CHS0
+
+	;Select result format
+	BCF	    ADCON2, ADFM	    ;Left Justify
+
+	;Select acquisition delay
+	BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+	BCF	    ADCON2, ACQT1
+	BSF	    ADCON2, ACQT2
+
+	;Turn on ADC module
+	BSF	    ADCON0, ADON
+	
+	RETURN
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="Setup RB5">
+ADC_SETUP_AN13:
+
+	;Configure Port RA0:
+	BSF    TRISB,   TRISB5  ;Disable pin output driver (See TRIS register) 	    
+	BSF    ANSELB,  ANSB5   ;Configure pin as analog     
+					
+	
+	;Configure the ADC module: 
+	BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+	BCF	    ADCON2, ADCS1	   	
+	BSF	    ADCON2, ADCS2	    			    				    	    
+
+	;Configure voltage reference
+	CLRF	    ADCON1
+	
+	;Select ADC input channel
+	BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+	BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+	BSF	    ADCON0, CHS2
+	BCF	    ADCON0, CHS1
+	BSF	    ADCON0, CHS0
+
+	;Select result format
+	BCF	    ADCON2, ADFM	    ;Left Justify
+
+	;Select acquisition delay
+	BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+	BCF	    ADCON2, ACQT1
+	BSF	    ADCON2, ACQT2
+
+	;Turn on ADC module
+	BSF	    ADCON0, ADON
+	
+	RETURN
+;</editor-fold>
+
+
+;<editor-fold defaultstate="collapsed" desc="READ RB0">
+Read_AN12:
+	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
+	BRA	Read_AN12
+	
+	CALL	ADC_SETUP_AN12	;do setup
+
+	BSF	ADCON0, GO	;start a conversion
+
+Poll_Go1
+	BTFSC	ADCON0, GO	;Polling the GO/DONE bit - Checked if hardware cleared go				    
+	BRA	Poll_Go1
+
+	MOVF	ADRESH,W 	;copy result of conversion into WREG
+	MOVWF	LLsensorVal	;copy this into LLSensorVal
+	RETURN	;WREG still contains the results of the conversion at this point
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="READ RB1">
+Read_AN10:
+	BTFSS	TXSTA1, TRMT	;Check if TMRT is set, to ensure that shift register is empty (p263)
+	BRA	Read_AN10
+	
+	CALL	ADC_SETUP_AN10	;do setup
+
+	BSF	ADCON0, GO	;start a conversion
+
+Poll_Go2
+	BTFSC	ADCON0, GO	;Polling the GO/DONE bit - Checked if hardware cleared go				    
+	BRA	Poll_Go2
+
+	MOVF	ADRESH,W 	;copy result of conversion into WREG
+	MOVWF	LsensorVal	;copy this into LLSensorVal
+	RETURN	;WREG still contains the results of the conversion at this point
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="READ RB2">
+Read_AN8:
+	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
+	BRA	Read_AN8
+	
+	CALL	ADC_SETUP_AN8	;do setup
+
+	BSF	ADCON0, GO	;start a conversion
+
+Poll_Go3
+	BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+	BRA	Poll_Go3
+
+	MOVF	ADRESH,W 			;copy result of conversion into WREG
+	MOVWF	MsensorVal			;copy this into LLSensorVal
+	RETURN	;WREG still contains the results of the conversion at this point
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="READ RB3">
+Read_AN9:
+	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
+	BRA	Read_AN9
+	
+	CALL	ADC_SETUP_AN9	;do setup
+
+	BSF	ADCON0, GO	;start a conversion
+
+Poll_Go4
+	BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+	BRA	Poll_Go4
+
+	MOVF	ADRESH,W 			;copy result of conversion into WREG
+	MOVWF	RsensorVal			;copy this into LLSensorVal
+	RETURN	;WREG still contains the results of the conversion at this point
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="READ RB5">
+Read_AN13:
+	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
+	BRA	Read_AN13
+	
+	CALL	ADC_SETUP_AN13	;do setup
+
+	BSF	ADCON0, GO	;start a conversion
+
+Poll_Go5
+	BTFSC	ADCON0, GO		    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+	BRA	Poll_Go5
+
+	MOVF	ADRESH,W 			;copy result of conversion into WREG
+	MOVWF	RRsensorVal			;copy this into LLSensorVal
+	RETURN	;WREG still contains the results of the conversion at this point
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="10ms Delay">
+tenmsDelay:
+    movlw	.13		
+    movwf	delayCounter2		
+Go_on1_10			
+    movlw	0xFF
+    movwf	delayCounter1
+Go_on2_10
+    decfsz	delayCounter1,f	
+    goto	Go_on2_10		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1_10		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
+
+    RETURN
+;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="10ms Delay">
+    movlw	.24		;24 * 250 * 0.01s = 60s
+    movwf	pythonCounter2		
+pythonLoop1
+    movlw	.250
+    movwf	pythonCounter1
+pythonLoop2
+
+    CALL	Read_AN12
+    CALL	trans
+
+    CALL	Read_AN10
+    CALL	trans
+
+    CALL	Read_AN8
+    CALL	trans
+
+    CALL	Read_AN9
+    CALL	trans
+
+    CALL	Read_AN13
+    CALL	trans
+
+    MOVLW	'\n'				;Send an enter
+    CALL	trans
+
+    CALL	tenmsDelay
+
+    decfsz	pythonCounter1,f
+    goto	pythonLoop2
+    decfsz	pythonCounter2,f   
+    goto	pythonLoop1
+    RETURN
+;</editor-fold>
+
+;</editor-fold>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     end
