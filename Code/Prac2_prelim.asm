@@ -80,14 +80,14 @@
 	RsensorVal
 	RRsensorVal	 ;.59
 
-	LLcolorSensed     ; One-hot encoded colour of each sensor
-	LcolorSensed      ; white  = bit 0      green = bit 1
-	McolorSensed      ; blue   = bit 2      red   = bit 3
-	RcolorSensed      ; black  = bit 4
-	RRcolorSensed	  ;.64
+	LLcolorSensed     	; One-hot encoded colour of each sensor
+	LcolorSensed      	; white  = bit 0      green = bit 1
+	McolorSensed      	; blue   = bit 2      red   = bit 3
+	RcolorSensed      	; black  = bit 4
+	RRcolorSensed	  	;.64
 
-	raceColor	  ; One-hot encoded colour of that the marv will race
-	raceLinePosition  ; position of the race line -  LL-L-M-R-RR
+	raceColor	  		; One-hot encoded colour of that the marv will race
+	raceLinePosition  	; position of the race line -  LL-L-M-R-RR
 
 	hdelay1			;
 	hdelay2
@@ -221,7 +221,7 @@ setup
     MOVWF   LLsensorVal
     MOVLW   .40
     MOVWF   LsensorVal
-    MOVLW   .250
+    MOVLW   .190
     MOVWF   MsensorVal
     MOVLW   .40
     MOVWF   RsensorVal
@@ -727,6 +727,18 @@ Go_on2_100
 ;</editor-fold>
     
 navigate:
+    BTFSC   raceColor,0		;check white
+    MOVLW   b'10101011'
+    BTFSC   raceColor,1		;check green
+    MOVLW   b'10000010'
+    BTFSC   raceColor,2		;check blue
+    MOVLW   b'10000000'
+    BTFSC   raceColor,3		;check red
+    MOVLW   b'10001000'
+    BTFSC   raceColor,4		;check black
+    MOVLW   b'11000111'
+    MOVWF   PORTD
+    
     CALL    getColor
     CALL    getRaceLinePosition
     CALL    determineDirection
@@ -837,7 +849,30 @@ transmitForPy
 
 	MOVLW	A'\n'
 	CALL	trans
-	GOTO	R4
+	
+	MOVLW	A'R'
+	CPFSEQ	col
+	GOTO	C1
+	BSF	raceColor,3
+	
+C1	MOVLW	A'B'
+	CPFSEQ	col
+	GOTO	C2
+	BSF	raceColor,2
+	
+C2	MOVLW	A'G'
+	CPFSEQ	col
+	GOTO	C3
+	BSF	raceColor,1
+	
+C3	MOVLW	A'n'
+	CPFSEQ	col
+	GOTO	C4
+	BSF	raceColor,4
+	
+C4	GOTO	R4
+	;L = Maze is not implemented yet
+	
 	
 PROC
 	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
@@ -874,7 +909,7 @@ S1
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;<editor-fold defaultstate="collapsed" desc="Calibration Subroutine">	
+;<editor-fold defaultstate="collapsed" desc="CALIBRATE">	
 CAL							;calibrate the sensors here
 CALIBRATE					; order is blue, red, green, white, black
     CLRF    PORTA
