@@ -6,6 +6,7 @@ from matplotlib import style
 import numpy as np
 import csv
 
+calibrationComplete = False
 ser = serial.Serial()
 data = [[], [], [], [], []]
 pos = 0
@@ -38,15 +39,21 @@ def setupSerial(baud):
 #\OwO/
 sensors = [0,1,2,3,4]
 def animate(i):
+    global calibrationComplete
     global data
     global pos
+    global fig
     sensors
     points = 0
     voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
         backupData.append(line)
-        if(line == "\OwO/"):
+        line = str(line)
+        if(line == '\OwO/\n'):
+            calibrationComplete = True
+            print("end sequence")
+            plt.close()
             return
         for a in range(0,5):
             #for b in range(0, 8):
@@ -84,8 +91,16 @@ def animate(i):
     return 
 
 def pythonCalibration():
-    ani = animation.FuncAnimation(fig, animate, interval = 510)
-    plt.show()
+    global calibrationComplete
+    if calibrationComplete == False:
+        ani = animation.FuncAnimation(fig, animate, interval = 510)
+        if calibrationComplete == True:
+            plt.close()
+            return
+        plt.show()
+    else:
+        plt.close()
+        return
 
 
 style.use('fast')
@@ -95,13 +110,18 @@ setupSerial(9600)
 
 command = ""        #command is die command wat ons vir die marv stuur
 while command != "exit":
-    marv = ser.readline()       #marv is die string wat ons by hom terug kry
-    print str(marv),
-    print ">>>",
-    command = str(raw_input())
-    ser.write(command.encode())
-    if (command == "CAL"):
-        pythonCalibration() #call die plot
+    try:
+        marv = ser.readline()       #marv is die string wat ons by hom terug kry
+        print str(marv),
+        print ">>>",
+        command = str(raw_input())
+        ser.write(command.encode())
+        if (command == "QCL"):
+            pythonCalibration() #call die plot
+            calibrationComplete = False
+    except(TclError):
+        print("The above error is a known issue with the python canvas library")
+        print(">>>")
 
 ser.close()     #close die com port connection
 #dumpData(data, 'dataDump.csv')

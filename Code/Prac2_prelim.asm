@@ -19,6 +19,7 @@
 	mes1		;received message command character 1	
 	mes2		;received message command character 2
 	mes3		;received message command character 3
+	mes4
 	cnt			;character count for receive
 	reg
 	size		;startup message size variable
@@ -317,7 +318,7 @@ PRO
 	MOVLW	A'N'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	Pro1			;if M is received goto MSG processing branch
+	GOTO	Pro1			;if M is received goto NAV processing branch
 	MOVLW	A'P'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
@@ -330,6 +331,10 @@ PRO
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
 	GOTO	Pro4		;if C is received goto CAL processing branch
+	MOVLW	A'Q'
+	XORWF	INDF0,W
+	BTFSC	STATUS,Z
+	GOTO	Pro5		;if P is received go to PCL processing branch
 	GOTO	err			; if none of the serial commands is received goto error message
 	
 Pro1
@@ -374,6 +379,19 @@ Pro3
 Pro4
 	LFSR	0,0x03		    ;check if rest of cal is received
 	MOVLW	A'A'
+	XORWF	INDF0,W
+	BTFSS	STATUS,Z
+	GOTO	err
+	LFSR	0,0x04
+	MOVLW	A'L'
+	XORWF	INDF0,W
+	BTFSC	STATUS,Z
+	GOTO	CAL
+	GOTO	err
+	
+Pro5
+	LFSR	0,0x03		    ;check if rest of QCL is received
+	MOVLW	A'C'
 	XORWF	INDF0,W
 	BTFSS	STATUS,Z
 	GOTO	err
@@ -1315,7 +1333,9 @@ Go_on2_10
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
-    movlw	.24		;24 * 250 * 0.01s = 60s
+    movlw	b'00001100'
+    MOVWF	PORTD
+    movlw	.4		;24 * 250 * 0.01s = 60s
     movwf	pythonCounter2		
 pythonLoop1
     movlw	.250
@@ -1361,9 +1381,11 @@ pythonLoop2
     CALL	trans
     MOVLW	.47
     CALL	trans
-	MOVLW	'\n'				;Send an enter
+    MOVLW	'\n'				;Send an enter
     CALL	trans
-    RETURN
+    CALL	tenmsDelay
+    
+    GOTO	RCE
 ;</editor-fold>
 
 ;</editor-fold>
