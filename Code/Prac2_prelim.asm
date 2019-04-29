@@ -42,6 +42,8 @@
 	EEPROM_DATA
 	readCount
 	newdelay
+	Touch1
+	Touch2
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor
@@ -182,35 +184,51 @@ setup
     MOVWF   size
     
     ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   .50
+MOVLW   .127
     MOVWF   LLwhiteValue
+    MOVLW   .86
     MOVWF   LwhiteValue
+    MOVLW   .79
     MOVWF   MwhiteValue
+    MOVLW   .66
     MOVWF   RwhiteValue
+    MOVLW   .58
     MOVWF   RRwhiteValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .100
+    MOVLW   .142
     MOVWF   LLgreenValue
+    MOVLW   .94
     MOVWF   LgreenValue
+    MOVLW   .89
     MOVWF   MgreenValue
+    MOVLW   .76
     MOVWF   RgreenValue
+    MOVLW   .63
     MOVWF   RRgreenValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .150
+    MOVLW   .196
     MOVWF   LLblueValue
+    MOVLW   .196
     MOVWF   LblueValue
+    MOVLW   .193
     MOVWF   MblueValue
+    MOVLW   .153
     MOVWF   RblueValue
+    MOVLW   .173
     MOVWF   RRblueValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .200
+    MOVLW   .235
     MOVWF   LLredValue
+    MOVLW   .240
     MOVWF   LredValue
+    MOVLW   .240
     MOVWF   MredValue
+    MOVLW   .235
     MOVWF   RredValue
+    MOVLW   .220
     MOVWF   RRredValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .250
+    MOVLW   .255
     MOVWF   LLblackValue
     MOVWF   LblackValue
     MOVWF   MblackValue
@@ -221,7 +239,7 @@ setup
     MOVWF   LLsensorVal
     MOVLW   .40
     MOVWF   LsensorVal
-    MOVLW   .190
+    MOVLW   .250
     MOVWF   MsensorVal
     MOVLW   .40
     MOVWF   RsensorVal
@@ -429,7 +447,15 @@ getColor:
 	CLRF    McolorSensed
 	CLRF    RcolorSensed
 	CLRF    RRcolorSensed
+	call	Read_AN8
+	call	Read_AN9
+	call	Read_AN10
+	call	Read_AN12
+	call	Read_AN13
+	
+	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
 	MOVF    LLwhiteValue,w
 	CPFSGT  LLsensorVal         ; if LLSensorVal is > LLwhiteValue, it's not white
 	BSF     LLcolorSensed,0     ; if it is white, set that bit
@@ -740,6 +766,7 @@ navigate:
     MOVWF   PORTD
     
     CALL    getColor
+    
     CALL    getRaceLinePosition
     CALL    determineDirection
     CALL    hunnitMilDelay
@@ -895,7 +922,33 @@ PROC
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;<editor-fold defaultstate="collapsed" desc="Touch Start (RCE1)">	
+RCE1	MOVLW	A's'
+	call	trans
+poll_c	call	Read_AN14
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
+	;call	trans
+	call	Read_AN14
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
+	;call	trans
+	call	Read_AN14
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
+	;call	trans
+	CPFSEQ	Touch2
+	goto	stop
+	MOVLW   A'\n'
+	;CALL    trans
+	goto	poll_c
+
+stop	MOVLW	A'D'
+	call	trans
+d	nop
+	bra	d
 	
+;</editor-fold>
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="Transmit Character Via Serial">
@@ -1301,7 +1354,7 @@ Poll_Go0
     BRA	    Poll_Go0
 
     MOVF    ADRESH,W	    ;copy result of conversion into WREG
-    MOVWF   LLsensorVal	    ;copy this into LLSensorVal
+    ;MOVWF   Touch	    ;copy this into LLSensorVal
     RETURN		    ;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
