@@ -23,7 +23,7 @@ def dumpData(d, fname):
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM9' 
+    ser.port = 'COM4' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -56,22 +56,24 @@ def animate(i):
         points += 1
 
     if len(data[0]) % 2000 == 0:
-        #data[0] = data[0][1000:]
-        #data[1] = data[1][1000:]
-        #data[2] = data[2][1000:]
-        #data[3] = data[3][1000:]
-        #data[4] = data[4][1000:]
-        pos += 1
+        # data[0] = data[0][1000:]
+        # data[1] = data[1][1000:]
+        # data[2] = data[2][1000:]
+        # data[3] = data[3][1000:]
+        # data[4] = data[4][1000:]
+        data = [[],[],[],[],[]]
+        # pos += 1
 
     ax1.clear()
     labels = ['LL', 'L', 'M', 'R', 'RR']
     for a in sensors:
-        ax1.plot(data[a][2000 * pos:], label= labels[a])
+        ax1.plot(data[a], label= labels[a])
         ax1.legend()
-        #ax1.plot(data[1][2000 * pos:])
-        #ax1.plot(data[2][2000 * pos:])
-        #ax1.plot(data[3][2000 * pos:])
-        #ax1.plot(data[4][2000 * pos:])
+    # ax1.plot(data[0][2000 * pos:])
+    # ax1.plot(data[1][2000 * pos:])
+    # ax1.plot(data[2][2000 * pos:]) 
+    # ax1.plot(data[3][2000 * pos:])
+    # ax1.plot(data[4][2000 * pos:])
 
 
     return 
