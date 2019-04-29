@@ -28,9 +28,14 @@ def setupSerial(baud):
     ser.stopbits = 1
     ser.timeout = None
     ser.open()
-    ser.write("CAL".encode())
+    print("COM Port Now Open:")
+    print("Baudrate: " + str(baud))
+    print("Bits per transmission: 8")
+    print("Stop bits: 1")
+    print("Parity: None\n")
+    
 
-
+#\OwO/
 sensors = [0,1,2,3,4]
 def animate(i):
     global data
@@ -41,6 +46,8 @@ def animate(i):
     while ser.is_open and points < 50:
         line = ser.readline()
         backupData.append(line)
+        if(line == "\OwO/"):
+            return
         for a in range(0,5):
             #for b in range(0, 8):
             #    line = ser.readline()
@@ -74,17 +81,29 @@ def animate(i):
         #ax1.plot(data[3][2000 * pos:])
         #ax1.plot(data[4][2000 * pos:])
 
-
     return 
+
+def pythonCalibration():
+    ani = animation.FuncAnimation(fig, animate, interval = 510)
+    plt.show()
+
+
 style.use('fast')
 fig = plt.figure()
-
 ax1 = fig.add_subplot(1,1,1)
 setupSerial(9600)
-plt.ylabel("Voltage")
-ani = animation.FuncAnimation(fig, animate, interval = 510)
-plt.show()
+
+command = ""        #command is die command wat ons vir die marv stuur
+while command != "exit":
+    marv = ser.readline()       #marv is die string wat ons by hom terug kry
+    print str(marv),
+    print ">>>",
+    command = str(raw_input())
+    ser.write(command.encode())
+    if (command == "CAL"):
+        pythonCalibration() #call die plot
+
+ser.close()     #close die com port connection
 #dumpData(data, 'dataDump.csv')
 #dumpData(backupData, 'backupdata.csv')
-ser.close()
 

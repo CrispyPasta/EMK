@@ -263,8 +263,6 @@ setup
 RCE	
 	MOVLW	b'10100100'			;hard coded transmission of RCE mode message
 	MOVWF	PORTD
-	MOVLW	A'\n'
-	call     trans
 	MOVLW	A'M'
 	call    trans
 	MOVLW	A'A'
@@ -392,8 +390,6 @@ Pro4
 ;<editor-fold defaultstate="collapsed" desc="ERROR Message">	
 err
 
-	MOVLW	A'\n'
-	call    trans
 	MOVLW	A'E'		    ;display error message if wrong serial command entered
 	call    trans
 	MOVLW	A'R'
@@ -731,8 +727,6 @@ navigate:
 	
 ;<editor-fold defaultstate="collapsed" desc="Program Color (PRC)">
 PRC	
-	MOVLW	A'\n'
-	call    trans
 	MOVLW	A'W'
 	call    trans
 	MOVLW	A'h'
@@ -801,24 +795,36 @@ REC
 	MOVLW	A'B'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	R4
+	GOTO	transmitForPy
 	MOVLW	A'R'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	R4
+	GOTO	transmitForPy
 	MOVLW	A'G'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	R4
+	GOTO	transmitForPy
 	MOVLW	A'n'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	R4
+	GOTO	transmitForPy
 	MOVLW	A'L'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	R4				;until here
+	GOTO	transmitForPy				;until here
 	GOTO	err				; if it is not valid show error message
+
+transmitForPy
+	MOVLW	A'S'
+	CALL	trans
+	MOVLW	A'e'
+	CALL	trans
+	MOVLW	A't'
+	CALL	trans
+
+	MOVLW	A'\n'
+	CALL	trans
+	GOTO	R4
 	
 PROC
 	LFSR	0,0x02			;check if RCE is received only valid serial command if in PRC
@@ -959,6 +965,42 @@ Go_off2
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RC2 (For touch sensor)">
+ADC_SETUP_AN14:
+
+	;Configure Port RA0:
+    BSF    TRISC,2	;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELC,2     ;Configure pin as analog       
+					
+	
+	;Configure the ADC module: 
+    BCF	    ADCON2, ADCS0	    ;Select ADC conversion clock - Fosc/4
+    BCF	    ADCON2, ADCS1	   	
+    BSF	    ADCON2, ADCS2	    			    				    	    
+
+	;Configure voltage reference
+    CLRF    ADCON1
+	
+	;Select ADC input channel
+    BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+    BSF	    ADCON0, CHS2
+    BSF	    ADCON0, CHS1
+    BCF	    ADCON0, CHS0
+
+	;Select result format
+    BCF	    ADCON2, ADFM	    ;Left Justify
+
+	;Select acquisition delay
+    BSF	    ADCON2, ACQT0	    ;Set to 12 Tad
+    BCF	    ADCON2, ACQT1
+    BSF	    ADCON2, ACQT2
+
+	;Turn on ADC module
+    BSF	    ADCON0, ADON
+	
+    RETURN
+;</editor-fold>		
 	
     ;<editor-fold defaultstate="collapsed" desc="Setup RB0">
 ADC_SETUP_AN12:
@@ -1146,6 +1188,25 @@ ADC_SETUP_AN13:
 ;</editor-fold>
 
 
+    ;<editor-fold defaultstate="collapsed" desc="READ RC2 (for touch sensor)">
+Read_AN14:
+    BTFSS   TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
+    BRA	    Read_AN14
+
+    CALL    ADC_SETUP_AN14	;do setup
+
+    BSF	    ADCON0, GO	    ;start a conversion
+
+Poll_Go0
+    BTFSC   ADCON0, GO	    ;Polling the GO/DONE bit - Checked if hardware cleared go				    
+    BRA	    Poll_Go0
+
+    MOVF    ADRESH,W	    ;copy result of conversion into WREG
+    MOVWF   LLsensorVal	    ;copy this into LLSensorVal
+    RETURN		    ;WREG still contains the results of the conversion at this point
+;</editor-fold>
+
+	
     ;<editor-fold defaultstate="collapsed" desc="READ RB0">
 Read_AN12:
 	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
@@ -1281,10 +1342,27 @@ pythonLoop2
 
     CALL	tenmsDelay
 
+    
+    
+    
+    
     decfsz	pythonCounter1,f
     goto	pythonLoop2
     decfsz	pythonCounter2,f   
     goto	pythonLoop1
+    
+    MOVLW	.92
+    CALL	trans
+    MOVLW	.79
+    CALL	trans
+    MOVLW	.119
+    CALL	trans
+    MOVLW	.79
+    CALL	trans
+    MOVLW	.47
+    CALL	trans
+	MOVLW	'\n'				;Send an enter
+    CALL	trans
     RETURN
 ;</editor-fold>
 
