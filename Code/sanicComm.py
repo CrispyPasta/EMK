@@ -110,18 +110,14 @@ setupSerial(9600)
 
 command = ""        #command is die command wat ons vir die marv stuur
 while command != "exit":
-    try:
-        marv = ser.readline()       #marv is die string wat ons by hom terug kry
-        print str(marv),
-        print ">>>",
-        command = str(raw_input())
-        ser.write(command.encode())
-        if (command == "QCL"):
-            pythonCalibration() #call die plot
-            calibrationComplete = False
-    except(TclError):
-        print("The above error is a known issue with the python canvas library")
-        print(">>>")
+    marv = ser.readline()       #marv is die string wat ons by hom terug kry
+    print str(marv),
+    print ">>>",
+    command = str(raw_input())
+    ser.write(command.encode())
+    if (command == "QCL"):
+        pythonCalibration() #call die plot
+        calibrationComplete = False
 
 ser.close()     #close die com port connection
 #dumpData(data, 'dataDump.csv')

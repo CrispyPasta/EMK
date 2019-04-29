@@ -26,11 +26,6 @@
 
 	loop
 	newsize	    ; used to store new message size
-	redValue	    ; These will store the values read by the cal subroutine come prac 2
-	blueValue
-	greenValue
-	whiteValue
-	blackValue
 	stateBits	    ; One-hot encoding indicating the current state
 			    ; 7 = MSG, 6 = RCE, 5 = PRC, 4 = CAL
 	portAbackup	    ; this stores whatever was in PORTA before the debugging interrupt so it can be restored
@@ -881,31 +876,82 @@ S1
 
 ;<editor-fold defaultstate="collapsed" desc="Calibration Subroutine">	
 CAL							;calibrate the sensors here
-CALIBRATE
-		CLRF    PORTA
-		MOVLW   b'10000000'
-		MOVWF   PORTD
-		call    delay1s
-		BSF	    PORTA,0
-		MOVLW   b'10001000'
-		MOVWF   PORTD
-		call    delay1s
-		BSF	    PORTA,1
-		MOVLW   b'10000010'
-		MOVWF   PORTD
-		call    delay1s
-		BSF	    PORTA,2
-		MOVLW   b'11000001'
-		MOVWF   PORTD
-		call    delay1s
-		BSF	    PORTA,3
-		MOVLW   b'11001000'
-		MOVWF   PORTD
-		call    delay1s
-		BSF	    PORTA,4
-		call    delay1s
-		CLRF    PORTA
-		GOTO    RCE				
+CALIBRATE					; order is blue, red, green, white, black
+    CLRF    PORTA
+    MOVLW   b'10000000'
+    MOVWF   PORTD
+	CALL	Read_AN12
+	MOVWF	LLblueValue
+	CALL	Read_AN10
+	MOVWF	LblueValue
+	CALL	Read_AN8
+	MOVWF	MblueValue
+	CALL	Read_AN9
+	MOVWF	RblueValue
+	CALL	Read_AN13
+	MOVWF	RRblueValue
+    call    delay1s
+
+    BSF	    PORTA,0
+    MOVLW   b'10001000'
+    MOVWF   PORTD
+	CALL	Read_AN12
+	MOVWF	LLredValue
+	CALL	Read_AN10
+	MOVWF	LredValue
+	CALL	Read_AN8
+	MOVWF	MredValue
+	CALL	Read_AN9
+	MOVWF	RredValue
+	CALL	Read_AN13
+	MOVWF	RRredValue
+    call    delay1s
+    BSF	    PORTA,1
+    MOVLW   b'10000010'
+    MOVWF   PORTD
+	CALL	Read_AN12
+	MOVWF	LLredValue
+	CALL	Read_AN10
+	MOVWF	LredValue
+	CALL	Read_AN8
+	MOVWF	MredValue
+	CALL	Read_AN9
+	MOVWF	RredValue
+	CALL	Read_AN13
+	MOVWF	RRredValue
+    call    delay1s
+    BSF	    PORTA,2
+    MOVLW   b'11000001'
+    MOVWF   PORTD
+	CALL	Read_AN12
+	MOVWF	LLwhiteValue
+	CALL	Read_AN10
+	MOVWF	LwhiteValue
+	CALL	Read_AN8
+	MOVWF	MwhiteValue
+	CALL	Read_AN9
+	MOVWF	RwhiteValue
+	CALL	Read_AN13
+	MOVWF	RRwhiteValue
+    call    delay1s
+    BSF	    PORTA,3
+    MOVLW   b'11001000'
+    MOVWF   PORTD
+	CALL	Read_AN12
+	MOVWF	LLblackValue
+	CALL	Read_AN10
+	MOVWF	LblackValue
+	CALL	Read_AN8
+	MOVWF	MblackValue
+	CALL	Read_AN9
+	MOVWF	RblackValue
+	CALL	Read_AN13
+	MOVWF	RRblackValue
+    call    delay1s
+    BSF	    PORTA,4
+    call    delay1s
+    CLRF    PORTA
+    GOTO    RCE				
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1335,7 +1381,7 @@ Go_on2_10
 pyCal:
     movlw	b'00001100'
     MOVWF	PORTD
-    movlw	.4		;24 * 250 * 0.01s = 60s
+    movlw	.24		;24 * 250 * 0.01s = 60s
     movwf	pythonCounter2		
 pythonLoop1
     movlw	.250
