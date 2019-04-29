@@ -184,48 +184,48 @@ setup
     MOVWF   size
     
     ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-MOVLW   .127
+    MOVLW   .128
     MOVWF   LLwhiteValue
-    MOVLW   .86
+    MOVLW   .128
     MOVWF   LwhiteValue
-    MOVLW   .79
+    MOVLW   .138
     MOVWF   MwhiteValue
-    MOVLW   .66
+    MOVLW   .133
     MOVWF   RwhiteValue
-    MOVLW   .58
+    MOVLW   .125
     MOVWF   RRwhiteValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .142
+    MOVLW   .148
     MOVWF   LLgreenValue
-    MOVLW   .94
+    MOVLW   .138
     MOVWF   LgreenValue
-    MOVLW   .89
+    MOVLW   .156
     MOVWF   MgreenValue
-    MOVLW   .76
+    MOVLW   .148
     MOVWF   RgreenValue
-    MOVLW   .63
+    MOVLW   .143
     MOVWF   RRgreenValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .196
+    MOVLW   .189
     MOVWF   LLblueValue
-    MOVLW   .196
+    MOVLW   .184
     MOVWF   LblueValue
-    MOVLW   .193
+    MOVLW   .204
     MOVWF   MblueValue
-    MOVLW   .153
+    MOVLW   .204
     MOVWF   RblueValue
-    MOVLW   .173
+    MOVLW   .199
     MOVWF   RRblueValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .235
+    MOVLW   .230
     MOVWF   LLredValue
-    MOVLW   .240
+    MOVLW   .230
     MOVWF   LredValue
-    MOVLW   .240
+    MOVLW   .230
     MOVWF   MredValue
     MOVLW   .235
     MOVWF   RredValue
-    MOVLW   .220
+    MOVLW   .230
     MOVWF   RRredValue    ;move hardcoded voltage values into their registers
 
     MOVLW   .255
@@ -680,12 +680,18 @@ determineDirection:
 	BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
 	BSF     PORTA,3
 
-
+	BTFSC   McolorSensed, 1     ; M senses green
+	BSF     PORTA,1
+	BTFSC   McolorSensed, 2     ; M senses blue
+	BSF     PORTA,2
+	BTFSC   McolorSensed, 3     ; M senses red
+	BSF     PORTA,0
+	
 	BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
 	BSF     PORTA,5
 	BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
 	BSF     PORTA,5
-
+	
 	MOVLW   0x0
 	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
 	return 
@@ -696,19 +702,23 @@ determineDirection:
 
 ;<editor-fold defaultstate="collapsed" desc="Search mode">
 searchModeLights:
-	bsf		PORTA,0
-	bcf		PORTA,1
-	bcf		PORTA,2
+	bcf	PORTA,3
+	bcf	PORTA,4
+	bcf	PORTA,5
+	
+	bsf	PORTA,0
+	bcf	PORTA,1
+	bcf	PORTA,2
 	CALL 	threeMilDelay
 	
-	bcf		PORTA,0
-	bsf		PORTA,1
-	bcf		PORTA,2
+	bcf	PORTA,0
+	bsf	PORTA,1
+	bcf	PORTA,2
 	CALL 	threeMilDelay
 	
-	bcf		PORTA,0
-	bcf		PORTA,1
-	bsf		PORTA,2
+	bcf	PORTA,0
+	bcf	PORTA,1
+	bsf	PORTA,2
 	CALL 	threeMilDelay
 	RETURN 
 ;</editor-fold>
@@ -757,20 +767,26 @@ navigate:
     MOVLW   b'10101011'
     BTFSC   raceColor,1		;check green
     MOVLW   b'10000010'
+    BTFSC   raceColor,0		;check green
+    BSF	    PORTA,1
     BTFSC   raceColor,2		;check blue
     MOVLW   b'10000000'
+    BTFSC   raceColor,2		;check blue
+    BSF	    PORTA,2
     BTFSC   raceColor,3		;check red
     MOVLW   b'10001000'
+    BTFSC   raceColor,3		;check red
+    BSF	    PORTA,0
     BTFSC   raceColor,4		;check black
-    MOVLW   b'11000111'
+    MOVLW   b'10101011'
     MOVWF   PORTD
     
+nav    
     CALL    getColor
-    
     CALL    getRaceLinePosition
     CALL    determineDirection
     CALL    hunnitMilDelay
-    GOTO    navigate
+    GOTO    nav
 	; navigate doesn't end, it must be interruted 
 
 ;</editor-fold>	
@@ -880,22 +896,26 @@ transmitForPy
 	MOVLW	A'R'
 	CPFSEQ	col
 	GOTO	C1
-	BSF	raceColor,3
+	MOVLW	b'00001000'
+	MOVWF	raceColor
 	
 C1	MOVLW	A'B'
 	CPFSEQ	col
 	GOTO	C2
-	BSF	raceColor,2
+	MOVLW	b'00000100'
+	MOVWF	raceColor
 	
 C2	MOVLW	A'G'
 	CPFSEQ	col
 	GOTO	C3
-	BSF	raceColor,1
+	MOVLW	b'00000010'
+	MOVWF	raceColor
 	
 C3	MOVLW	A'n'
 	CPFSEQ	col
 	GOTO	C4
-	BSF	raceColor,4
+	MOVLW	b'00010000'
+	MOVWF	raceColor
 	
 C4	GOTO	R4
 	;L = Maze is not implemented yet
@@ -1469,7 +1489,7 @@ Go_on2_10
 pyCal:
     movlw	b'00001100'
     MOVWF	PORTD
-    movlw	.24		;24 * 250 * 0.01s = 60s
+    movlw	.120		;24 * 250 * 0.01s = 60s
     movwf	pythonCounter2		
 pythonLoop1
     movlw	.250
