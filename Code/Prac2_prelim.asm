@@ -881,7 +881,7 @@ CALIBRATE					; order is blue, red, green, white, black
     MOVLW   b'10000000'
     MOVWF   PORTD
 	CALL	Read_AN12
-	MOVWF	LLblueValue
+	MOVWF	LLblueValue		;~~~~~BLUE~~~~~
 	CALL	Read_AN10
 	MOVWF	LblueValue
 	CALL	Read_AN8
@@ -889,14 +889,14 @@ CALIBRATE					; order is blue, red, green, white, black
 	CALL	Read_AN9
 	MOVWF	RblueValue
 	CALL	Read_AN13
-	MOVWF	RRblueValue
+	MOVWF	RRblueValue		;~~~~~BLUE~~~~~
     call    delay1s
 
     BSF	    PORTA,0
     MOVLW   b'10001000'
     MOVWF   PORTD
 	CALL	Read_AN12
-	MOVWF	LLredValue
+	MOVWF	LLredValue		;~~~~~RED~~~~~
 	CALL	Read_AN10
 	MOVWF	LredValue
 	CALL	Read_AN8
@@ -904,27 +904,27 @@ CALIBRATE					; order is blue, red, green, white, black
 	CALL	Read_AN9
 	MOVWF	RredValue
 	CALL	Read_AN13
-	MOVWF	RRredValue
+	MOVWF	RRredValue		;~~~~~RED~~~~~
     call    delay1s
     BSF	    PORTA,1
     MOVLW   b'10000010'
     MOVWF   PORTD
 	CALL	Read_AN12
-	MOVWF	LLredValue
+	MOVWF	LLgreenValue		;~~~~~GREEN~~~~~
 	CALL	Read_AN10
-	MOVWF	LredValue
+	MOVWF	LgreenValue
 	CALL	Read_AN8
-	MOVWF	MredValue
+	MOVWF	MgreenValue
 	CALL	Read_AN9
-	MOVWF	RredValue
+	MOVWF	RgreenValue
 	CALL	Read_AN13
-	MOVWF	RRredValue
+	MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
     call    delay1s
     BSF	    PORTA,2
     MOVLW   b'11000001'
     MOVWF   PORTD
 	CALL	Read_AN12
-	MOVWF	LLwhiteValue
+	MOVWF	LLwhiteValue	;~~~~~WHITE~~~~~
 	CALL	Read_AN10
 	MOVWF	LwhiteValue
 	CALL	Read_AN8
@@ -932,13 +932,13 @@ CALIBRATE					; order is blue, red, green, white, black
 	CALL	Read_AN9
 	MOVWF	RwhiteValue
 	CALL	Read_AN13
-	MOVWF	RRwhiteValue
+	MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
     call    delay1s
     BSF	    PORTA,3
     MOVLW   b'11001000'
     MOVWF   PORTD
 	CALL	Read_AN12
-	MOVWF	LLblackValue
+	MOVWF	LLblackValue	;~~~~~BLACK~~~~~
 	CALL	Read_AN10
 	MOVWF	LblackValue
 	CALL	Read_AN8
@@ -946,7 +946,7 @@ CALIBRATE					; order is blue, red, green, white, black
 	CALL	Read_AN9
 	MOVWF	RblackValue
 	CALL	Read_AN13
-	MOVWF	RRblackValue
+	MOVWF	RRblackValue	;~~~~~BLACK~~~~~
     call    delay1s
     BSF	    PORTA,4
     call    delay1s
