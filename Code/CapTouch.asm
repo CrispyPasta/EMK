@@ -1,6 +1,6 @@
     list p=PIC18F45K22
     #include "p18f45K22.inc"
-    title = "ADC to Serial"
+    title = "Capacitive Touch"
     ;<editor-fold defaultstate="collapsed" desc="Configuration Bits">  
     
     ;--- Configuration bits ---
@@ -22,6 +22,9 @@
     ADCValue
     delayCounter1        ; I want to make a 10ms delay
     delayCounter2
+    capTouch_reading     ; voltage from cap touch sensing
+    capTouch_not_touched ; voltage reading for untouched sensor
+    capTouch_touched     ; voltage reading for untouched sensor
     ENDC
     
     ;</editor-fold>
@@ -78,9 +81,9 @@ setup:
     CLRF	PORTA		; Initialize PORTA by clearing output data latches
     CLRF	LATA		; Alternate method to clear output data latches
     CLRF	TRISA		; clear bits for all pins
-    BSF     TRISA,0     ; Disable digital output driver
+    BSF     TRISA,1     ; Disable digital output driver on pin 1 (sensor pin)
     CLRF	ANSELA		; clear bits for all pins	
-    BSF     ANSELA,0    ; Disable digital input buffer
+    BSF     ANSELA,1    ; Disable digital input buffer (sensor pin)
     MOVLW   0x0
 
     ;</editor-fold>
@@ -135,19 +138,21 @@ setup:
     BCF     ADCON1,NVCFG0       ;Select internal input Vss
     BCF     ADCON1,NVCFG1
 
-    ;Select the AN0 pin (Channel Selection)
-    MOVLW   b'00000'
+    ;Select the PORTA,1 pin (Channel Selection)
+    MOVLW   b'00001'
     MOVWF   ADCON0
 
     BCF     ADCON2,ADFM         ;Left justified-MSB bits are in ADRESH
     BSF     ADCON0,ADON         ;Turn on the ADC
     ;</editor-fold>
 
+
+
     BSF	    PORTA,7	        ;Just so I can see it's on
     GOTO    start
 ;</editor-fold>
 
-tenmsDelay
+tenmsDelay:
 	movlw	.13		
 	movwf	delayCounter2		
 Go_on1			
@@ -180,25 +185,85 @@ adcPoll:
     MOVF    ADRESH,W        ;Copy result to WREG
     return 
 
-start:
-    CALL    readPin0
-    CALL    transmitChar
-    
-    CALL    readPin0
-    CALL    transmitChar
-    
-    CALL    readPin0
-    CALL    transmitChar
-    
-    CALL    readPin0
-    CALL    transmitChar
-    
-    CALL    readPin0
-    CALL    transmitChar
+capTouch_delay:
+    MOVLW   0xFF
+loop:
+    decfsz  WREG,w
+    GOTO    loop
+    return
 
-    MOVLW   A'\n'
+capTouch_setup:
+    ;<editor-fold defaultstate="collapsed" desc="Initialize ADC">
+    MOVLB   0x0F
+
+    CLRF	PORTA		; Initialize PORTA by clearing output data latches
+    CLRF	LATA		; Alternate method to clear output data latches
+    CLRF	TRISA		; clear bits for all pins
+    CLRF	ANSELA		; clear bits for all pins	
+    MOVLB   0x00
+            
+    CALL    capTouch_delay  ; Delay for draining circuit
+
+    MOVLW   b'00000011'
+    MOVWF   CTMUICON            ; Set the current source as 55uA with no trim
+
+
+    BCF     CTMUCONH,EDGSEQEN  ; Disable edge sequence 
+    
+
+    MOVLB   0x0
+    ;</editor-fold>
+    RETURN 
+
+capTouch:
+    CALL    capTouch_setup
+    BSF     CTMUCONH,CTMUEN     ; Enable die module
+    BCF     CTMUCONL,EDG1STAT   ; These two get XORed to enable the current
+    BCF     CTMUCONL,EDG2STAT   ; disable for now
+    BSF     CTMUICON,IDISSEN    ; Make sure the current source is initially grounded
+            
+    CALL    capTouch_delay      ; wait for discharge to finish
+    BSF     CTMUICON,IDISSEN    ; Make sure the current source is initially grounded
+    BCF     CTMUICON,IDISSEN    ; Stop grounding the current
+    BSF     CTMUCONL,EDG1STAT   ; XOR now positive, start charging the circuit
+    CALL    capTouch_delay      ; wait for charging
+    BCF     CTMUCONL,EDG1STAT   ; stop charging circuit
+
+    MOVLW   0x0F
+    BSF     TRISA,1
+    BSF     ANSELA,1
+    MOVLW   0x0
+
+    BSF     ADCON0,GO           ; Start a conversion
+
+capTouch_poll:
+    BTFSC   ADCON0,GO           ; When bit is 0 again, conversion is finished
+    BRA     capTouch_poll       ; Loop until done, approx 36us
+    MOVF    ADRESH,W            ; Copy result to WREG
+
     CALL    transmitChar
+    RETURN 
+
+start:
+    ; CALL    readPin0
+    ; CALL    transmitChar
+    
+    ; CALL    readPin0
+    ; CALL    transmitChar
+    
+    ; CALL    readPin0
+    ; CALL    transmitChar
+    
+    ; CALL    readPin0
+    ; CALL    transmitChar
+    
+    ; CALL    readPin0
+    ; CALL    transmitChar
+
+    ; MOVLW   A'\n'
+    ; CALL    transmitChar
+    CALL    capTouch
     CALL    tenmsDelay
     GOTO    start
 
-end
+    end
