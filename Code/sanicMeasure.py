@@ -45,16 +45,10 @@ def animate(i):
     global fig
     sensors
     points = 0
-    voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
         backupData.append(line)
         line = str(line)
-        if(line == '\OwO/\n'):
-            calibrationComplete = True
-            print("end sequence")
-            plt.close()
-            return
         for a in range(0,5):
             #for b in range(0, 8):
             #    line = ser.readline()
@@ -70,17 +64,12 @@ def animate(i):
                     data[a].append(0)  # append prev voltage if too few bits
         points += 1
 
-    if len(data[0]) % 2000 == 0:
-        # data[0] = data[0][1000:]
-        # data[1] = data[1][1000:]
-        # data[2] = data[2][1000:]
-        # data[3] = data[3][1000:]
-        # data[4] = data[4][1000:]
-        data = [[],[],[],[],[]]
+    if len(data[0]) % 50 == 0 and len(data[0]) >= 2000:
+        data = [data[0][50:],data[1][50:],data[2][50:],data[3][50:],data[4][50:]]
         # pos += 1
 
     ax1.clear()
-    labels = ['RR', 'R', 'M', 'L', 'LL']
+    labels = ['LL', 'L', 'M', 'R', 'RR']
     for a in sensors:
         ax1.plot(data[a], label= labels[a])
         ax1.legend()
@@ -92,36 +81,11 @@ def animate(i):
 
     return 
 
-def pythonCalibration():
-    global calibrationComplete
-    if calibrationComplete == False:
-        ani = animation.FuncAnimation(fig, animate, interval = 510)
-        if calibrationComplete == True:
-            plt.close()
-            return
-        plt.show()
-    else:
-        plt.close()
-        return
-
-
 style.use('fast')
 fig = plt.figure()
 ax1 = fig.add_subplot(1,1,1)
 setupSerial(9600)
 
-command = ""        #command is die command wat ons vir die marv stuur
-while command != "exit":
-    marv = ser.readline()       #marv is die string wat ons by hom terug kry
-    print str(marv),
-    print ">>>",
-    command = str(raw_input())
-    ser.write(command.encode())
-    if (command == "QCL"):
-        pythonCalibration() #call die plot
-        calibrationComplete = False
-
+ani = animation.FuncAnimation(fig, animate, interval=510)
+plt.show()
 ser.close()     #close die com port connection
-#dumpData(data, 'dataDump.csv')
-#dumpData(backupData, 'backupdata.csv')
-

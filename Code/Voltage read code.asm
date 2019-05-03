@@ -199,6 +199,8 @@
         sensor3
         sensor4
         sensor5
+        temp
+        loopvar
     ENDC
 
 ;*******************************************************************************
@@ -377,32 +379,92 @@ MAIN:
 ;Send 5 sensor values to the serial port seperated by a semicolon, then send an enter for a newline
     
         ;<editor-fold defaultstate="collapsed" desc="Send 5 Sensor values">
-    
-    CALL    Read_AN12
+    MOVLW   0x02
+    MOVWF   loopvar
+    MOVLW   0x0 
+    MOVWF   temp
+ave1:
+    CALL    Read_AN12   ;reading is now in wreg
+    RRNCF   WREG,w        ;divide wreg by 2
+    BCF     WREG,7        ;clear first bit cause it rotates
+    ADDWF   temp,f      ;add the two together
+    decfsz  loopvar
+    GOTO    ave1
+    MOVF    temp,w
+    BCF     WREG,0
+    BCF     WREG,1
     CALL    SEND_BYTE
     
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-
+    MOVLW   0x02
+    MOVWF   loopvar
+    MOVLW   0x0 
+    MOVWF   temp
+ave2:
     CALL    Read_AN10
+    RRNCF   WREG,w        ;divide wreg by 2
+    BCF     WREG,7        ;clear first bit cause it rotates
+    ADDWF   temp,f      ;add the two together
+    decfsz  loopvar
+    GOTO    ave2
+    MOVF    temp,w
+    BCF     WREG,0
+    BCF     WREG,1
     CALL    SEND_BYTE
     
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-
+    MOVLW   0x02
+    MOVWF   loopvar
+    MOVLW   0x0 
+    MOVWF   temp
+ave3:
     CALL    Read_AN8
+    RRNCF   WREG,w        ;divide wreg by 2
+    BCF     WREG,7        ;clear first bit cause it rotates
+    ADDWF   temp,f      ;add the two together
+    decfsz  loopvar
+    GOTO    ave3
+    MOVF    temp,w
+    BCF     WREG,0
+    BCF     WREG,1
     CALL    SEND_BYTE
     
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-
+    MOVLW   0x02
+    MOVWF   loopvar
+    MOVLW   0x0 
+    MOVWF   temp
+ave4:
     CALL    Read_AN9
+    RRNCF   WREG,w        ;divide wreg by 2
+    BCF     WREG,7        ;clear first bit cause it rotates
+    ADDWF   temp,f      ;add the two together
+    decfsz  loopvar
+    GOTO    ave4
+    MOVF    temp,w
+    BCF     WREG,0
+    BCF     WREG,1
     CALL    SEND_BYTE
     
 ;    MOVLW   A';'
 ;    CALL    SEND_BYTE
-       
+    MOVLW   0x02
+    MOVWF   loopvar
+    MOVLW   0x0 
+    MOVWF   temp
+ave5:
     CALL    Read_AN13
+    RRNCF   WREG,w        ;divide wreg by 2
+    BCF     WREG,7        ;clear first bit cause it rotates
+    ADDWF   temp,f      ;add the two together
+    decfsz  loopvar
+    GOTO    ave5
+    MOVF    temp,w
+    BCF     WREG,0
+    BCF     WREG,1
     CALL    SEND_BYTE
     
 ;    MOVLW   A';'
@@ -467,6 +529,7 @@ Read_AN0:
     ;add delay- if problems
 				    
 ;Start conversion by setting the GO/DONE bit.
+
     BSF		ADCON0, GO
 				    
 ;Wait for ADC conversion to complete by one of the following: 
@@ -1250,17 +1313,27 @@ ISR:
     ;</editor-fold>
    
     
-    tenmsDelay:
+tenmsDelay:
     movlw	.13		
     movwf	delayCounter2		
-    Go_on1			
+Go_on1			
     movlw	0xFF
     movwf	delayCounter1
-    Go_on2
+Go_on2
     decfsz	delayCounter1,f	
     goto	Go_on2		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
     decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
     goto	Go_on1		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
+
+    RETURN
+
+
+fifusDelay:		
+    movlw	0x0F
+    movwf	delayCounter1
+Go_on
+    decfsz	delayCounter1,f	
+    goto	Go_on	        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
 
     RETURN
     
