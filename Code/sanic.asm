@@ -74,13 +74,13 @@
 	RRgreenValue
 	RRblueValue
 	RRredValue
-	RRblackValue	 ;.54
+	RRblackValue	 ;.54	0X36
 
 	LLsensorVal     ; Voltage value received from sensors
 	LsensorVal
 	MsensorVal
 	RsensorVal
-	RRsensorVal	 ;.59
+	RRsensorVal	 ;.59	0x3B
 
 	LLcolorSensed     	; One-hot encoded colour of each sensor
 	LcolorSensed      	; white  = bit 0      green = bit 1
@@ -93,16 +93,16 @@
 
 	hdelay1			;
 	hdelay2
-	hdelay3
+	hdelay3			;.69 0x45
 
 	delayCounter1	; for 10 ms delay
 	delayCounter2
 
 	pythonCounter1	;variables for calibration with python
-	pythonCounter2
+	pythonCounter2		;.73 0x49
 	
-	temp	    ; temp variable for sensor output averaging
-	aveloop	    ; loop counter for sensor averaging
+	temp	    ; temp variable for sensor output averaging	4A
+	aveloop	    ; loop counter for sensor averaging	4B
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
 ;</editor-fold>
@@ -1404,9 +1404,7 @@ Read_AN12:
 ;	BRA	Read_AN12
 	
 	CALL	ADC_SETUP_AN12	;do setup
-	movlw	0x02
-	movwf	aveloop		; we're gonna loop twice
-ave1
+
 	BSF	ADCON0, GO	;start a conversion
 
 Poll_Go1
@@ -1414,13 +1412,7 @@ Poll_Go1
 	BRA	Poll_Go1
 
 	MOVF	ADRESH,W 	;copy result of conversion into WREG
-	RRNCF	WREG,W		;divide wreg by 2, store in wreg
-	BCF	WREG,7
-	ADDWF	LLsensorVal	;copy this into LLsensorVal
-	DECFSZ	aveloop		;decrement loop counter
-	GOTO	ave1
-	BCF	LLsensorVal,0
-	BCF	LLsensorVal,1
+	MOVWF	LLsensorVal
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1430,9 +1422,7 @@ Read_AN10:
 ;	BRA	Read_AN10
 	
 	CALL	ADC_SETUP_AN10	;do setup
-	movlw	0x02
-	movwf	aveloop		; we're gonna loop twice
-ave2
+
 	BSF	ADCON0, GO	;start a conversion
 
 Poll_Go2
@@ -1440,13 +1430,7 @@ Poll_Go2
 	BRA	Poll_Go2
 
 	MOVF	ADRESH,W 	;copy result of conversion into WREG
-	RRNCF	WREG,W		;divide wreg by 2, store in wreg
-	BCF	WREG,7
-	ADDWF	LsensorVal	;copy this into LLsensorVal
-	DECFSZ	aveloop		;decrement loop counter
-	GOTO	ave2
-	BCF	LsensorVal,0
-	BCF	LsensorVal,1
+	MOVWF	LsensorVal
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1456,9 +1440,7 @@ Read_AN8:
 ;	BRA	Read_AN8
 	
 	CALL	ADC_SETUP_AN8	;do setup
-	movlw	0x02
-	movwf	aveloop		; we're gonna loop twice
-ave3
+
 	BSF	ADCON0, GO	;start a conversion
 
 Poll_Go3
@@ -1466,13 +1448,7 @@ Poll_Go3
 	BRA	Poll_Go3
 
 	MOVF	ADRESH,W 	;copy result of conversion into WREG
-	RRNCF	WREG,W		;divide wreg by 2, store in wreg
-	BCF	WREG,7
-	ADDWF	MsensorVal	;copy this into LLsensorVal
-	DECFSZ	aveloop		;decrement loop counter
-	GOTO	ave3
-	BCF	MsensorVal,0
-	BCF	MsensorVal,1
+	MOVWF	MsensorVal
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1482,9 +1458,7 @@ Read_AN9:
 ;	BRA	Read_AN9
 	
 	CALL	ADC_SETUP_AN9	;do setup
-	movlw	0x02
-	movwf	aveloop		; we're gonna loop twice
-ave4
+
 	BSF	ADCON0, GO	;start a conversion
 
 Poll_Go4
@@ -1492,13 +1466,7 @@ Poll_Go4
 	BRA	Poll_Go4
 
 	MOVF	ADRESH,W 	;copy result of conversion into WREG
-	RRNCF	WREG,W		;divide wreg by 2, store in wreg
-	BCF	WREG,7
-	ADDWF	RsensorVal	;copy this into LLsensorVal
-	DECFSZ	aveloop		;decrement loop counter
-	GOTO	ave4
-	BCF	RsensorVal,0
-	BCF	RsensorVal,1
+	MOVWF	RsensorVal
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1508,9 +1476,7 @@ Read_AN13:
 ;	BRA	Read_AN13
 	
 	CALL	ADC_SETUP_AN13	;do setup
-	movlw	0x02
-	movwf	aveloop		; we're gonna loop twice
-ave5
+
 	BSF	ADCON0, GO	;start a conversion
 
 Poll_Go5
@@ -1518,16 +1484,120 @@ Poll_Go5
 	BRA	Poll_Go5
 
 	MOVF	ADRESH,W 	;copy result of conversion into WREG
-	RRNCF	WREG,W		;divide wreg by 2, store in wreg
-	BCF	WREG,7
-	ADDWF	RRsensorVal	;copy this into LLsensorVal
-	DECFSZ	aveloop		;decrement loop counter
-	GOTO	ave5
-	BCF	RRsensorVal,0
-	BCF	RRsensorVal,1
+	MOVWF	RRsensorVal
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
+    ;<editor-fold defaultstate="collapsed" desc="Average1 - LL ">
+Average1:
+	MOVLW	0x02
+	MOVWF	aveloop
+	CLRF	temp
+	
+    rep1
+	CALL	Read_AN12
+	nop
+	RRNCF	WREG,w		;divide by 2
+	BCF	WREG,7		;incase rotation causes a mistake
+	ADDWF	temp
+	DECFSZ	aveloop
+	GOTO	rep1
+	MOVF	temp,w		;move to w
+	BCF	WREG,0		;clear to reduce noise 
+	BCF	WREG,1
+	BCF	WREG,2
+	MOVWF	LLsensorVal
+	RETURN
+    ;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="Average2 - L">
+Average2:
+	MOVLW	0x02
+	MOVWF	aveloop
+	CLRF	temp
+	
+    rep2
+	CALL	Read_AN10
+	nop
+	RRNCF	WREG,w		;divide by 2
+	BCF	WREG,7		;incase rotation causes a mistake
+	ADDWF	temp
+	DECFSZ	aveloop
+	GOTO	rep2
+	MOVF	temp,w		;move to w
+	BCF	WREG,0		;clear to reduce noise 
+	BCF	WREG,1
+	BCF	WREG,2
+	MOVWF	LsensorVal
+	RETURN
+    ;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="Average3 - M">
+Average3:
+	MOVLW	0x02
+	MOVWF	aveloop
+	CLRF	temp
+	
+    rep3
+	CALL	Read_AN8
+	nop
+	RRNCF	WREG,w		;divide by 2
+	BCF	WREG,7		;incase rotation causes a mistake
+	ADDWF	temp
+	DECFSZ	aveloop
+	GOTO	rep3
+	MOVF	temp,w		;move to w
+	BCF	WREG,0		;clear to reduce noise 
+	BCF	WREG,1
+	BCF	WREG,2
+	MOVWF	MsensorVal
+	RETURN
+    ;</editor-fold>
+	
+    ;<editor-fold defaultstate="collapsed" desc="Average4 - R">
+Average4:
+	MOVLW	0x02
+	MOVWF	aveloop
+	CLRF	temp
+	
+    rep4
+	CALL	Read_AN9
+	nop
+	RRNCF	WREG,w		;divide by 2
+	BCF	WREG,7		;incase rotation causes a mistake
+	ADDWF	temp
+	DECFSZ	aveloop
+	GOTO	rep4
+	MOVF	temp,w		;move to w
+	BCF	WREG,0		;clear to reduce noise 
+	BCF	WREG,1
+	BCF	WREG,2
+	MOVWF	RsensorVal
+	RETURN
+    ;</editor-fold>
+	
+    ;<editor-fold defaultstate="collapsed" desc="Average5 - RR">
+Average5:
+	MOVLW	0x02
+	MOVWF	aveloop
+	CLRF	temp
+	
+    rep5
+	CALL	Read_AN13
+	nop
+	RRNCF	WREG,w		;divide by 2
+	BCF	WREG,7		;incase rotation causes a mistake
+	ADDWF	temp
+	DECFSZ	aveloop
+	GOTO	rep5
+	MOVF	temp,w		;move to w
+	BCF	WREG,0		;clear to reduce noise 
+	BCF	WREG,1
+	BCF	WREG,2
+	MOVWF	RRsensorVal
+	RETURN
+    ;</editor-fold>
+	
     ;<editor-fold defaultstate="collapsed" desc="10ms Delay">
 tenmsDelay:
     movlw	.13		
@@ -1555,23 +1625,22 @@ pythonLoop1
     movwf	pythonCounter1
 pythonLoop2
 
-    CALL    Read_AN12
-    MOVF    LLsensorVal,w
+    CALL    Average1
     CALL    trans
 
-    CALL    Read_AN10
+    CALL    Average2
     MOVF    LsensorVal,w
     CALL    trans
 
-    CALL    Read_AN8
+    CALL    Average3
     MOVF    MsensorVal,w
     CALL    trans
 
-    CALL    Read_AN9
+    CALL    Average4
     MOVF    RsensorVal,w
     CALL    trans
 
-    CALL    Read_AN13
+    CALL    Average5
     MOVF    RRsensorVal,w
     CALL    trans
 

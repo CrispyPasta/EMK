@@ -37,7 +37,7 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [0,1,2,3,4]
+sensors = [0, 1, 2, 3, 4]
 def animate(i):
     global calibrationComplete
     global data
@@ -70,14 +70,9 @@ def animate(i):
                     data[a].append(0)  # append prev voltage if too few bits
         points += 1
 
-    if len(data[0]) % 2000 == 0:
-        # data[0] = data[0][1000:]
-        # data[1] = data[1][1000:]
-        # data[2] = data[2][1000:]
-        # data[3] = data[3][1000:]
-        # data[4] = data[4][1000:]
-        data = [[],[],[],[],[]]
-        # pos += 1
+    if len(data[0]) % 50 == 0 and len(data[0]) >= 2000:
+        data = [data[0][50:], data[1][50:], data[2]
+                [50:], data[3][50:], data[4][50:]]
 
     ax1.clear()
     labels = ['RR', 'R', 'M', 'L', 'LL']
