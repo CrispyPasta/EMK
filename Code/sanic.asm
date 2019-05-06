@@ -1675,4 +1675,54 @@ pythonLoop2
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+;<editor-fold defaultstate="collapsed" desc="Motor Control Stuff">
+    ;<editor-fold defaultstate="collapsed" desc="PWM Setup">
+PWMSetup:
+	;Step 1
+	MOVLB	0x0F
+	BSF	TRISC,4	    ;disable output on this pin
+	BCF	PORTC,4
+	MOVLB	0x00
+	
+    ;Step 2
+	BCF		CCPTMRS1,C4TSEL0
+	BCF		CCPTMRS1,C4TSEL1	;tells the PWM to use Timer 2
+
+	;Step 3
+	CALL 	PWMTimerSetup
+	
+	;Step 4 and 6
+	MOVLW	0x0F	    ; = 00001111
+	MOVWF	CCP4CON	    ; sets module to PWM mode
+
+	;Step 5
+	MOVLW	b'10000000'		;1000000000 = 512 = 50% duty cycle
+	MOVLF	CCPR2L
+	BCF		CCP4CON,DC4B0
+	BCF		CCP4CON,DC4B1
+
+	;Step 7
+	MOVLB	0x0F
+	BCF		TRISC,4		;enable output on pin
+	MOVLB	0x00
+	RETURN
+    ;</editor-fold>
+
+
+	;<editor-fold defaultstate="collapsed" desc="PWM Timer Setup">
+PWMTimerSetup:
+	MOVLW	b'01111011'	;prescaler = 16, postscaler = 16, timer = off
+	MOVWF	T2CON		
+	MOVWF	PR2			;overflow 256 times
+
+	BCF		PIR1,TMR2IF	;clear the interrupt flag bit
+
+	BSF		T2CON,TMR2ON	;turn on the timer
+	RETURN
+    ;</editor-fold>
+    
+;</editor-fold>
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     end
