@@ -953,22 +953,28 @@ PROC
 ;<editor-fold defaultstate="collapsed" desc="Touch Start (RCE1)">	
 RCE1	MOVLW	A's'
 	call	trans
-poll_c	call	Read_AN14
-	MOVFF	Touch1,Touch2
-	MOVWF	Touch1
-	;call	trans
+poll_c	
 	call	Read_AN14
-	MOVFF	Touch1,Touch2
+	BCF	WREG,0
+	BCF	WREG,1
+	BCF	WREG,2
+	BCF	WREG,3
+	BCF	WREG,4
 	MOVWF	Touch1
-	;call	trans
+	
+	CALL	tenmsDelay
+	
 	call	Read_AN14
-	MOVFF	Touch1,Touch2
-	MOVWF	Touch1
-	;call	trans
-	CPFSEQ	Touch2
+	BCF	WREG,0
+	BCF	WREG,1
+	BCF	WREG,2
+	BCF	WREG,3
+	BCF	WREG,4
+	MOVWF	Touch2
+	
+	CPFSEQ	Touch1
 	goto	stop
-	MOVLW   A'\n'
-	;CALL    trans
+	
 	goto	poll_c
 
 stop	MOVLW	A'D'
@@ -1490,110 +1496,110 @@ Poll_Go5
 
     ;<editor-fold defaultstate="collapsed" desc="Average1 - LL ">
 Average1:
-	MOVLW	0x02
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
-    rep1
+rep1
 	CALL	Read_AN12
-	nop
+	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
+	BCF	WREG,6		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep1
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
 	MOVWF	LLsensorVal
 	RETURN
     ;</editor-fold>
     
     ;<editor-fold defaultstate="collapsed" desc="Average2 - L">
 Average2:
-	MOVLW	0x02
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
-    rep2
+rep2
 	CALL	Read_AN10
-	nop
+	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
+	BCF	WREG,6		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep2
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
 	MOVWF	LsensorVal
 	RETURN
     ;</editor-fold>
     
     ;<editor-fold defaultstate="collapsed" desc="Average3 - M">
 Average3:
-	MOVLW	0x02
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
-    rep3
+rep3
 	CALL	Read_AN8
-	nop
+	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
+	BCF	WREG,6		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep3
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
 	MOVWF	MsensorVal
 	RETURN
     ;</editor-fold>
 	
     ;<editor-fold defaultstate="collapsed" desc="Average4 - R">
 Average4:
-	MOVLW	0x02
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
-    rep4
+rep4
 	CALL	Read_AN9
-	nop
+	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
+	BCF	WREG,6		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep4
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
 	MOVWF	RsensorVal
 	RETURN
     ;</editor-fold>
 	
     ;<editor-fold defaultstate="collapsed" desc="Average5 - RR">
 Average5:
-	MOVLW	0x02
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
-    rep5
+rep5
 	CALL	Read_AN13
-	nop
+	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
+	BCF	WREG,6		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep5
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
 	MOVWF	RRsensorVal
 	RETURN
     ;</editor-fold>
@@ -1698,7 +1704,7 @@ PWMSetup:
 
 	;Step 5
 	MOVLW	b'10000000'		;1000000000 = 512 = 50% duty cycle
-	MOVLF	CCPR2L
+	MOVWF	CCPR2L
 	BCF		CCP4CON,DC4B0
 	BCF		CCP4CON,DC4B1
 

@@ -16,8 +16,9 @@
     GOTO    setup
 
     ORG     0x08
-    BCF	    PIR1,TMR2IF
-    RETURN
+    BTFSC   PIR1,TMR2IF
+    CALL    PWMISR,FAST
+    RETFIE
 
 
 setup
@@ -45,7 +46,7 @@ PWMSetup:
     CLRF    CCP1CON
     MOVLW   .199
     MOVWF   PR2
-    MOVLW   .49
+    MOVLW   .179
     MOVWF   CCPR1L
     BCF	    TRISC,CCP1
     MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
@@ -54,11 +55,19 @@ PWMSetup:
     MOVWF   CCP1CON 
     CLRF    TMR2
     BSF	    T2CON, TMR2ON
+    BSF     PIE1, TMR2IE     ; enable interrupts from the timer
+    bsf     INTCON,PEIE      ; Enable peripheral interrupts
+    bsf     INTCON,GIE       ; Enable global interrupts
+    ;write ISR that does the same thing as the polling 
 	
     RETURN
     ;</editor-fold>
 
-
+PWMISR
+    BCF	    PIR1,TMR2IF
+    CLRF    TMR2
+    RETURN
+    
 PWM:
 ;    CLRF    CCP1CON
 ;    MOVLW   .249
@@ -73,11 +82,11 @@ PWM:
 ;    CLRF    TMR2
 ;    BSF     T2CON, TMR2ON
     CALL    PWMSetup
-again
-    BCF     PIR1, TMR2IF
-over
-    BTFSS   PIR1, TMR2IF 
-    BRA     over
-    GOTO    again 
+; again
+;     BCF     PIR1, TMR2IF
+; over
+;     BTFSS   PIR1, TMR2IF 
+;     BRA     over
+;     GOTO    again 
 
     end
