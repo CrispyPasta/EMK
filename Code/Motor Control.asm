@@ -17,16 +17,16 @@
 
 
 setup
-    BSF		OSCCON,IRCF0
-    BCF		OSCCON,IRCF1
-    BSF		OSCCON,IRCF2   
+    BSF	    OSCCON,IRCF0
+    BCF	    OSCCON,IRCF1
+    BSF	    OSCCON,IRCF2   
 
-    MOVLB	0xF		    ; Set BSR for banked SFRs
-    CLRF	PORTA		; Initialize PORTA by clearing output data latches
-    CLRF	LATA		; Alternate method to clear output data latches
-    CLRF	TRISA		; clear bits for all pins
+    MOVLB   0xF		    ; Set BSR for banked SFRs
+    CLRF    PORTA		; Initialize PORTA by clearing output data latches
+    CLRF    LATA		; Alternate method to clear output data latches
+    CLRF    TRISA		; clear bits for all pins
     BSF     TRISA,0     ; Disable digital output driver
-    CLRF	ANSELA		; clear bits for all pins	
+    CLRF    ANSELA		; clear bits for all pins	
     BSF     ANSELA,0    ; Disable digital input buffer
     MOVLW   0x0
 
@@ -35,22 +35,28 @@ setup
 start
     BSF     PORTA,7
     GOTO    PWM 
-    call    Average1
-    call    trans
-    call    tenmsDelay
-
+    
 ;<editor-fold defaultstate="collapsed" desc="PWM Setup">
 PWMSetup:
+    BSF     CONFIG3H, 0
     CLRF    CCP1CON
+    CLRF    CCP2CON
     MOVLW   .199
     MOVWF   PR2
-    MOVLW   .179
+    MOVLW   .25
     MOVWF   CCPR1L
-    BCF	    TRISC,CCP1
+    MOVWF   CCPR2L
+    BCF	    TRISC,CCP1      ;C2
+    BCF	    TRISE,1         ;C1
+
+    CLRF    CCPTMRS0        ;all PWM modules use timer 2
+
     MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
     MOVWF   T2CON   
     MOVLW   b'00011100'	    ;.25, PWM mode
     MOVWF   CCP1CON 
+    MOVWF   CCP2CON 
+
     CLRF    TMR2
     BSF	    T2CON, TMR2ON
     BSF     PIE1, TMR2IE     ; enable interrupts from the timer
@@ -61,7 +67,7 @@ PWMSetup:
     RETURN
     ;</editor-fold>
 
-PWMISR
+PWMISR:
     BCF	    PIR1,TMR2IF
     CLRF    TMR2
     RETURN
@@ -69,6 +75,5 @@ PWMISR
 PWM:
 
     CALL    PWMSetup
-    return
 
     end
