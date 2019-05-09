@@ -12,7 +12,9 @@
 
     ORG     0x08
     BTFSC   PIR1,TMR2IF
-    CALL    PWMISR,FAST
+    CALL    PWMISRL,FAST
+    BTFSC   PIR5,TMR4IF
+    CALL    PWMISRR,FAST
     RETFIE
 
 
@@ -25,55 +27,90 @@ setup
     CLRF    PORTA		; Initialize PORTA by clearing output data latches
     CLRF    LATA		; Alternate method to clear output data latches
     CLRF    TRISA		; clear bits for all pins
-    BSF     TRISA,0     ; Disable digital output driver
     CLRF    ANSELA		; clear bits for all pins	
-    BSF     ANSELA,0    ; Disable digital input buffer
     MOVLW   0x0
 
+    CALL    PWM
     GOTO    start
 
-start
-    BSF     PORTA,7
-    GOTO    PWM 
     
-;<editor-fold defaultstate="collapsed" desc="PWM Setup">
-PWMSetup:
-    BSF     CONFIG3H, 0
+start
+    GOTO    start
+    
+    
+;<editor-fold defaultstate="collapsed" desc="PWM Setup Left">
+LeftMotorControl macro dutyCycle, direction
+    MOVLB   0x0f
     CLRF    CCP1CON
-    CLRF    CCP2CON
-    MOVLW   .199
+    MOVLW   .200
     MOVWF   PR2
-    MOVLW   .25
+    MOVLW   dutyCycle
     MOVWF   CCPR1L
-    MOVWF   CCPR2L
+    
     BCF	    TRISC,CCP1      ;C2
-    BCF	    TRISE,1         ;C1
-
-    CLRF    CCPTMRS0        ;all PWM modules use timer 2
-
-    MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
-    MOVWF   T2CON   
-    MOVLW   b'00011100'	    ;.25, PWM mode
+    
+    CLRF    CCPTMRS0
+  
+    MOVLW   b'00001100'	    ;PWM mode
     MOVWF   CCP1CON 
-    MOVWF   CCP2CON 
-
+    MOVLB   0xF
+    MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
+    MOVWF   T2CON 
     CLRF    TMR2
-    BSF	    T2CON, TMR2ON
     BSF     PIE1, TMR2IE     ; enable interrupts from the timer
     bsf     INTCON,PEIE      ; Enable peripheral interrupts
     bsf     INTCON,GIE       ; Enable global interrupts
-    ;write ISR that does the same thing as the polling 
-	
-    RETURN
+    BSF	    T2CON, TMR2ON    ; Turn timer on
+    MOVLB   0x0
+	; BSF     PORTA,5        ;indicate that the setup was performed
+    endm
     ;</editor-fold>
+    
+;<editor-fold defaultstate="collapsed" desc="PWM Setup Right">
+RightMotorControl macro dutyCycle, direction
+    CLRF    CCP5CON
+    MOVLW   .200
+    MOVWF   PR4
+    MOVLW   dutyCycle
+    MOVWF   CCPR5L
+    
+    BCF	    TRISE, 2         ;E2
+    
+    BSF     CCPTMRS1, 2      ;use timer 4
 
-PWMISR:
+    MOVLW   b'00001100'	     ;PWM mode
+    MOVWF   CCP5CON 
+    
+    MOVLB   0xF
+    MOVLW   b'01111010'	      ;16 prescale, 16 postscale, timer off
+    MOVWF   T4CON 
+    CLRF    TMR4
+    BSF     PIE5, TMR4IE      ; enable interrupts from the timer
+    bsf     INTCON, PEIE      ; Enable peripheral interrupts
+    bsf     INTCON, GIE       ; Enable global interrupts
+    BSF	    T4CON, TMR4ON     ; Turn timer on
+    MOVLB   0x0
+    ; BSF     PORTA,6         ; indicate tea the setup was performed
+    endm
+    ;</editor-fold>
+    
+PWMISRL:
+    BCF	    PIR5,TMR4IE
     BCF	    PIR1,TMR2IF
     CLRF    TMR2
+    BSF	    PIR5,TMR4IE
+    RETURN
+    
+PWMISRR:
+    BCF	    PIR5,TMR4IF
+    MOVLB   0xF
+    CLRF    TMR4
+    MOVLB   0x0
     RETURN
     
 PWM:
 
-    CALL    PWMSetup
-
+    RightMotorControl .150,b'0'
+    LeftMotorControl .200,b'0'    
+    RETURN 
     end

@@ -954,6 +954,7 @@ PROC
 RCE1	MOVLW	A's'
 	call	trans
 poll_c	
+	call 	tenmsDelay
 	call	Read_AN14
 	BCF	WREG,0
 	BCF	WREG,1
