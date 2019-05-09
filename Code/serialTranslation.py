@@ -2,7 +2,7 @@ import serial
 import matplotlib.pyplot as plt 
 import matplotlib.animation as animation
 import matplotlib.legend as lgnd 
-from matplotlib import style
+from   matplotlib import style
 import numpy as np
 import csv
 
@@ -23,7 +23,7 @@ def dumpData(d, fname):
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM5' 
+    ser.port = 'COM4' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
