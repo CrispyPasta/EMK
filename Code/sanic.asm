@@ -44,6 +44,7 @@
 	newdelay
 	Touch1
 	Touch2
+	diff
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor
@@ -110,17 +111,31 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     
 ;<editor-fold defaultstate="collapsed" desc="Reset and Interrupt Vectors">
-    org 	0h
-    GOTO 	setup   
-    org 	8h  
-    BTFSC	PIR1,RCIF
-    GOTO	ISR1
+    org	    0h
+    GOTO    setup  
+
+    org	    8h  
+    CALL    InterruptHandler
     return
-    org		18h
+
+    org	    18h
     BTFSC   INTCON,RBIF      ; Test the interrupt flag of PORTB pin 0
     GOTO    DEBUG_SUB       ; Go to the debugging subroutine
     RETURN
+    
+    ;<editor-fold defaultstate="collapsed" desc="Interrupt Handler">
+InterruptHandler:
+    BTFSC   PIR1,RCIF
+    GOTO    touchISR
+    BTFSC   PIR1,TMR2IF		;PWM timer interrupts	
+    CALL    PWMISRL,FAST		
+    BTFSC   PIR5,TMR4IF		
+    CALL    PWMISRR,FAST
+    RETURN
+    ;</editor-fold>
 ;</editor-fold>
+    
+    
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
     
@@ -454,11 +469,11 @@ getColor:
 	CLRF    McolorSensed
 	CLRF    RcolorSensed
 	CLRF    RRcolorSensed
-	call	Read_AN8
-	call	Read_AN9
-	call	Read_AN10
-	call	Read_AN12
-	call	Read_AN13
+	call	AverageLL		;use these cause they have very little noise
+	call	AverageL
+	call	AverageM
+	call	AverageR
+	call	AverageRR
 	
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -730,47 +745,82 @@ searchModeLights:
 	CALL 	threeMilDelay
 	RETURN 
 ;</editor-fold>
-	
-;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
-threeMilDelay: ;(actually now 333ms)
-	movlw   .3
-	movwf   hdelay3
-Go_on0_333
-	movlw	.144	
-	movwf	hdelay2		
-Go_on1_333			
-	movlw	0xFF
-	movwf	hdelay1
-Go_on2_333
-	decfsz	hdelay1,f	
-	goto	Go_on2_333		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-	decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
-	goto	Go_on1_333		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
-	decfsz  hdelay3,f
-	goto    Go_on0_333
 
-	RETURN
-
-;</editor-fold>
-
-;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
-hunnitMilDelay: ;(actually now 100ms)
-	movlw	.130	
-	movwf	hdelay2		
-Go_on1_100			
-	movlw	0xFF
-	movwf	hdelay1
-Go_on2_100
-	decfsz	hdelay1,f	
-	goto	Go_on2_100		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-	decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
-	goto	Go_on1_100		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
-
-	RETURN
-
-;</editor-fold>
+;<editor-fold defaultstate="collapsed" desc="Left motor control">
+LeftMotorControl macro dutyCycle, direction
+    MOVLB   0x0f
+    CLRF    CCP1CON
+    MOVLW   .200
+    MOVWF   PR2
+    MOVLW   dutyCycle
+    MOVWF   CCPR1L
     
+    BCF	    TRISC,CCP1      ;C2
+    
+    CLRF    CCPTMRS0
+  
+    MOVLW   b'00001100'	    ;PWM mode
+    MOVWF   CCP1CON 
+    MOVLB   0xF
+    MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
+    MOVWF   T2CON 
+    CLRF    TMR2
+    BSF     PIE1, TMR2IE     ; enable interrupts from the timer
+    bsf     INTCON,PEIE      ; Enable peripheral interrupts
+    bsf     INTCON,GIE       ; Enable global interrupts
+    BSF	    T2CON, TMR2ON    ; Turn timer on
+    MOVLB   0x0
+	; BSF     PORTA,5        ;indicate that the setup was performed
+    endm
+
+PWMISRL:
+    BCF	    PIR5,TMR4IE
+    BCF	    PIR1,TMR2IF
+    CLRF    TMR2
+    BSF	    PIR5,TMR4IE
+    RETURN
+    ;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="Right motor control">
+RightMotorControl macro dutyCycle, direction
+    CLRF    CCP5CON
+    MOVLW   .200
+    MOVWF   PR4
+    MOVLW   dutyCycle
+    MOVWF   CCPR5L
+    
+    BCF	    TRISE, 2         ;E2
+    
+    BSF     CCPTMRS1, 2      ;use timer 4
+
+    MOVLW   b'00001100'	     ;PWM mode
+    MOVWF   CCP5CON 
+    
+    MOVLB   0xF
+    MOVLW   b'01111010'	      ;16 prescale, 16 postscale, timer off
+    MOVWF   T4CON 
+    CLRF    TMR4
+    BSF     PIE5, TMR4IE      ; enable interrupts from the timer
+    bsf     INTCON, PEIE      ; Enable peripheral interrupts
+    bsf     INTCON, GIE       ; Enable global interrupts
+    BSF	    T4CON, TMR4ON     ; Turn timer on
+    MOVLB   0x0
+    ; BSF     PORTA,6         ; indicate tea the setup was performed
+    endm
+
+PWMISRR:
+    BCF	    PIR5,TMR4IF
+    MOVLB   0xF
+    CLRF    TMR4
+    MOVLB   0x0
+    RETURN
+    ;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
+    RightMotorControl .150, b'0'
+    LeftMotorControl  .150, b'0'
+	
     BTFSC   raceColor,0		;check white
     MOVLW   b'10101011'
     BTFSC   raceColor,1		;check green
@@ -796,7 +846,8 @@ nav
     ;CALL    hunnitMilDelay
     GOTO    nav
 	; navigate doesn't end, it must be interruted 
-
+;</editor-fold>
+	
 ;</editor-fold>	
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -953,36 +1004,35 @@ PROC
 ;<editor-fold defaultstate="collapsed" desc="Touch Start (RCE1)">	
 RCE1	MOVLW	A's'
 	call	trans
+	MOVLW	d'9'
+	MOVWF	diff
+	call	delay1s
 poll_c	
-	call 	tenmsDelay
 	call	Read_AN14
-	BCF	WREG,0
-	BCF	WREG,1
-	BCF	WREG,2
-	BCF	WREG,3
-	BCF	WREG,4
+	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
-	CALL	tenmsDelay
+	call	Read_AN14
+	
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
+	
 	
 	call	Read_AN14
-	BCF	WREG,0
-	BCF	WREG,1
-	BCF	WREG,2
-	BCF	WREG,3
-	BCF	WREG,4
-	MOVWF	Touch2
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
 	
-	CPFSEQ	Touch1
+	
+	SUBFWB	Touch2
+	CPFSGT	diff
 	goto	stop
-	
+	MOVLW   A'\n'
 	goto	poll_c
 
 stop	MOVLW	A'D'
 	call	trans
 	BSF	    INTCON,GIEL		; Enable peripheral interrupts
 	bsf     INTCON,GIEH  ; Enable global interrupts
-	;BSF	    INTCON,INT0IE
 	BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
 	GOTO	navigate
 
@@ -990,7 +1040,7 @@ stop	MOVLW	A'D'
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ISR1	CLRF	RCREG
+touchISR	CLRF	RCREG
 	BCF	PIR1,RCIF
 	BCF	PIE1,RC1IE
 	GOTO	RCE
@@ -1135,31 +1185,6 @@ debugCalibrate
    
 ;</editor-fold>
     
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    
-;<editor-fold defaultstate="collapsed" desc="One second delay">
-delay1s
-
-	MOVLW   0x0F
-	MOVWF   delay3
-Go_off0
-
-	movlw	0xFF
-	movwf	delay2
-Go_off1					
-	movlw	0xFF	
-	movwf	delay1
-Go_off2
-
-	decfsz	delay1,f
-	goto	Go_off2
-	decfsz	delay2,f
-	goto	Go_off1
-	decfsz	delay3,f
-	goto	Go_off0
-	RETURN
-;</editor-fold>
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python + ADC stuff">
@@ -1604,22 +1629,6 @@ rep5
 	MOVWF	RRsensorVal
 	RETURN
     ;</editor-fold>
-	
-    ;<editor-fold defaultstate="collapsed" desc="10ms Delay">
-tenmsDelay:
-    movlw	.13		
-    movwf	delayCounter2		
-Go_on1_10			
-    movlw	0xFF
-    movwf	delayCounter1
-Go_on2_10
-    decfsz	delayCounter1,f	
-    goto	Go_on2_10		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-    decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
-    goto	Go_on1_10		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
-
-    RETURN
-;</editor-fold>
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
@@ -1680,56 +1689,90 @@ pythonLoop2
 ;</editor-fold>
 
 ;</editor-fold>
-    
+     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+   
+;<editor-fold defaultstate="collapsed" desc="Delay Loops">
     
-;<editor-fold defaultstate="collapsed" desc="Motor Control Stuff">
-    ;<editor-fold defaultstate="collapsed" desc="PWM Setup">
-PWMSetup:
-	;Step 1
-	MOVLB	0x0F
-	BSF	TRISC,4	    ;disable output on this pin
-	BCF	PORTC,4
-	MOVLB	0x00
-	
-    ;Step 2
-	BCF		CCPTMRS1,C4TSEL0
-	BCF		CCPTMRS1,C4TSEL1	;tells the PWM to use Timer 2
+    ;<editor-fold defaultstate="collapsed" desc="10ms Delay">
+tenmsDelay:
+    movlw	.13		
+    movwf	delayCounter2		
+Go_on1_10			
+    movlw	0xFF
+    movwf	delayCounter1
+Go_on2_10
+    decfsz	delayCounter1,f	
+    goto	Go_on2_10		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1_10		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
 
-	;Step 3
-	CALL 	PWMTimerSetup
-	
-	;Step 4 and 6
-	MOVLW	0x0F	    ; = 00001111
-	MOVWF	CCP4CON	    ; sets module to PWM mode
+    RETURN
+;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
+hunnitMilDelay: ;(actually now 100ms)
+    movlw	.130	
+    movwf	hdelay2		
+Go_on1_100			
+    movlw	0xFF
+    movwf	hdelay1
+Go_on2_100
+    decfsz	hdelay1,f	
+    goto	Go_on2_100		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1_100		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
 
-	;Step 5
-	MOVLW	b'10000000'		;1000000000 = 512 = 50% duty cycle
-	MOVWF	CCPR2L
-	BCF		CCP4CON,DC4B0
-	BCF		CCP4CON,DC4B1
+    RETURN
 
-	;Step 7
-	MOVLB	0x0F
-	BCF		TRISC,4		;enable output on pin
-	MOVLB	0x00
-	RETURN
-    ;</editor-fold>
+;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
+threeMilDelay: ;(actually now 333ms)
+    movlw   .3
+    movwf   hdelay3
+Go_on0_333
+    movlw	.144	
+    movwf	hdelay2		
+Go_on1_333			
+    movlw	0xFF
+    movwf	hdelay1
+Go_on2_333
+    decfsz	hdelay1,f	
+    goto	Go_on2_333		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
+    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    goto	Go_on1_333		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
+    decfsz  hdelay3,f
+    goto    Go_on0_333
 
+    RETURN
 
-	;<editor-fold defaultstate="collapsed" desc="PWM Timer Setup">
-PWMTimerSetup:
-	MOVLW	b'01111011'	;prescaler = 16, postscaler = 16, timer = off
-	MOVWF	T2CON		
-	MOVWF	PR2			;overflow 256 times
+;</editor-fold>
+      
+    ;<editor-fold defaultstate="collapsed" desc="One second delay">
+delay1s
 
-	BCF		PIR1,TMR2IF	;clear the interrupt flag bit
+    MOVLW   0x0F
+    MOVWF   delay3
+Go_off0
 
-	BSF		T2CON,TMR2ON	;turn on the timer
-	RETURN
-    ;</editor-fold>
+    movlw	0xFF
+    movwf	delay2
+Go_off1					
+    movlw	0xFF	
+    movwf	delay1
+Go_off2
+
+    decfsz	delay1,f
+    goto	Go_off2
+    decfsz	delay2,f
+    goto	Go_off1
+    decfsz	delay3,f
+    goto	Go_off0
+    RETURN
+;</editor-fold>
     
 ;</editor-fold>
-
+    
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     end
