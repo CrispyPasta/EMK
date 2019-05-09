@@ -1494,8 +1494,8 @@ Poll_Go5
 	RETURN	;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-    ;<editor-fold defaultstate="collapsed" desc="Average1 - LL ">
-Average1:
+    ;<editor-fold defaultstate="collapsed" desc="AverageLL - LL ">
+AverageLL:
 	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
@@ -1516,8 +1516,8 @@ rep1
 	RETURN
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="Average2 - L">
-Average2:
+    ;<editor-fold defaultstate="collapsed" desc="AverageL - L">
+AverageL:
 	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
@@ -1538,8 +1538,8 @@ rep2
 	RETURN
     ;</editor-fold>
     
-    ;<editor-fold defaultstate="collapsed" desc="Average3 - M">
-Average3:
+    ;<editor-fold defaultstate="collapsed" desc="AverageM - M">
+AverageM:
 	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
@@ -1560,8 +1560,8 @@ rep3
 	RETURN
     ;</editor-fold>
 	
-    ;<editor-fold defaultstate="collapsed" desc="Average4 - R">
-Average4:
+    ;<editor-fold defaultstate="collapsed" desc="AverageR - R">
+AverageR:
 	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
@@ -1582,8 +1582,8 @@ rep4
 	RETURN
     ;</editor-fold>
 	
-    ;<editor-fold defaultstate="collapsed" desc="Average5 - RR">
-Average5:
+    ;<editor-fold defaultstate="collapsed" desc="AverageRR - RR">
+AverageRR:
 	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
@@ -1631,22 +1631,22 @@ pythonLoop1
     movwf	pythonCounter1
 pythonLoop2
 
-    CALL    Average1
+    CALL    AverageLL
     CALL    trans
 
-    CALL    Average2
+    CALL    AverageL
     MOVF    LsensorVal,w
     CALL    trans
 
-    CALL    Average3
+    CALL    AverageM
     MOVF    MsensorVal,w
     CALL    trans
 
-    CALL    Average4
+    CALL    AverageR
     MOVF    RsensorVal,w
     CALL    trans
 
-    CALL    Average5
+    CALL    AverageRR
     MOVF    RRsensorVal,w
     CALL    trans
 

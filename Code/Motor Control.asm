@@ -6,13 +6,6 @@
     CONFIG  WDTEN = OFF           ; Watchdog Timer Enable bit (WDT is controlled by SWDTEN bit of the WDTCON register)
     CONFIG  LVP	= ON              ; Low voltage programming
     ;--- Configuration bits ---
-    
-    global  PWM
-    global  PWMISR
-
-    extern  Average1
-    extern  trans
-    extern  tenmsDelay
 
     ORG     0x00
     GOTO    setup
@@ -35,23 +28,6 @@ setup
     BSF     TRISA,0     ; Disable digital output driver
     CLRF	ANSELA		; clear bits for all pins	
     BSF     ANSELA,0    ; Disable digital input buffer
-
-    ;setup port for transmission
-    CLRF    FSR0
-    MOVLW   b'00100100'	;enable TXEN and BRGH
-    MOVWF   TXSTA1
-    MOVLW   b'10010000'	    ;enable serial port and continuous receive 
-    MOVWF   RCSTA1
-    MOVLW   D'25'
-    MOVWF   SPBRG1
-    CLRF    SPBRGH1
-    BCF	    BAUDCON1,BRG16	; Use 8 bit baud generator
-    BSF	    TRISC,TX		; make TX an output pin
-    BSF	    TRISC,RX		; make RX an input pin
-    CLRF    PORTC
-    CLRF    ANSELC
-    MOVLW   b'11011000'  	; Setup port C for serial port.
-
     MOVLW   0x0
 
     GOTO    start
