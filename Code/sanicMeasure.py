@@ -10,16 +10,17 @@ calibrationComplete = False
 ser = serial.Serial()
 data = [[], [], [], [], []]
 pos = 0
-backupData = []
-def dumpData(d, fname):
-    global data
+# backupData = []
 
-    d = np.array(data, dtype = float)
-    d = d.transpose()
-    dataFile = open(fname, 'wb')
-    with dataFile:
-        writer = csv.writer(dataFile)
-        writer.writerows(d)
+# def dumpData(d, fname):
+#     global data
+
+#     d = np.array(data, dtype = float)
+#     d = d.transpose()
+#     dataFile = open(fname, 'wb')
+#     with dataFile:
+#         writer = csv.writer(dataFile)
+#         writer.writerows(d)
 
 def setupSerial(baud):
     ser.baudrate = baud
@@ -47,7 +48,7 @@ def animate(i):
     points = 0
     while ser.is_open and points < 50:
         line = ser.readline()
-        backupData.append(line)
+        # backupData.append(line)
         line = str(line)
         for a in range(0,5):
             #for b in range(0, 8):

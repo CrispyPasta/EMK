@@ -10,16 +10,6 @@ calibrationComplete = False
 ser = serial.Serial()
 data = [[], [], [], [], []]
 pos = 0
-backupData = []
-def dumpData(d, fname):
-    global data
-
-    d = np.array(data, dtype = float)
-    d = d.transpose()
-    dataFile = open(fname, 'wb')
-    with dataFile:
-        writer = csv.writer(dataFile)
-        writer.writerows(d)
 
 def setupSerial(baud):
     ser.baudrate = baud
@@ -48,13 +38,23 @@ def animate(i):
     voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
-        backupData.append(line)
         line = str(line)
-        if(line == '\OwO/\n'):
+        if (line == '\OwO/\n'):     #stop string for the python plotting
             calibrationComplete = True
             print("end sequence")
             plt.close()
             return
+        elif (len(line) ==26):     #this should be the calibration values
+            print(" \tLL\tL\tM\tR\tRR")
+            colors = ["W", "G", "B", "R", "K"]
+            for a in range(0, 5):
+                print colors[a] + "\t",
+                for b in range(0, 5):
+                    print str(ord(line[a + 5 * b])) + "\t",
+                print("\n")
+
+                #now just store all this shit in an array and plot it 
+            continue
         for a in range(0,5):
             #for b in range(0, 8):
             #    line = ser.readline()

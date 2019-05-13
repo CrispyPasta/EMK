@@ -20,29 +20,14 @@
 	mes2		;received message command character 2
 	mes3		;received message command character 3
 	mes4
-	cnt			;character count for receive
+	charCount	;character count for receive
 	reg
 	size		;startup message size variable
-
 	loop
-	newsize	    ; used to store new message size
-	stateBits	    ; One-hot encoding indicating the current state
-			    ; 7 = MSG, 6 = RCE, 5 = PRC, 4 = CAL
-	portAbackup	    ; this stores whatever was in PORTA before the debugging interrupt so it can be restored
-	delay1
+	delay1		; delay loop counters, these are reused
 	delay2
 	delay3
-	TX_BYTE
-	RX_BYTE
-	WRITE_ACKNOWLEDGE_POLL_LOOPS
-	POLL_COUNTER
-	WRITE_CONTROL
-	READ_CONTROL
-	EEPROM_ADDRESS
-	EEPROM_DATA
-	readCount
-	newdelay
-	Touch1
+	Touch1		; for touch start sensor
 	Touch2
 	diff
 
@@ -51,7 +36,7 @@
 	LLgreenValue
 	LLblueValue
 	LLredValue
-	LLblackValue	 ;.34
+	LLblackValue	 ;.20
 
 	LwhiteValue      ; Hardcoded voltage values for each color for Left sensor
 	LgreenValue
@@ -92,14 +77,7 @@
 	raceColor	  	; One-hot encoded colour of that the marv will race
 	raceLinePosition  	; position of the race line -  LL-L-M-R-RR
 
-	hdelay1			;
-	hdelay2
-	hdelay3			;.69 0x45
-
-	delayCounter1	; for 10 ms delay
-	delayCounter2
-
-	pythonCounter1	;variables for calibration with python
+	pythonCounter1		;variables for calibration with python, these can't be reused 
 	pythonCounter2		;.73 0x49
 	
 	temp	    ; temp variable for sensor output averaging	4A
@@ -118,9 +96,6 @@
     CALL    InterruptHandler
     return
 
-    org	    18h
-    BTFSC   INTCON,RBIF      ; Test the interrupt flag of PORTB pin 0
-    GOTO    DEBUG_SUB       ; Go to the debugging subroutine
     RETURN
     
     ;<editor-fold defaultstate="collapsed" desc="Interrupt Handler">
@@ -134,8 +109,6 @@ InterruptHandler:
     RETURN
     ;</editor-fold>
 ;</editor-fold>
-    
-    
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
     
@@ -337,14 +310,14 @@ R1
 	BCF	INTCON,GIE
 	BCF	INTCON,PEIE
 	MOVLW	D'3'
-	MOVWF	cnt
+	MOVWF	charCount
 R2
 	BTFSS	PIR1,RC1IF		; check if something is received loop
 	BRA	R2
 cat
 	MOVFF	RCREG, INDF0		; catches the character
 	INCF	FSR0L,F
-	DCFSNZ	cnt 			; if 3 characters received goto processing function
+	DCFSNZ	charCount 			; if 3 characters received goto processing function
 	GOTO	PRO
 	GOTO	R2
 	
@@ -907,13 +880,13 @@ R3
 R4
 	LFSR 	0,0x02
 	MOVLW	D'3'
-	MOVWF	cnt
+	MOVWF	charCount
 R5
 	BTFSS 	PIR1, RCIF	; check if something is received
 	BRA 	R5
 	MOVFF	RCREG, INDF0
 	INCF	FSR0L,F
-	DCFSNZ	cnt 
+	DCFSNZ	charCount 
 	GOTO	PROC
 	GOTO	R5
 
@@ -1040,10 +1013,13 @@ stop	MOVLW	A'D'
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-touchISR	CLRF	RCREG
-	BCF	PIR1,RCIF
-	BCF	PIE1,RC1IE
-	GOTO	RCE
+;<editor-fold defaultstate="collapsed" desc="touchISR">
+touchISR	
+    CLRF    RCREG
+    BCF	    PIR1,RCIF
+    BCF	    PIE1,RC1IE
+    GOTO    RCE
+;</editor-fold>
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1136,53 +1112,6 @@ CALIBRATE					; order is blue, red, green, white, black
     call    delay1s
     CLRF    PORTA
     GOTO    RCE				
-;</editor-fold>
-    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    
-;<editor-fold defaultstate="collapsed" desc="Debugging subroutine">
-DEBUG_SUB
-		bcf     INTCON,INT0IF      ; clear the interrupt flag
-		bcf	    INTCON,RBIF
-		MOVF    PORTA,w	    	; copy porta to w
-		MOVWF   portAbackup     ; copy from w to the backup register 
-		BTFSC   stateBits,7     ; check if it's in message mode
-		CALL    debugMessage
-		BTFSC   stateBits,6     ; check if it's in race mode
-		CALL    debugRace
-		BTFSC   stateBits,5     ; check if it's in programming mode
-		CALL    debugProgram
-		BTFSC   stateBits,4     ; check if it's in calibration mode
-		CALL    debugCalibrate
-		MOVF    portAbackup,w
-		MOVWF   PORTA           ; restore port A contents
-		bcf	    INTCON,RBIF
-		RETFIE
-
-debugMessage
-		MOVF    0x08,w
-		MOVWF   PORTA
-		call    delay1s
-		RETURN
-
-debugRace
-		MOVF    col,w
-		MOVWF   PORTA
-		call    delay1s
-		RETURN
-
-debugProgram
-		MOVF    col,w
-		MOVWF   PORTA
-		call    delay1s
-		RETURN
-
-debugCalibrate
-		;MOVF    calOffset,w  
-		MOVWF   PORTA
-		call    delay1s
-		RETURN 
-   
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1630,15 +1559,52 @@ rep5
 	RETURN
     ;</editor-fold>
 
+    ;<editor-fold defaultstate="collapsed" desc="Python Stop Word Transmission">
+stopWord:
+    MOVLW	.92
+    CALL	trans
+    MOVLW	.79
+    CALL	trans
+    MOVLW	.119
+    CALL	trans
+    MOVLW	.79
+    CALL	trans
+    MOVLW	.47
+    CALL	trans
+    MOVLW	'\n'				;Send an enter
+    CALL	trans
+	RETURN
+    ;</editor-fold>
+
+    ;<editor-fold defaultstate="collapsed" desc="Transmit Calibrated Values">
+sendCals:
+	MOVLW	.25		; there are 25 calibrated values 
+	MOVWF	delay3	
+	;we're gonna start from address .16, 0x10 and send one character 25 times in a row.
+	LFSR	0, 0x010	;clear FSR0H and load FRS0L with 0x10
+
+not_done
+	MOVF	POSTINC0, W 	;move contents of FSR to W, then incremement 
+	call	trans
+	DECFSZ	delay3
+	GOTO	not_done
+
+	MOVLW	A'\n'
+	call	trans
+	CLRF	WREG 
+	RETURN
+    ;</editor-fold>
+
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
-    movlw	b'00001100'
-    MOVWF	PORTD
-    movlw	.24		;24 * 250 * 0.01s = 60s
-    movwf	pythonCounter2		
+    CALL    sendCals
+    movlw   b'00001100'
+    MOVWF   PORTD
+    movlw   .24		;24 * 250 * 0.01s = 60s
+    movwf   pythonCounter2		
 pythonLoop1
-    movlw	.250
-    movwf	pythonCounter1
+    movlw   .250
+    movwf   pythonCounter1
 pythonLoop2
 
     CALL    AverageLL
@@ -1664,28 +1630,15 @@ pythonLoop2
     CALL    trans
 
     CALL    tenmsDelay
+ 
+    decfsz  pythonCounter1,f
+    goto    pythonLoop2
+    decfsz  pythonCounter2,f   
+    goto    pythonLoop1
+    
+    CALL    stopWord
 
-    
-    
-    decfsz	pythonCounter1,f
-    goto	pythonLoop2
-    decfsz	pythonCounter2,f   
-    goto	pythonLoop1
-    
-    MOVLW	.92
-    CALL	trans
-    MOVLW	.79
-    CALL	trans
-    MOVLW	.119
-    CALL	trans
-    MOVLW	.79
-    CALL	trans
-    MOVLW	.47
-    CALL	trans
-    MOVLW	'\n'				;Send an enter
-    CALL	trans
-    
-    GOTO	RCE
+    GOTO    RCE
 ;</editor-fold>
 
 ;</editor-fold>
@@ -1697,14 +1650,14 @@ pythonLoop2
     ;<editor-fold defaultstate="collapsed" desc="10ms Delay">
 tenmsDelay:
     movlw	.13		
-    movwf	delayCounter2		
+    movwf	delay2		
 Go_on1_10			
     movlw	0xFF
-    movwf	delayCounter1
+    movwf	delay1
 Go_on2_10
-    decfsz	delayCounter1,f	
+    decfsz	delay1,f	
     goto	Go_on2_10		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-    decfsz	delayCounter2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    decfsz	delay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
     goto	Go_on1_10		        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
 
     RETURN
@@ -1713,14 +1666,14 @@ Go_on2_10
     ;<editor-fold defaultstate="collapsed" desc="100 ms Delay loop">
 hunnitMilDelay: ;(actually now 100ms)
     movlw	.130	
-    movwf	hdelay2		
+    movwf	delay2		
 Go_on1_100			
     movlw	0xFF
-    movwf	hdelay1
+    movwf	delay1
 Go_on2_100
-    decfsz	hdelay1,f	
+    decfsz	delay1,f	
     goto	Go_on2_100		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    decfsz	delay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
     goto	Go_on1_100		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
 
     RETURN
@@ -1730,19 +1683,19 @@ Go_on2_100
     ;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
 threeMilDelay: ;(actually now 333ms)
     movlw   .3
-    movwf   hdelay3
+    movwf   delay3
 Go_on0_333
     movlw	.144	
-    movwf	hdelay2		
+    movwf	delay2		
 Go_on1_333			
     movlw	0xFF
-    movwf	hdelay1
+    movwf	delay1
 Go_on2_333
-    decfsz	hdelay1,f	
+    decfsz	delay1,f	
     goto	Go_on2_333		        ; The Inner loop takes 3 instructions per loop * 256 loops = 768 instructions
-    decfsz	hdelay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
+    decfsz	delay2,f	    ; The outer loop takes an additional (3 instructions per loop + 2 instructions to reload Delay 1) * 256 loops
     goto	Go_on1_333		        ; (768+5) * 130 = 100490 instructions / 1M instructions per second = 100.50 ms.
-    decfsz  hdelay3,f
+    decfsz  delay3,f
     goto    Go_on0_333
 
     RETURN
