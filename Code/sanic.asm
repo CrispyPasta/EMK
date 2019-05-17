@@ -82,6 +82,11 @@
 	
 	temp	    ; temp variable for sensor output averaging	4A
 	aveloop	    ; loop counter for sensor averaging	4B
+
+	calLoop1
+	calLoop2
+	calTemp1
+	calTemp2
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
 
@@ -702,6 +707,37 @@ determineDirection:
 
 ;</editor-fold>
 
+HardRight:
+    RightMotorControl, .20, b'1'
+    LeftMotorControl, .100, b'0'
+    RETURN
+	
+HardLeft:
+    RightMotorControl, .100, b'0'
+    LeftMotorControl, .20, b'1'
+    RETURN
+
+Right:
+    RightMotorControl, .60, b'1'
+    LeftMotorControl, .100, b'0'
+    RETURN
+
+Left:
+    RightMotorControl, .100, b'0'
+    LeftMotorControl, .60, b'1'
+    RETURN
+
+Stop:
+    RightMotorControl, .0, b'0'		;turn motors off 
+    LeftMotorControl, .0, b'0'
+    RETURN
+
+Straight:
+    RightMotorControl, .200, b'0'	; g2g fêst 
+    LeftMotorControl, .200, b'0'
+    RETURN
+	
+	
 ;<editor-fold defaultstate="collapsed" desc="Search mode">
 searchModeLights:
 	bcf	PORTA,3
@@ -738,10 +774,10 @@ LeftMotorControl macro dutyCycle, direction
     
     CLRF    CCPTMRS0
   
-    MOVLW   b'00001100'	    ;PWM mode
+    MOVLW   b'00001100'	     ;PWM mode
     MOVWF   CCP1CON 
     MOVLB   0xF
-    MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
+    MOVLW   b'01111010'	     ;16 prescale, 16 postscale, timer off
     MOVWF   T2CON 
     CLRF    TMR2
     BSF     PIE1, TMR2IE     ; enable interrupts from the timer
