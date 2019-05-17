@@ -10,21 +10,11 @@ calibrationComplete = False
 ser = serial.Serial()
 data = [[], [], [], [], []]
 pos = 0
-backupData = []
-def dumpData(d, fname):
-    global data
-
-    d = np.array(data, dtype = float)
-    d = d.transpose()
-    dataFile = open(fname, 'wb')
-    with dataFile:
-        writer = csv.writer(dataFile)
-        writer.writerows(d)
 
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM4' 
+    ser.port = 'COM13' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -37,7 +27,10 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [0,1,2,3,4]
+sensors = [0, 1, 2, 3, 4]
+ranges  = [0]
+#LL L M R RR
+calValues = [[], [], [], [], []]
 def animate(i):
     global calibrationComplete
     global data
@@ -45,21 +38,30 @@ def animate(i):
     global fig
     sensors
     points = 0
-    voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
-        backupData.append(line)
         line = str(line)
-        if(line == '\OwO/\n'):
+        if (line == '\OwO/\n'):     #stop string for the python plotting
             calibrationComplete = True
             print("end sequence")
             plt.close()
             return
-        for a in range(0,5):
-            #for b in range(0, 8):
-            #    line = ser.readline()
-            #    voltages += 5 * ord(line[a]) / 255.0
+        elif (len(line) ==26):     #this should be the calibration values
+            # print(" \tLL\tL\tM\tR\tRR")
+            # colors = ["W", "G", "B", "R", "K"]
+            for a in range(0, 5):
+                # print colors[a] + "\t",
+                for b in range(0, 5):
+                    # print str(ord(line[a + 5 * b])) + "\t",
+                    calValues[b].append(ord(line[a + 5 * b]))
+                # print("\n")
+            
+            # print(calValues)
 
+                #now just store all this shit in an array and plot it 
+            continue
+
+        for a in range(0,5):
             try:
                 voltage = 5 * ord(line[a]) / 255.0
                 data[a].append(voltage)
@@ -68,21 +70,22 @@ def animate(i):
                     data[a].append(data[a][len(data[a]) - 1])
                 except:
                     data[a].append(0)  # append prev voltage if too few bits
+                    
         points += 1
 
-    if len(data[0]) % 2000 == 0:
-        # data[0] = data[0][1000:]
-        # data[1] = data[1][1000:]
-        # data[2] = data[2][1000:]
-        # data[3] = data[3][1000:]
-        # data[4] = data[4][1000:]
-        data = [[],[],[],[],[]]
-        # pos += 1
+    if len(data[0]) % 50 == 0 and len(data[0]) >= 2000:
+        data = [data[0][50:], data[1][50:], data[2]
+                [50:], data[3][50:], data[4][50:]]
 
     ax1.clear()
     labels = ['RR', 'R', 'M', 'L', 'LL']
+    cols = ['c', 'g', 'b', 'r', 'k']
+    calVals = np.array(calValues, dtype=np.float)
+
     for a in sensors:
         ax1.plot(data[a], label= labels[a])
+        for b in (ranges):
+            ax1.hlines(y = calVals[b] * (5.0 / 255), xmin = 0, xmax = 2000, color = cols, linestyle = '--' , alpha = 0.1)
         ax1.legend()
     # ax1.plot(data[0][2000 * pos:])
     # ax1.plot(data[1][2000 * pos:])
@@ -113,9 +116,10 @@ setupSerial(9600)
 command = ""        #command is die command wat ons vir die marv stuur
 while command != "exit":
     marv = ser.readline()       #marv is die string wat ons by hom terug kry
-    print str(marv),
-    print ">>>",
-    command = str(raw_input())
+    print ((marv)),
+    print (">>>"),
+    # command = (str(raw_input()))
+    command = str(input())
     ser.write(command.encode())
     if (command == "QCL"):
         pythonCalibration() #call die plot
