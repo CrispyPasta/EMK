@@ -90,11 +90,17 @@
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
 
-	whiteBit	equ 	.0
-	greenBit	equ 	.1
-	blueBit		equ 	.2
-	redBit		equ 	.3
-	blackBit	equ 	.4
+	whiteBit	equ .0
+	greenBit	equ .1
+	blueBit		equ .2
+	redBit		equ .3
+	blackBit	equ .4
+
+	llBit	equ .0
+	lBit	equ .1
+	mBit	equ .2
+	rBit	equ .3
+	rrBit	equ .4
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -677,7 +683,7 @@ determineDirection:
 	;forward = race color is nie opgetel nie
 	;left = L of LL is getrigger
 	;right = R of RR is getrigger
-	BTFSC   McolorSensed, 1     ; M senses green (these three are for the LED 
+	BTFSC   McolorSensed, greenBit     ; M senses green (these three are for the LED 
 	BSF     PORTA,1
 	BTFSC   McolorSensed, 2     ; M senses blue   ...that indicates the color 
 	BSF     PORTA,2
@@ -703,6 +709,24 @@ determineDirection:
 	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
 	return 
 	CALL	searchModeLights		; flash die LEDs
+
+	BTFSC	raceLinePosition, mBit
+	GOTO	Straight				; GOTO (not call), then the motor control thing returns back to navigation
+
+	BTFSC	raceLinePosition, lBit
+	GOTO	Left	
+
+	BTFSC	raceLinePosition, rBit
+	GOTO	Right	
+
+	BTFSC	raceLinePosition, llBit
+	GOTO	HardLeft	
+
+	BTFSC	raceLinePosition, rrBit
+	GOTO	HardRight	
+
+	BTFSC	raceLinePosition, lBit
+	GOTO	Left	
 	return
 
 ;</editor-fold>
@@ -710,32 +734,32 @@ determineDirection:
 HardRight:
     RightMotorControl, .20, b'1'
     LeftMotorControl, .100, b'0'
-    RETURN
+    RETURN		;return to navigation 
 	
 HardLeft:
     RightMotorControl, .100, b'0'
     LeftMotorControl, .20, b'1'
-    RETURN
+    RETURN		;return to navigation 
 
 Right:
     RightMotorControl, .60, b'1'
     LeftMotorControl, .100, b'0'
-    RETURN
+    RETURN		;return to navigation 
 
 Left:
     RightMotorControl, .100, b'0'
     LeftMotorControl, .60, b'1'
-    RETURN
+    RETURN		;return to navigation 
 
 Stop:
     RightMotorControl, .0, b'0'		;turn motors off 
     LeftMotorControl, .0, b'0'
-    RETURN
+    RETURN		;return to navigation 
 
 Straight:
     RightMotorControl, .200, b'0'	; g2g fêst 
     LeftMotorControl, .200, b'0'
-    RETURN
+    RETURN		;return to navigation 
 	
 	
 ;<editor-fold defaultstate="collapsed" desc="Search mode">
@@ -1493,7 +1517,7 @@ Poll_Go5
 
     ;<editor-fold defaultstate="collapsed" desc="AverageLL - LL ">
 AverageLL:
-	MOVLW	0x04
+	MOVLW	0x08
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1501,21 +1525,25 @@ rep1
 	CALL	Read_AN12
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
+	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
+	BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep1
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
+	BCF	WREG,
+	
 	MOVWF	LLsensorVal
 	RETURN
     ;</editor-fold>
     
     ;<editor-fold defaultstate="collapsed" desc="AverageL - L">
 AverageL:
-	MOVLW	0x04
+	MOVLW	0x08
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1523,21 +1551,25 @@ rep2
 	CALL	Read_AN10
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
+	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
+	BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep2
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
+	BCF	WREG,
+	
 	MOVWF	LsensorVal
 	RETURN
     ;</editor-fold>
     
     ;<editor-fold defaultstate="collapsed" desc="AverageM - M">
 AverageM:
-	MOVLW	0x04
+	MOVLW	0x08
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1545,21 +1577,25 @@ rep3
 	CALL	Read_AN8
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
+	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
+	BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep3
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
+	BCF	WREG,
+	
 	MOVWF	MsensorVal
 	RETURN
     ;</editor-fold>
 	
     ;<editor-fold defaultstate="collapsed" desc="AverageR - R">
 AverageR:
-	MOVLW	0x04
+	MOVLW	0x08
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1567,21 +1603,25 @@ rep4
 	CALL	Read_AN9
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
+	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
+	BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep4
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
+	BCF	WREG,
+	
 	MOVWF	RsensorVal
 	RETURN
     ;</editor-fold>
 	
     ;<editor-fold defaultstate="collapsed" desc="AverageRR - RR">
 AverageRR:
-	MOVLW	0x04
+	MOVLW	0x08
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1589,14 +1629,18 @@ rep5
 	CALL	Read_AN13
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
+	RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
+	BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep5
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
+	BCF	WREG,
+	
 	MOVWF	RRsensorVal
 	RETURN
     ;</editor-fold>
@@ -1642,7 +1686,7 @@ pyCal:
     CALL    sendCals
     movlw   b'00001100'
     MOVWF   PORTD
-    movlw   .100		;24 * 250 * 0.01s = 60s
+    movlw   .250		;24 * 250 * 0.01s = 60s
     movwf   pythonCounter2		
 pythonLoop1
     movlw   .250

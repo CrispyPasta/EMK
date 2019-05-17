@@ -14,7 +14,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM13' 
+    ser.port = 'COM11' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -28,7 +28,7 @@ def setupSerial(baud):
 
 #\OwO/
 sensors = [0, 1, 2, 3, 4]
-ranges  = [0]
+ranges  = []
 #LL L M R RR
 calValues = [[], [], [], [], []]
 def animate(i):
@@ -118,8 +118,8 @@ while command != "exit":
     marv = ser.readline()       #marv is die string wat ons by hom terug kry
     print ((marv)),
     print (">>>"),
-    # command = (str(raw_input()))
-    command = str(input())
+    command = (str(raw_input()))
+    # command = str(input())
     ser.write(command.encode())
     if (command == "QCL"):
         pythonCalibration() #call die plot
