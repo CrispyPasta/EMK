@@ -28,6 +28,9 @@ def setupSerial(baud):
 
 #\OwO/
 sensors = [0, 1, 2, 3, 4]
+ranges  = [0]
+#LL L M R RR
+calValues = [[], [], [], [], []]
 def animate(i):
     global calibrationComplete
     global data
@@ -35,7 +38,6 @@ def animate(i):
     global fig
     sensors
     points = 0
-    voltages = 0
     while ser.is_open and points < 50:
         line = ser.readline()
         line = str(line)
@@ -45,21 +47,21 @@ def animate(i):
             plt.close()
             return
         elif (len(line) ==26):     #this should be the calibration values
-            print(" \tLL\tL\tM\tR\tRR")
-            colors = ["W", "G", "B", "R", "K"]
+            # print(" \tLL\tL\tM\tR\tRR")
+            # colors = ["W", "G", "B", "R", "K"]
             for a in range(0, 5):
-                print colors[a] + "\t",
+                # print colors[a] + "\t",
                 for b in range(0, 5):
-                    print str(ord(line[a + 5 * b])) + "\t",
-                print("\n")
+                    # print str(ord(line[a + 5 * b])) + "\t",
+                    calValues[b].append(ord(line[a + 5 * b]))
+                # print("\n")
+            
+            # print(calValues)
 
                 #now just store all this shit in an array and plot it 
             continue
-        for a in range(0,5):
-            #for b in range(0, 8):
-            #    line = ser.readline()
-            #    voltages += 5 * ord(line[a]) / 255.0
 
+        for a in range(0,5):
             try:
                 voltage = 5 * ord(line[a]) / 255.0
                 data[a].append(voltage)
@@ -68,6 +70,7 @@ def animate(i):
                     data[a].append(data[a][len(data[a]) - 1])
                 except:
                     data[a].append(0)  # append prev voltage if too few bits
+                    
         points += 1
 
     if len(data[0]) % 50 == 0 and len(data[0]) >= 2000:
@@ -76,8 +79,13 @@ def animate(i):
 
     ax1.clear()
     labels = ['RR', 'R', 'M', 'L', 'LL']
+    cols = ['c', 'g', 'b', 'r', 'k']
+    calVals = np.array(calValues, dtype=np.float)
+
     for a in sensors:
         ax1.plot(data[a], label= labels[a])
+        for b in (ranges):
+            ax1.hlines(y = calVals[b] * (5.0 / 255), xmin = 0, xmax = 2000, color = cols, linestyle = '--' , alpha = 0.1)
         ax1.legend()
     # ax1.plot(data[0][2000 * pos:])
     # ax1.plot(data[1][2000 * pos:])

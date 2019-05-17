@@ -84,6 +84,12 @@
 	aveloop	    ; loop counter for sensor averaging	4B
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
+
+	whiteBit	equ 	.0
+	greenBit	equ 	.1
+	blueBit		equ 	.2
+	redBit		equ 	.3
+	blackBit	equ 	.4
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -239,8 +245,8 @@ setup
     MOVLW   .90
     MOVWF   RRsensorVal
     
-    MOVLW   b'00000100'	;blue
-    MOVWF   raceColor
+    CLRF	raceColor
+    BSF   	raceColor,blueBit
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GOTO    RCE
 	
@@ -794,21 +800,21 @@ navigate:
     RightMotorControl .150, b'0'
     LeftMotorControl  .150, b'0'
 	
-    BTFSC   raceColor,0		;check white
+    BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
-    BTFSC   raceColor,1		;check green
+    BTFSC   raceColor,greenBit		;check green
     MOVLW   b'10000010'
-    BTFSC   raceColor,1		;check green
+    BTFSC   raceColor,greenBit		;check green
     BSF	    PORTA,1
-    BTFSC   raceColor,2		;check blue
+    BTFSC   raceColor,blueBit		;check blue
     MOVLW   b'10000000'
-    BTFSC   raceColor,2		;check blue
+    BTFSC   raceColor,blueBit		;check blue
     BSF	    PORTA,2
-    BTFSC   raceColor,3		;check red
+    BTFSC   raceColor,redBit		;check red
     MOVLW   b'10001000'
-    BTFSC   raceColor,3		;check red
+    BTFSC   raceColor,redBit		;check red
     BSF	    PORTA,0
-    BTFSC   raceColor,4		;check black
+    BTFSC   raceColor,blackBit		;check black
     MOVLW   b'10101011'
     MOVWF   PORTD
     
