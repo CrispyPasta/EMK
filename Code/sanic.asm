@@ -1606,7 +1606,7 @@ pyCal:
     CALL    sendCals
     movlw   b'00001100'
     MOVWF   PORTD
-    movlw   .24		;24 * 250 * 0.01s = 60s
+    movlw   .100		;24 * 250 * 0.01s = 60s
     movwf   pythonCounter2		
 pythonLoop1
     movlw   .250
