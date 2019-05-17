@@ -40,7 +40,8 @@ def animate(i):
     points = 0
     while ser.is_open and points < 50:
         line = ser.readline()
-        line = str(line)
+        # line = str(line)
+        print(line)
         if (line == '\OwO/\n'):     #stop string for the python plotting
             calibrationComplete = True
             print("end sequence")
@@ -54,6 +55,7 @@ def animate(i):
                 for b in range(0, 5):
                     # print str(ord(line[a + 5 * b])) + "\t",
                     calValues[b].append(ord(line[a + 5 * b]))
+
                 # print("\n")
             
             # print(calValues)
@@ -64,6 +66,8 @@ def animate(i):
         for a in range(0,5):
             try:
                 voltage = 5 * ord(line[a]) / 255.0
+                # voltage = (int(str(line[4 + (a * 4):5 + (a * 4)]), 16) * 5.0) / 255.0
+
                 data[a].append(voltage)
             except:
                 try:
