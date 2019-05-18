@@ -796,7 +796,21 @@ LeftMotorControl macro dutyCycle, direction
     bsf     INTCON,GIE       ; Enable global interrupts
     BSF	    T2CON, TMR2ON    ; Turn timer on
     MOVLB   0x0
-	; BSF     PORTA,5        ;indicate that the setup was performed
+	
+	BTFSC	direction, 0	  ; if 1, go forward
+	GOTO	forward 
+	GOTO	backward
+	
+forward
+	BSF		PORTC,4
+	BCF		PORTC,5
+	endm 
+
+backward 
+	BCF		PORTC,4
+	BSF		PORTC,5
+
+	
     endm
 
 PWMISRL:
@@ -831,7 +845,20 @@ RightMotorControl macro dutyCycle, direction
     bsf     INTCON, GIE       ; Enable global interrupts
     BSF	    T4CON, TMR4ON     ; Turn timer on
     MOVLB   0x0
-    ; BSF     PORTA,6         ; indicate tea the setup was performed
+    
+	BTFSC	direction, 0	  ; if 1, go forward
+	GOTO	forward 
+	GOTO	backward
+	
+forward
+	BSF		PORTC,6
+	BCF		PORTC,7
+	endm 
+
+backward 
+	BCF		PORTC,6
+	BSF		PORTC,7
+
     endm
 
 PWMISRR:
@@ -845,39 +872,39 @@ PWMISRR:
 ;<editor-fold defaultstate="collapsed" desc="Direction Controls">
 HardRight:
     BSF	    PORTA, 5	;indicates right 
-    RightMotorControl	.20,b'1'
-    LeftMotorControl	.100,b'0'
+    RightMotorControl	.20, 0x01
+    LeftMotorControl	.100,0x00
     RETURN		;return to navigation 
 	
 HardLeft:
     BSF	    PORTA, 3	;indicates left
-    RightMotorControl	.100,b'0'
-    LeftMotorControl	.20,b'1'
+    RightMotorControl	.100,0x00
+    LeftMotorControl	.20, 0x01
     RETURN		;return to navigation 
 
 Right:
     BSF	    PORTA, 5	;indicates right
-    RightMotorControl	.60,b'1'
-    LeftMotorControl	.100,b'0'
+    RightMotorControl	.60, 0x01
+    LeftMotorControl	.100,0x00
     RETURN		;return to navigation 
 
 Left:
     BSF	    PORTA, 3	;indicates left
-    RightMotorControl	.100,b'0'
-    LeftMotorControl	.60,b'1'
+    RightMotorControl	.100,0x00
+    LeftMotorControl	.60, 0x01
     RETURN		;return to navigation 
 
 Stop:
 	MOVLW	0xFF
     MOVWF   PORTA		;turn off all leddies for stop
-    RightMotorControl	.0,b'0'		;turn motors off 
-    LeftMotorControl	.0,b'0'
+    RightMotorControl	.0,0x00		;turn motors off 
+    LeftMotorControl	.0,0x00
     RETURN		;return to navigation 
 
 Straight:
     BSF	    PORTA, 4
-    RightMotorControl	.200, b'0'	; g2g  f�st
-    LeftMotorControl	.200, b'0'
+    RightMotorControl	.200, 0x00	; g2g  f�st
+    LeftMotorControl	.200, 0x00
     RETURN		;return to navigation  
     ;</editor-fold>
     
