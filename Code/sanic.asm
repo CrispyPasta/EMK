@@ -638,7 +638,7 @@ getColor:
 
 ;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
 testBlack:
-
+	
 
 ;</editor-fold>
 
@@ -692,27 +692,20 @@ determineDirection:
 	BTFSC   McolorSensed, redBit     ; M senses red    ...sensed by sensor M)
 	BSF     PORTA,0
 	
-	BTFSC   raceLinePosition, mBit     ; if M senses race colour, go straight
-	BSF     PORTA,4
-	BTFSC   raceLinePosition, mBit     ; if going straight, return
-	return				
+	; BTFSC   raceLinePosition, mBit     ; if M senses race colour, go straight
+	; BSF     PORTA,4
+	; BTFSC   raceLinePosition, mBit     ; if going straight, return
+	; return				
 	
-	BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
-	BSF     PORTA,3
-	BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
-	BSF     PORTA,3
+	; BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
+	; BSF     PORTA,3
+	; BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
+	; BSF     PORTA,3
 	
-	BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
-	BSF     PORTA,5
-	BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
-	BSF     PORTA,5
-	
-	MOVLW   0x0
-	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
-	return 
-	CALL	searchModeLights		; flash die LEDs
-
-
+	; BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
+	; BSF     PORTA,5
+	; BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
+	; BSF     PORTA,5
 
 	BTFSC	raceLinePosition, mBit
 	GOTO	Straight				; GOTO (not call), then the motor control thing returns back to nav
@@ -730,6 +723,11 @@ determineDirection:
 	GOTO	HardRight	
 
 	CALL	testBlack	
+	
+	MOVLW   0x0
+	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
+	return 
+	CALL	searchModeLights		; flash die LEDs
 	return
 
 ;</editor-fold>
