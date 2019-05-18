@@ -90,17 +90,17 @@
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
 
-	whiteBit	equ .0
-	greenBit	equ .1
-	blueBit		equ .2
-	redBit		equ .3
-	blackBit	equ .4
+whiteBit	equ .0
+greenBit	equ .1
+blueBit		equ .2
+redBit		equ .3
+blackBit	equ .4
 
-	llBit	equ .0
-	lBit	equ .1
-	mBit	equ .2
-	rBit	equ .3
-	rrBit	equ .4
+llBit	equ .0
+lBit	equ .1
+mBit	equ .2
+rBit	equ .3
+rrBit	equ .4
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
