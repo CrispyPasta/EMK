@@ -1734,6 +1734,151 @@ pythonLoop2
 
     GOTO    RCE
 ;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="Range Calculation">
+    Ranges:
+    
+;   Half all readings
+	
+    	RRNCF	LLwhiteValue,f	;divide by 2
+	BCF	LLwhiteValue,7
+	RRNCF	LLgreenValue,f	;divide by 2
+	BCF	LLgreenValue,7
+	RRNCF	LLredValue,f	;divide by 2
+	BCF	LLredValue,7
+	RRNCF	LLblueValue,f	;divide by 2
+	BCF	LLblueValue,7
+	RRNCF	LLblackValue,f	;divide by 2
+	BCF	LLblackValue,7
+	
+		
+    	RRNCF	LwhiteValue,f	;divide by 2
+	BCF	LwhiteValue,7
+	RRNCF	LgreenValue,f	;divide by 2
+	BCF	LgreenValue,7
+	RRNCF	LredValue,f	;divide by 2
+	BCF	LredValue,7
+	RRNCF	LblueValue,f	;divide by 2
+	BCF	LblueValue,7
+	RRNCF	LblackValue,f	;divide by 2
+	BCF	LblackValue,7
+	
+		
+    	RRNCF	MwhiteValue,f	;divide by 2
+	BCF	MwhiteValue,7
+	RRNCF	MgreenValue,f	;divide by 2
+	BCF	MgreenValue,7
+	RRNCF	MredValue,f	;divide by 2
+	BCF	MredValue,7
+	RRNCF	MblueValue,f	;divide by 2
+	BCF	MblueValue,7
+	RRNCF	MblackValue,f	;divide by 2
+	BCF	MblackValue,7
+    
+		
+    	RRNCF	RwhiteValue,f	;divide by 2
+	BCF	RwhiteValue,7
+	RRNCF	RgreenValue,f	;divide by 2
+	BCF	RgreenValue,7
+	RRNCF	RredValue,f	;divide by 2
+	BCF	RredValue,7
+	RRNCF	RblueValue,f	;divide by 2
+	BCF	RblueValue,7
+	RRNCF	RblackValue,f	;divide by 2
+	BCF	RblackValue,7
+	
+		
+    	RRNCF	RRwhiteValue,f	;divide by 2
+	BCF	RRwhiteValue,7
+	RRNCF	RRgreenValue,f	;divide by 2
+	BCF	RRgreenValue,7
+	RRNCF	RRredValue,f	;divide by 2
+	BCF	RRredValue,7
+	RRNCF	RRblueValue,f	;divide by 2
+	BCF	RRblueValue,7
+	RRNCF	RRblackValue,f	;divide by 2
+	BCF	RRblackValue,7
+;	AVG white and green
+   
+	MOVF	LLgreenValue,w
+	ADDWF	LLwhiteValue,f	
+
+	
+	MOVF	LgreenValue,w
+	ADDWF	LwhiteValue,f	
+
+
+	MOVF	MgreenValue,w
+	ADDWF	MwhiteValue,f	
+
+	MOVF	RgreenValue,w
+	ADDWF	RwhiteValue,f	
+
+	MOVF	RRgreenValue,w
+	ADDWF	RRwhiteValue,f	
+
+	
+;	AVG green and red
+	MOVF	LLredValue,w
+	ADDWF	LLgreenValue,f	
+	
+	MOVF	LredValue,w
+	ADDWF	LgreenValue,f	
+	
+	MOVF	MredValue,w
+	ADDWF	MgreenValue,f	
+	
+	MOVF	RredValue,w
+	ADDWF	RgreenValue,f	
+	
+	MOVF	RRredValue,w
+	ADDWF	RRgreenValue,f	
+
+	
+;	AVG red and blue
+	MOVF	LLblueValue,w
+	ADDWF	LLredValue,f	
+
+	
+	MOVF	LblueValue,w
+	ADDWF	LredValue,f	
+
+	MOVF	MblueValue,w
+	ADDWF	MredValue,f	
+
+	
+	MOVF	RblueValue,w
+	ADDWF	RredValue,f	
+
+	
+	MOVF	RRblueValue,w
+	ADDWF	RRredValue,f	
+
+	
+	
+;	AVG blue and black
+	MOVF	LLblackValue,w
+	ADDWF	LLblueValue,f	
+
+	
+	MOVF	LblackValue,w
+	ADDWF	LblueValue,f	
+
+	
+	MOVF	MblackValue,w
+	ADDWF	MblueValue,f	
+
+	
+	MOVF	RblackValue,w
+	ADDWF	RblueValue,f	
+
+	
+	MOVF	RRblackValue,w
+	ADDWF	RRblueValue,f	
+
+	
+	RETURN
+    ;</editor-fold>
 
 ;</editor-fold>
      
