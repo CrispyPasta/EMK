@@ -1216,8 +1216,8 @@ CALIBRATE					; order is blue, red, green, white, black
 ADC_SETUP_AN15:
 
 	;Configure Port RA0:
-    BSF    TRISC,2	;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,2     ;Configure pin as analog       
+    BSF    TRISC,3	;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELC,3     ;Configure pin as analog       
 					
 	
 	;Configure the ADC module: 
