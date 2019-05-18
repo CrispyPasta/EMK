@@ -38,7 +38,7 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [0,1,2,3,4]
+sensors = [0]
 def animate(i):
     global calibrationComplete
     global data
