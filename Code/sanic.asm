@@ -469,9 +469,11 @@ getColor:
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 getColor_LL:	
 	MOVF    LLwhiteValue,w
-	CPFSGT  LLsensorVal         		; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     LLcolorSensed,whiteBit     	; if it is white, set that bit
-
+	CPFSGT  LLsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF     LLcolorSensed,whiteBit     ; if it is white, set that bit
+	BTFSS	LLcolorSensed,whiteBit
+	Return			    ; return if white sensed
+	
 	MOVF    LLgreenValue,w
 	CPFSGT  LLsensorVal         
 	BSF     LLcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
