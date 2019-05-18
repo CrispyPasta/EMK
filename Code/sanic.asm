@@ -1542,7 +1542,7 @@ Poll_Go5
 
     ;<editor-fold defaultstate="collapsed" desc="AverageLL - LL ">
 AverageLL:
-	MOVLW	0x08
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1550,17 +1550,17 @@ rep1
 	CALL	Read_AN12
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	RRNCF	WREG,w		;divide by 2
+	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	BCF	WREG,5		;incase rotation causes a mistake
+	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep1
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
+	; BCF	WREG,2
 	
 	MOVWF	LLsensorVal
 	RETURN
@@ -1568,7 +1568,7 @@ rep1
     
     ;<editor-fold defaultstate="collapsed" desc="AverageL - L">
 AverageL:
-	MOVLW	0x08
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1576,17 +1576,17 @@ rep2
 	CALL	Read_AN10
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	RRNCF	WREG,w		;divide by 2
+	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	BCF	WREG,5		;incase rotation causes a mistake
+	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep2
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
+	; BCF	WREG,2
 	
 	MOVWF	LsensorVal
 	RETURN
@@ -1594,7 +1594,7 @@ rep2
     
     ;<editor-fold defaultstate="collapsed" desc="AverageM - M">
 AverageM:
-	MOVLW	0x08
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1602,17 +1602,17 @@ rep3
 	CALL	Read_AN8
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	RRNCF	WREG,w		;divide by 2
+	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	BCF	WREG,5		;incase rotation causes a mistake
+	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep3
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
+	; BCF	WREG,2
 	
 	MOVWF	MsensorVal
 	RETURN
@@ -1620,7 +1620,7 @@ rep3
 	
     ;<editor-fold defaultstate="collapsed" desc="AverageR - R">
 AverageR:
-	MOVLW	0x08
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1628,17 +1628,17 @@ rep4
 	CALL	Read_AN9
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	RRNCF	WREG,w		;divide by 2
+	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	BCF	WREG,5		;incase rotation causes a mistake
+	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep4
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
+	; BCF	WREG,2
 	
 	MOVWF	RsensorVal
 	RETURN
@@ -1646,7 +1646,7 @@ rep4
 	
     ;<editor-fold defaultstate="collapsed" desc="AverageRR - RR">
 AverageRR:
-	MOVLW	0x08
+	MOVLW	0x04
 	MOVWF	aveloop
 	CLRF	temp
 	
@@ -1654,17 +1654,17 @@ rep5
 	CALL	Read_AN13
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	RRNCF	WREG,w		;divide by 2
+	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	BCF	WREG,5		;incase rotation causes a mistake
+	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep5
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,2
+	; BCF	WREG,2
 	
 	MOVWF	RRsensorVal
 	RETURN
