@@ -90,17 +90,17 @@
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
 
-	whiteBit	equ .0
-	greenBit	equ .1
-	blueBit		equ .2
-	redBit		equ .3
-	blackBit	equ .4
+whiteBit    equ .0
+greenBit    equ .1
+blueBit     equ .2
+redBit	equ .3
+blackBit    equ .4
 
-	llBit	equ .0
-	lBit	equ .1
-	mBit	equ .2
-	rBit	equ .3
-	rrBit	equ .4
+llBit   equ .0
+lBit    equ .1
+mBit    equ .2
+rBit    equ .3
+rrBit   equ .4
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -730,37 +730,6 @@ determineDirection:
 	return
 
 ;</editor-fold>
-
-HardRight:
-    RightMotorControl, .20, b'1'
-    LeftMotorControl, .100, b'0'
-    RETURN		;return to navigation 
-	
-HardLeft:
-    RightMotorControl, .100, b'0'
-    LeftMotorControl, .20, b'1'
-    RETURN		;return to navigation 
-
-Right:
-    RightMotorControl, .60, b'1'
-    LeftMotorControl, .100, b'0'
-    RETURN		;return to navigation 
-
-Left:
-    RightMotorControl, .100, b'0'
-    LeftMotorControl, .60, b'1'
-    RETURN		;return to navigation 
-
-Stop:
-    RightMotorControl, .0, b'0'		;turn motors off 
-    LeftMotorControl, .0, b'0'
-    RETURN		;return to navigation 
-
-Straight:
-    RightMotorControl, .200, b'0'	; g2g fêst 
-    LeftMotorControl, .200, b'0'
-    RETURN		;return to navigation 
-	
 	
 ;<editor-fold defaultstate="collapsed" desc="Search mode">
 searchModeLights:
@@ -855,10 +824,40 @@ PWMISRR:
     RETURN
     ;</editor-fold>
 
+HardRight:
+    RightMotorControl  .20,b'1'
+    LeftMotorControl  .100,b'0'
+    RETURN		;return to navigation 
+	
+HardLeft:
+    RightMotorControl  .100,b'0'
+    LeftMotorControl  .20,b'1'
+    RETURN		;return to navigation 
+
+Right:
+    RightMotorControl  .60,b'1'
+    LeftMotorControl  .100,b'0'
+    RETURN		;return to navigation 
+
+Left:
+    RightMotorControl  .100,b'0'
+    LeftMotorControl  .60,b'1'
+    RETURN		;return to navigation 
+
+Stop:
+    RightMotorControl  .0,b'0'		;turn motors off 
+    LeftMotorControl  .0,b'0'
+    RETURN		;return to navigation 
+
+Straight:
+    RightMotorControl  .200, b'0'	; g2g fêst 
+    LeftMotorControl  .200, b'0'
+    RETURN		;return to navigation     
+    
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
-    RightMotorControl .150, b'0'
-    LeftMotorControl  .150, b'0'
+    RightMotorControl .150,b'0'
+    LeftMotorControl  .150,b'0'
 	
     BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
@@ -1535,7 +1534,7 @@ rep1
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,
+	BCF	WREG,2
 	
 	MOVWF	LLsensorVal
 	RETURN
@@ -1561,7 +1560,7 @@ rep2
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,
+	BCF	WREG,2
 	
 	MOVWF	LsensorVal
 	RETURN
@@ -1587,7 +1586,7 @@ rep3
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,
+	BCF	WREG,2
 	
 	MOVWF	MsensorVal
 	RETURN
@@ -1613,7 +1612,7 @@ rep4
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,
+	BCF	WREG,2
 	
 	MOVWF	RsensorVal
 	RETURN
@@ -1639,7 +1638,7 @@ rep5
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	BCF	WREG,
+	BCF	WREG,2
 	
 	MOVWF	RRsensorVal
 	RETURN
