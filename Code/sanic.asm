@@ -810,7 +810,6 @@ backward
 	BCF		PORTC,4
 	BSF		PORTC,5
 
-	
     endm
 
 PWMISRL:
