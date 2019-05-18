@@ -242,15 +242,15 @@ setup
     MOVWF   RblackValue
     MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .140             ;set hardcoded values for sensor outputs (for testing)
+    MOVLW   .250             ;set hardcoded values for sensor outputs (for testing)
     MOVWF   LLsensorVal
-    MOVLW   .40
+    MOVLW   .250
     MOVWF   LsensorVal
     MOVLW   .250
     MOVWF   MsensorVal
-    MOVLW   .40
+    MOVLW   .250
     MOVWF   RsensorVal
-    MOVLW   .90
+    MOVLW   .250
     MOVWF   RRsensorVal
     
     CLRF	raceColor
@@ -637,9 +637,9 @@ getColor:
 	return                             ; Return from getColor (determine color sensed by each sensor)
 ;</editor-fold>
 	
-;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
+;<editor-fold defaultstate="collapsed" desc="Test for black (Stop Condition)">
 testBlack:
-	MOVLW	0xF4		;check of die voltage > 4.8 V is 
+	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
 	
 	CPFSGT	LLsensorVal		;if the sensor value is higher, don't return 
 	RETURN
@@ -654,8 +654,6 @@ testBlack:
 
 	; if the code gets to here, there's black everywhere 
 	RETLW	0xAA			;just a value that's unlikely to occur naturally 
-
-
 
 ;</editor-fold>
 
@@ -885,7 +883,7 @@ Straight:
     
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
-    CALL	Straight				;initially go forward 
+    CALL    Straight				;initially go forward 
 	
     BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
