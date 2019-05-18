@@ -1185,6 +1185,7 @@ CALIBRATE					; order is blue, red, green, white, black
     BSF	    PORTA,4
     call    delay1s
     CLRF    PORTA
+    call    Ranges		; Use Range function for colour detection values
     GOTO    RCE				
 ;</editor-fold>
     
