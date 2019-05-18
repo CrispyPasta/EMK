@@ -1073,17 +1073,17 @@ capTouch:
 	MOVWF	diff
 	call	delay1s
 poll_c	
-	call	Read_AN14
+	call	Read_AN15
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
-	call	Read_AN14
+	call	Read_AN15
 	
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
 	
-	call	Read_AN14
+	call	Read_AN15
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
@@ -1213,7 +1213,7 @@ CALIBRATE					; order is blue, red, green, white, black
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python + ADC stuff">
     ;<editor-fold defaultstate="collapsed" desc="Setup RC2 (For touch sensor)">
-ADC_SETUP_AN14:
+ADC_SETUP_AN15:
 
 	;Configure Port RA0:
     BSF    TRISC,2	;Disable pin output driver (See TRIS register) 	    
@@ -1233,7 +1233,7 @@ ADC_SETUP_AN14:
     BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
     BSF	    ADCON0, CHS2
     BSF	    ADCON0, CHS1
-    BCF	    ADCON0, CHS0
+    BSF	    ADCON0, CHS0
 
 	;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
@@ -1436,11 +1436,11 @@ ADC_SETUP_AN13:
 
 
     ;<editor-fold defaultstate="collapsed" desc="READ RC2 (for touch sensor)">
-Read_AN14:
+Read_AN15:
     BTFSS   TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA	    Read_AN14
+    BRA	    Read_AN15
 
-    CALL    ADC_SETUP_AN14	;do setup
+    CALL    ADC_SETUP_AN15	;do setup
 
     BSF	    ADCON0, GO	    ;start a conversion
 
