@@ -29,7 +29,7 @@
 	delay3
 	Touch1		; for touch start sensor
 	Touch2
-	diff
+	diff		
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor 0x16
@@ -1099,7 +1099,7 @@ stop
 	MOVLW   A'\n'
 	call	trans
 	BSF	INTCON,GIEL		; Enable peripheral interrupts
-	bsf     INTCON,GIEH  ; Enable global interrupts
+	bsf     INTCON,GIEH		; Enable global interrupts
 	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
 	GOTO	navigate
 
@@ -1229,8 +1229,8 @@ ADC_SETUP_AN15:
     CLRF    ADCON1
 	
 	;Select ADC input channel
-    BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
-    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
+    BCF	    ADCON0, CHS4	    ;Select AN14 - 01110
+    BSF	    ADCON0, CHS3	    
     BSF	    ADCON0, CHS2
     BSF	    ADCON0, CHS1
     BSF	    ADCON0, CHS0
