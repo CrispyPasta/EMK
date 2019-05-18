@@ -459,10 +459,15 @@ getColor:
 	call	AverageM
 	call	AverageR
 	call	AverageRR
-	
+	call	getColor_LL
+	call	getColor_L
+	call	getColor_M
+	call	getColor_R
+	call	getColor_RR
+	return            
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
+getColor_LL:	
 	MOVF    LLwhiteValue,w
 	CPFSGT  LLsensorVal         		; if LLsensorVal is > LLwhiteValue, it's not white
 	BSF     LLcolorSensed,whiteBit     	; if it is white, set that bit
@@ -470,170 +475,161 @@ getColor:
 	MOVF    LLgreenValue,w
 	CPFSGT  LLsensorVal         
 	BSF     LLcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-	MOVF    LLwhiteValue,w    
-	CPFSGT  LLsensorVal         ; it it's smaller than white, it's not green
-	BCF     LLcolorSensed,greenBit     
-
-	MOVF    LLblueValue,w
-	CPFSGT  LLsensorVal         
-	BSF     LLcolorSensed,blueBit     
-	MOVF    LLgreenValue,w
-	CPFSGT  LLsensorVal         
-	BCF     LLcolorSensed,blueBit     
+    	BTFSS	LLcolorSensed,greenBit
+	Return			    ; return if green sensed
 
 	MOVF    LLredValue,w
 	CPFSGT  LLsensorVal         
 	BSF     LLcolorSensed,redBit     
+	BTFSS	LLcolorSensed,redBit
+	Return			    ; return if red sensed
+
 	MOVF    LLblueValue,w
 	CPFSGT  LLsensorVal         
-	BCF     LLcolorSensed,redBit     
+	BSF     LLcolorSensed,blueBit     
+	BTFSS	LLcolorSensed,blueBit
+	Return			    ; return if blue sensed
 
-	MOVF    LLblackValue,w
-	CPFSGT  LLsensorVal
+
 	BSF     LLcolorSensed,blackBit     ; else, it's black
-	MOVF    LLredValue,w
-	CPFSGT  LLsensorVal
-	BCF     LLcolorSensed,blackBit     ; else, it's black
+	Return
+	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+getColor_L:
 	MOVF    LwhiteValue,w
-	CPFSGT  LsensorVal         		; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     LcolorSensed,whiteBit  	   ; if it is white, set that bit
-
+	CPFSGT  LsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF     LcolorSensed,whiteBit     ; if it is white, set that bit
+	BTFSS	LcolorSensed,whiteBit
+	Return			    ; return if white sensed
+	
 	MOVF    LgreenValue,w
 	CPFSGT  LsensorVal         
 	BSF     LcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-	MOVF    LwhiteValue,w    
-	CPFSGT  LsensorVal         ; it it's smaller than white, it's not green
-	BCF     LcolorSensed,greenBit     
+    	BTFSS	LcolorSensed,greenBit
+	Return			    ; return if green sensed
 
-	MOVF    LblueValue,w
-	CPFSGT  LsensorVal         
-	BSF     LcolorSensed,blueBit     
-	MOVF    LgreenValue,w
-	CPFSGT  LsensorVal         
-	BCF     LcolorSensed,blueBit     
 
 	MOVF    LredValue,w
 	CPFSGT  LsensorVal         
 	BSF     LcolorSensed,redBit     
+	BTFSS	LcolorSensed,redBit
+	Return			    ; return if red sensed
+	
 	MOVF    LblueValue,w
 	CPFSGT  LsensorVal         
-	BCF     LcolorSensed,redBit     
+	BSF     LcolorSensed,blueBit
+	BTFSS	LcolorSensed,blueBit
+	Return			    ; return if blue sensed
 
-	MOVF    LblackValue,w
-	CPFSGT  LsensorVal
+
 	BSF     LcolorSensed,blackBit     ; else, it's black
-	MOVF    LredValue,w
-	CPFSGT  LsensorVal
-	BCF     LcolorSensed,blackBit     ; else, it's black
+	Return
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+getColor_M:
+	
 	MOVF    MwhiteValue,w
-	CPFSGT  MsensorVal         		; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     McolorSensed,whiteBit  	   ; if it is white, set that bit
-
+	CPFSGT  MsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF     McolorSensed,whiteBit     ; if it is white, set that bit
+	BTFSS	McolorSensed,whiteBit
+	Return			    ; return if white sensed
+	
 	MOVF    MgreenValue,w
 	CPFSGT  MsensorVal         
 	BSF     McolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-	MOVF    MwhiteValue,w    
-	CPFSGT  MsensorVal         ; it it's smaller than white, it's not green
-	BCF     McolorSensed,greenBit     
+    	BTFSS	McolorSensed,greenBit
+	Return			    ; return if green sensed
 
-	MOVF    MblueValue,w
-	CPFSGT  MsensorVal         
-	BSF     McolorSensed,blueBit     
-	MOVF    MgreenValue,w
-	CPFSGT  MsensorVal         
-	BCF     McolorSensed,blueBit     
 
 	MOVF    MredValue,w
 	CPFSGT  MsensorVal         
 	BSF     McolorSensed,redBit     
+	BTFSS	McolorSensed,redBit
+	Return			    ; return if red sensed
+	
+	
 	MOVF    MblueValue,w
 	CPFSGT  MsensorVal         
-	BCF     McolorSensed,redBit     
+	BSF     McolorSensed,blueBit     
+	BTFSS	McolorSensed,blueBit
+	Return			    ; return if blue sensed
 
-	MOVF    MblackValue,w
-	CPFSGT  MsensorVal
+
 	BSF     McolorSensed,blackBit     ; else, it's black
-	MOVF    MredValue,w
-	CPFSGT  MsensorVal
-	BCF     McolorSensed,blackBit     ; else, it's black
+	Return
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    getColor_R:
+	
 	MOVF    RwhiteValue,w
-	CPFSGT  RsensorVal         		; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     RcolorSensed,whiteBit  	   ; if it is white, set that bit
-
+	CPFSGT  RsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF     RcolorSensed,whiteBit     ; if it is white, set that bit
+	BTFSS	RcolorSensed,whiteBit
+	Return			    ; return if white sensed
+	
 	MOVF    RgreenValue,w
 	CPFSGT  RsensorVal         
 	BSF     RcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-	MOVF    RwhiteValue,w    
-	CPFSGT  RsensorVal         ; it it's smaller than white, it's not green
-	BCF     RcolorSensed,greenBit     
+    	BTFSS	RcolorSensed,greenBit
+	Return			    ; return if green sensed
 
-	MOVF    RblueValue,w
-	CPFSGT  RsensorVal         
-	BSF     RcolorSensed,blueBit     
-	MOVF    RgreenValue,w
-	CPFSGT  RsensorVal         
-	BCF     RcolorSensed,blueBit     
 
 	MOVF    RredValue,w
 	CPFSGT  RsensorVal         
 	BSF     RcolorSensed,redBit     
+	BTFSS	RcolorSensed,redBit
+	Return			    ; return if red sensed
+
 	MOVF    RblueValue,w
 	CPFSGT  RsensorVal         
-	BCF     RcolorSensed,redBit     
+	BSF     RcolorSensed,blueBit     
+	BTFSS	RcolorSensed,blueBit
+	Return			    ; return if blue sensed
 
-	MOVF    RblackValue,w
-	CPFSGT  RsensorVal
-	BSF     RcolorSensed,blackBit     ; else, it's black
-	MOVF    RredValue,w
-	CPFSGT  RsensorVal
-	BCF     RcolorSensed,blackBit     ; else, it's black
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 	
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	MOVF    RRwhiteValue,w
-	CPFSGT  RRsensorVal         		; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     RRcolorSensed,whiteBit     	; if it is white, set that bit
-
+	BSF     RcolorSensed,blackBit     ; else, it's black
+	Return
+    ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+    ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+getColor_RR:
+    	MOVF    RRwhiteValue,w
+	CPFSGT  RRsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF     RRcolorSensed,whiteBit     ; if it is white, set that bit
+	BTFSS	RRcolorSensed,whiteBit
+	Return			    ; return if white sensed
+	
 	MOVF    RRgreenValue,w
 	CPFSGT  RRsensorVal         
 	BSF     RRcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-	MOVF    RRwhiteValue,w    
-	CPFSGT  RRsensorVal         ; it it's smaller than white, it's not green
-	BCF     RRcolorSensed,greenBit     
-
-	MOVF    RRblueValue,w
-	CPFSGT  RRsensorVal         
-	BSF     RRcolorSensed,blueBit     
-	MOVF    RRgreenValue,w
-	CPFSGT  RRsensorVal         
-	BCF     RRcolorSensed,blueBit     
+    	BTFSS	RRcolorSensed,greenBit
+	Return			    ; return if green sensed
 
 	MOVF    RRredValue,w
 	CPFSGT  RRsensorVal         
 	BSF     RRcolorSensed,redBit     
+	BTFSS	RRcolorSensed,redBit
+	Return			    ; return if red sensed
+
 	MOVF    RRblueValue,w
 	CPFSGT  RRsensorVal         
-	BCF     RRcolorSensed,redBit     
+	BSF     RRcolorSensed,blueBit     
+	BTFSS	RRcolorSensed,blueBit
+	Return			    ; return if blue sensed
 
-	MOVF    RRblackValue,w
-	CPFSGT  RRsensorVal
+	
+
 	BSF     RRcolorSensed,blackBit     ; else, it's black
-	MOVF    RRredValue,w
-	CPFSGT  RRsensorVal
-	BCF     RRcolorSensed,blackBit     ; else, it's black
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	Return
+;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-	return                             ; Return from getColor (determine color sensed by each sensor)
-;</editor-fold>
+	;</editor-fold>
 
 
 ;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
