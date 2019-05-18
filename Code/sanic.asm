@@ -96,6 +96,8 @@ lBit    equ .1
 mBit    equ .2
 rBit    equ .3
 rrBit   equ .4
+
+blackFlag	equ 0xAA	;if WREG = blackFlag, we should stop 
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -240,15 +242,15 @@ setup
     MOVWF   RblackValue
     MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .140             ;set hardcoded values for sensor outputs (for testing)
+    MOVLW   .250             ;set hardcoded values for sensor outputs (for testing)
     MOVWF   LLsensorVal
-    MOVLW   .40
+    MOVLW   .250
     MOVWF   LsensorVal
     MOVLW   .250
     MOVWF   MsensorVal
-    MOVLW   .40
+    MOVLW   .250
     MOVWF   RsensorVal
-    MOVLW   .90
+    MOVLW   .250
     MOVWF   RRsensorVal
     
     CLRF	raceColor
@@ -636,7 +638,21 @@ getColor_RR:
 
 ;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
 testBlack:
+	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
+	
+	CPFSGT	LLsensorVal		;if the sensor value is higher, don't return 
+	RETURN
+	CPFSGT	LsensorVal		;if the sensor value is higher, don't return 
+	RETURN
+	CPFSGT	MsensorVal		;if the sensor value is higher, don't return 
+	RETURN
+	CPFSGT	RsensorVal		;if the sensor value is higher, don't return 
+	RETURN
+	CPFSGT	RRsensorVal		;if the sensor value is higher, don't return 
+	RETURN
 
+	; if the code gets to here, there's black everywhere 
+	RETLW	0xAA			;just a value that's unlikely to occur naturally 
 
 ;</editor-fold>
 
@@ -690,27 +706,20 @@ determineDirection:
 	BTFSC   McolorSensed, redBit     ; M senses red    ...sensed by sensor M)
 	BSF     PORTA,0
 	
-	BTFSC   raceLinePosition, mBit     ; if M senses race colour, go straight
-	BSF     PORTA,4
-	BTFSC   raceLinePosition, mBit     ; if going straight, return
-	return				
+	; BTFSC   raceLinePosition, mBit     ; if M senses race colour, go straight
+	; BSF     PORTA,4
+	; BTFSC   raceLinePosition, mBit     ; if going straight, return
+	; return				
 	
-	BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
-	BSF     PORTA,3
-	BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
-	BSF     PORTA,3
+	; BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
+	; BSF     PORTA,3
+	; BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
+	; BSF     PORTA,3
 	
-	BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
-	BSF     PORTA,5
-	BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
-	BSF     PORTA,5
-	
-	MOVLW   0x0
-	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
-	return 
-	CALL	searchModeLights		; flash die LEDs
-
-
+	; BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
+	; BSF     PORTA,5
+	; BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
+	; BSF     PORTA,5
 
 	BTFSC	raceLinePosition, mBit
 	GOTO	Straight				; GOTO (not call), then the motor control thing returns back to nav
@@ -728,6 +737,14 @@ determineDirection:
 	GOTO	HardRight	
 
 	CALL	testBlack	
+	CPFSEQ	blackFlag		; check if black was detected on all sensors
+	GOTO	$+4				; skip over "GOTO Stop", to "MOVLW 0x0"
+	GOTO	Stop
+	
+	MOVLW   0x0
+	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
+	return 
+	CALL	searchModeLights		; flash die LEDs
 	return
 
 ;</editor-fold>
@@ -827,46 +844,45 @@ PWMISRR:
 
 ;<editor-fold defaultstate="collapsed" desc="Direction Controls">
 HardRight:
-	BSF		PORTA, 5	;indicates right 
-    RightMotorControl  .20,b'1'
-    LeftMotorControl  .100,b'0'
+    BSF	    PORTA, 5	;indicates right 
+    RightMotorControl	.20,b'1'
+    LeftMotorControl	.100,b'0'
     RETURN		;return to navigation 
 	
 HardLeft:
-	BSF		PORTA, 3	;indicates left
-    RightMotorControl  .100,b'0'
-    LeftMotorControl  .20,b'1'
+    BSF	    PORTA, 3	;indicates left
+    RightMotorControl	.100,b'0'
+    LeftMotorControl	.20,b'1'
     RETURN		;return to navigation 
 
 Right:
-	BSF		PORTA, 5	;indicates right
-    RightMotorControl  .60,b'1'
-    LeftMotorControl  .100,b'0'
+    BSF	    PORTA, 5	;indicates right
+    RightMotorControl	.60,b'1'
+    LeftMotorControl	.100,b'0'
     RETURN		;return to navigation 
 
 Left:
-	BSF		PORTA, 3	;indicates left
-    RightMotorControl  .100,b'0'
-    LeftMotorControl  .60,b'1'
+    BSF	    PORTA, 3	;indicates left
+    RightMotorControl	.100,b'0'
+    LeftMotorControl	.60,b'1'
     RETURN		;return to navigation 
 
 Stop:
-	CLRF	PORTA		;turn off all leddies for stop
-    RightMotorControl  .0,b'0'		;turn motors off 
-    LeftMotorControl  .0,b'0'
+    CLRF    PORTA		;turn off all leddies for stop
+    RightMotorControl	.0,b'0'		;turn motors off 
+    LeftMotorControl	.0,b'0'
     RETURN		;return to navigation 
 
 Straight:
-	BSF		PORTA, 4
-    RightMotorControl  .200, b'0'	; g2g  f�st
-    LeftMotorControl  .200, b'0'
+    BSF	    PORTA, 4
+    RightMotorControl	.200, b'0'	; g2g  f�st
+    LeftMotorControl	.200, b'0'
     RETURN		;return to navigation  
     ;</editor-fold>
     
-    
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
-    CALL	Straight				;initially go forward 
+    CALL    Straight				;initially go forward 
 	
     BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
