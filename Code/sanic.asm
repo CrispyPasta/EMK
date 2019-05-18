@@ -868,7 +868,8 @@ Left:
     RETURN		;return to navigation 
 
 Stop:
-    CLRF    PORTA		;turn off all leddies for stop
+	MOVLW	0xFF
+    MOVWF   PORTA		;turn off all leddies for stop
     RightMotorControl	.0,b'0'		;turn motors off 
     LeftMotorControl	.0,b'0'
     RETURN		;return to navigation 
@@ -1067,7 +1068,7 @@ PROC
 ;<editor-fold defaultstate="collapsed" desc="Touch Start (RCE1)">	
 RCE1	MOVLW	A's'
 	call	trans
-	MOVLW	d'9'
+	MOVLW	d'35'
 	MOVWF	diff
 	call	delay1s
 poll_c	
@@ -1089,14 +1090,16 @@ poll_c
 	SUBFWB	Touch2
 	CPFSGT	diff
 	goto	stop
-	MOVLW   A'\n'
 	goto	poll_c
 
-stop	MOVLW	A'D'
+stop	
+	MOVLW	A'D'
 	call	trans
-	BSF	    INTCON,GIEL		; Enable peripheral interrupts
+	MOVLW   A'\n'
+	call	trans
+	BSF	INTCON,GIEL		; Enable peripheral interrupts
 	bsf     INTCON,GIEH  ; Enable global interrupts
-	BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
+	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
 	GOTO	navigate
 
 ;</editor-fold>	
