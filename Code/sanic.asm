@@ -32,7 +32,7 @@
 	diff
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor
+	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor 0x16
 	LLgreenValue
 	LLblueValue
 	LLredValue
@@ -568,7 +568,7 @@ getColor_M:
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    getColor_R:
+getColor_R:
 	
 	MOVF    RwhiteValue,w
 	CPFSGT  RsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
@@ -1130,73 +1130,73 @@ CALIBRATE					; order is blue, red, green, white, black
     CLRF    PORTA
     MOVLW   b'10000000'
     MOVWF   PORTD
-	CALL	Read_AN12
-	MOVWF	LLblueValue		;~~~~~BLUE~~~~~
-	CALL	Read_AN10
-	MOVWF	LblueValue
-	CALL	Read_AN8
-	MOVWF	MblueValue
-	CALL	Read_AN9
-	MOVWF	RblueValue
-	CALL	Read_AN13
-	MOVWF	RRblueValue		;~~~~~BLUE~~~~~
+    CALL	Read_AN12
+    MOVWF	LLblueValue		;~~~~~BLUE~~~~~
+    CALL	Read_AN10
+    MOVWF	LblueValue
+    CALL	Read_AN8
+    MOVWF	MblueValue
+    CALL	Read_AN9
+    MOVWF	RblueValue
+    CALL	Read_AN13
+    MOVWF	RRblueValue		;~~~~~BLUE~~~~~
     call    delay1s
 
     BSF	    PORTA,0
     MOVLW   b'10001000'
     MOVWF   PORTD
-	CALL	Read_AN12
-	MOVWF	LLredValue		;~~~~~RED~~~~~
-	CALL	Read_AN10
-	MOVWF	LredValue
-	CALL	Read_AN8
-	MOVWF	MredValue
-	CALL	Read_AN9
-	MOVWF	RredValue
-	CALL	Read_AN13
-	MOVWF	RRredValue		;~~~~~RED~~~~~
+    CALL	Read_AN12
+    MOVWF	LLredValue		;~~~~~RED~~~~~
+    CALL	Read_AN10
+    MOVWF	LredValue
+    CALL	Read_AN8
+    MOVWF	MredValue
+    CALL	Read_AN9
+    MOVWF	RredValue
+    CALL	Read_AN13
+    MOVWF	RRredValue		;~~~~~RED~~~~~
     call    delay1s
     BSF	    PORTA,1
     MOVLW   b'10000010'
     MOVWF   PORTD
-	CALL	Read_AN12
-	MOVWF	LLgreenValue		;~~~~~GREEN~~~~~
-	CALL	Read_AN10
-	MOVWF	LgreenValue
-	CALL	Read_AN8
-	MOVWF	MgreenValue
-	CALL	Read_AN9
-	MOVWF	RgreenValue
-	CALL	Read_AN13
-	MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
+    CALL	Read_AN12
+    MOVWF	LLgreenValue		;~~~~~GREEN~~~~~
+    CALL	Read_AN10
+    MOVWF	LgreenValue
+    CALL	Read_AN8
+    MOVWF	MgreenValue
+    CALL	Read_AN9
+    MOVWF	RgreenValue
+    CALL	Read_AN13
+    MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
     call    delay1s
     BSF	    PORTA,2
     MOVLW   b'11000001'
     MOVWF   PORTD
-	CALL	Read_AN12
-	MOVWF	LLwhiteValue	;~~~~~WHITE~~~~~
-	CALL	Read_AN10
-	MOVWF	LwhiteValue
-	CALL	Read_AN8
-	MOVWF	MwhiteValue
-	CALL	Read_AN9
-	MOVWF	RwhiteValue
-	CALL	Read_AN13
-	MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
+    CALL	Read_AN12
+    MOVWF	LLwhiteValue	;~~~~~WHITE~~~~~
+    CALL	Read_AN10
+    MOVWF	LwhiteValue
+    CALL	Read_AN8
+    MOVWF	MwhiteValue
+    CALL	Read_AN9
+    MOVWF	RwhiteValue
+    CALL	Read_AN13
+    MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
     call    delay1s
     BSF	    PORTA,3
     MOVLW   b'11001000'
     MOVWF   PORTD
-	CALL	Read_AN12
-	MOVWF	LLblackValue	;~~~~~BLACK~~~~~
-	CALL	Read_AN10
-	MOVWF	LblackValue
-	CALL	Read_AN8
-	MOVWF	MblackValue
-	CALL	Read_AN9
-	MOVWF	RblackValue
-	CALL	Read_AN13
-	MOVWF	RRblackValue	;~~~~~BLACK~~~~~
+    CALL	Read_AN12
+    MOVWF	LLblackValue	;~~~~~BLACK~~~~~
+    CALL	Read_AN10
+    MOVWF	LblackValue
+    CALL	Read_AN8
+    MOVWF	MblackValue
+    CALL	Read_AN9
+    MOVWF	RblackValue
+    CALL	Read_AN13
+    MOVWF	RRblackValue	;~~~~~BLACK~~~~~
     call    delay1s
     BSF	    PORTA,4
     call    delay1s
@@ -1708,6 +1708,7 @@ not_done
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
+	CALL	Ranges
     CALL    sendCals
     movlw   b'00001100'
     MOVWF   PORTD
@@ -1753,68 +1754,20 @@ pythonLoop2
 ;</editor-fold>
     
     ;<editor-fold defaultstate="collapsed" desc="Range Calculation">
-    Ranges:
+Ranges:
     
 ;   Half all readings
-	
-    	RRNCF	LLwhiteValue,f	;divide by 2
-	BCF	LLwhiteValue,7
-	RRNCF	LLgreenValue,f	;divide by 2
-	BCF	LLgreenValue,7
-	RRNCF	LLredValue,f	;divide by 2
-	BCF	LLredValue,7
-	RRNCF	LLblueValue,f	;divide by 2
-	BCF	LLblueValue,7
-	RRNCF	LLblackValue,f	;divide by 2
-	BCF	LLblackValue,7
-	
-		
-    	RRNCF	LwhiteValue,f	;divide by 2
-	BCF	LwhiteValue,7
-	RRNCF	LgreenValue,f	;divide by 2
-	BCF	LgreenValue,7
-	RRNCF	LredValue,f	;divide by 2
-	BCF	LredValue,7
-	RRNCF	LblueValue,f	;divide by 2
-	BCF	LblueValue,7
-	RRNCF	LblackValue,f	;divide by 2
-	BCF	LblackValue,7
-	
-		
-    	RRNCF	MwhiteValue,f	;divide by 2
-	BCF	MwhiteValue,7
-	RRNCF	MgreenValue,f	;divide by 2
-	BCF	MgreenValue,7
-	RRNCF	MredValue,f	;divide by 2
-	BCF	MredValue,7
-	RRNCF	MblueValue,f	;divide by 2
-	BCF	MblueValue,7
-	RRNCF	MblackValue,f	;divide by 2
-	BCF	MblackValue,7
-    
-		
-    	RRNCF	RwhiteValue,f	;divide by 2
-	BCF	RwhiteValue,7
-	RRNCF	RgreenValue,f	;divide by 2
-	BCF	RgreenValue,7
-	RRNCF	RredValue,f	;divide by 2
-	BCF	RredValue,7
-	RRNCF	RblueValue,f	;divide by 2
-	BCF	RblueValue,7
-	RRNCF	RblackValue,f	;divide by 2
-	BCF	RblackValue,7
-	
-		
-    	RRNCF	RRwhiteValue,f	;divide by 2
-	BCF	RRwhiteValue,7
-	RRNCF	RRgreenValue,f	;divide by 2
-	BCF	RRgreenValue,7
-	RRNCF	RRredValue,f	;divide by 2
-	BCF	RRredValue,7
-	RRNCF	RRblueValue,f	;divide by 2
-	BCF	RRblueValue,7
-	RRNCF	RRblackValue,f	;divide by 2
-	BCF	RRblackValue,7
+	LFSR	FSR0,0x10	;load FRS0 with address of first range value
+	MOVLW	.25		;we have 25 values 
+	MOVWF	delay3
+
+repRanges
+	RRNCF	INDF0,f 		;divide by 2
+	BCF	POSTINC0,7		;clear bit to correct mistake and move pointer one on afterwards 
+
+	DECFSZ	delay3
+	goto	repRanges 
+
 ;	AVG white and green
    
 	MOVF	LLgreenValue,w
@@ -1876,22 +1829,27 @@ pythonLoop2
 ;	AVG blue and black
 	MOVF	LLblackValue,w
 	ADDWF	LLblueValue,f	
+	ADDWF	LLblackValue,f	;reset black to it's normal value 
 
 	
 	MOVF	LblackValue,w
 	ADDWF	LblueValue,f	
+	ADDWF	LblackValue,f	
 
 	
 	MOVF	MblackValue,w
 	ADDWF	MblueValue,f	
+	ADDWF	MblackValue,f	
 
 	
 	MOVF	RblackValue,w
 	ADDWF	RblueValue,f	
+	ADDWF	RblackValue,f	
 
 	
 	MOVF	RRblackValue,w
 	ADDWF	RRblueValue,f	
+	ADDWF	RRblackValue,f	
 
 	
 	RETURN

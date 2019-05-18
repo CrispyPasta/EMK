@@ -28,7 +28,7 @@ def setupSerial(baud):
 
 #\OwO/
 sensors = [0, 1, 2, 3, 4]
-ranges  = []
+ranges  = [0]
 #LL L M R RR
 calValues = [[], [], [], [], []]
 def animate(i):
@@ -47,14 +47,14 @@ def animate(i):
             plt.close()
             return
         elif (len(line) ==26):     #this should be the calibration values
-            # print(" \tLL\tL\tM\tR\tRR")
-            # colors = ["W", "G", "B", "R", "K"]
+            print(" \tLL\tL\tM\tR\tRR")
+            colors = ["W", "G", "B", "R", "K"]
             for a in range(0, 5):
-                # print colors[a] + "\t",
+                print colors[a] + "\t",
                 for b in range(0, 5):
-                    # print str(ord(line[a + 5 * b])) + "\t",
+                    print str(ord(line[a + 5 * b])) + "\t",
                     calValues[b].append(ord(line[a + 5 * b]))
-                # print("\n")
+                print("\n")
             
             # print(calValues)
 
