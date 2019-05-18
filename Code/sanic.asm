@@ -82,11 +82,6 @@
 	
 	temp	    ; temp variable for sensor output averaging	4A
 	aveloop	    ; loop counter for sensor averaging	4B
-
-	calLoop1
-	calLoop2
-	calTemp1
-	calTemp2
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
 
@@ -643,7 +638,7 @@ getColor:
 
 ;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
 testBlack:
-	
+
 
 ;</editor-fold>
 
