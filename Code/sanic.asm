@@ -395,7 +395,7 @@ Pro3
 	MOVLW	A'E'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	RCE1
+	GOTO	capTouch
 	GOTO	err
 	
 Pro4
@@ -503,7 +503,7 @@ getColor_LL:
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 getColor_L:
 	MOVF    LwhiteValue,w
-	CPFSGT  LsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	CPFSGT  LsensorVal         	; if LLsensorVal is > LLwhiteValue, it's not white
 	BSF     LcolorSensed,whiteBit     ; if it is white, set that bit
 	BTFSS	LcolorSensed,whiteBit
 	Return			    ; return if white sensed
@@ -1065,8 +1065,9 @@ PROC
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;<editor-fold defaultstate="collapsed" desc="Touch Start (RCE1)">	
-RCE1	MOVLW	A's'
+;<editor-fold defaultstate="collapsed" desc="Touch Start (capTouch)">	
+capTouch:	
+	MOVLW	A's'
 	call	trans
 	MOVLW	d'35'
 	MOVWF	diff
@@ -1145,7 +1146,7 @@ CALIBRATE					; order is blue, red, green, white, black
     MOVWF	RRblueValue		;~~~~~BLUE~~~~~
     call    delay1s
 
-    BSF	    PORTA,0
+    BSF	    PORTA,blueBit
     MOVLW   b'10001000'
     MOVWF   PORTD
     CALL	Read_AN12
@@ -1159,7 +1160,7 @@ CALIBRATE					; order is blue, red, green, white, black
     CALL	Read_AN13
     MOVWF	RRredValue		;~~~~~RED~~~~~
     call    delay1s
-    BSF	    PORTA,1
+    BSF	    PORTA,redBit
     MOVLW   b'10000010'
     MOVWF   PORTD
     CALL	Read_AN12
@@ -1173,7 +1174,7 @@ CALIBRATE					; order is blue, red, green, white, black
     CALL	Read_AN13
     MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
     call    delay1s
-    BSF	    PORTA,2
+    BSF	    PORTA,greenBit
     MOVLW   b'11000001'
     MOVWF   PORTD
     CALL	Read_AN12
@@ -1187,7 +1188,7 @@ CALIBRATE					; order is blue, red, green, white, black
     CALL	Read_AN13
     MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
     call    delay1s
-    BSF	    PORTA,3
+    BSF	    PORTA,whiteBit
     MOVLW   b'11001000'
     MOVWF   PORTD
     CALL	Read_AN12
@@ -1201,7 +1202,7 @@ CALIBRATE					; order is blue, red, green, white, black
     CALL	Read_AN13
     MOVWF	RRblackValue	;~~~~~BLACK~~~~~
     call    delay1s
-    BSF	    PORTA,4
+    BSF	    PORTA,blackBit
     call    delay1s
     CLRF    PORTA
     call    Ranges		; Use Range function for colour detection values
