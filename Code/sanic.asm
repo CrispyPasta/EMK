@@ -479,7 +479,7 @@ getColor_LL:
 	MOVF    LLgreenValue,w
 	CPFSGT  LLsensorVal         
 	BSF     LLcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    	BTFSS	LLcolorSensed,greenBit
+    BTFSS	LLcolorSensed,greenBit
 	Return			    ; return if green sensed
 
 	MOVF    LLredValue,w
@@ -511,7 +511,7 @@ getColor_L:
 	MOVF    LgreenValue,w
 	CPFSGT  LsensorVal         
 	BSF     LcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    	BTFSS	LcolorSensed,greenBit
+    BTFSS	LcolorSensed,greenBit
 	Return			    ; return if green sensed
 
 
@@ -579,7 +579,7 @@ getColor_R:
 	MOVF    RgreenValue,w
 	CPFSGT  RsensorVal         
 	BSF     RcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    	BTFSS	RcolorSensed,greenBit
+    BTFSS	RcolorSensed,greenBit
 	Return			    ; return if green sensed
 
 
@@ -603,7 +603,7 @@ getColor_R:
 	
     ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 getColor_RR:
-    	MOVF    RRwhiteValue,w
+    MOVF    RRwhiteValue,w
 	CPFSGT  RRsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
 	BSF     RRcolorSensed,whiteBit     ; if it is white, set that bit
 	BTFSS	RRcolorSensed,whiteBit
@@ -612,7 +612,7 @@ getColor_RR:
 	MOVF    RRgreenValue,w
 	CPFSGT  RRsensorVal         
 	BSF     RRcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    	BTFSS	RRcolorSensed,greenBit
+    BTFSS	RRcolorSensed,greenBit
 	Return			    ; return if green sensed
 
 	MOVF    RRredValue,w
@@ -626,8 +626,6 @@ getColor_RR:
 	BSF     RRcolorSensed,blueBit     
 	BTFSS	RRcolorSensed,blueBit
 	Return			    ; return if blue sensed
-
-	
 
 	BSF     RRcolorSensed,blackBit     ; else, it's black
 	Return
@@ -695,31 +693,13 @@ getRaceLinePosition:
 ;<editor-fold defaultstate="collapsed" desc="Determine Direction">
 
 determineDirection:
-	;forward = middle sensor is die regte kleur
-	;forward = race color is nie opgetel nie
-	;left = L of LL is getrigger
-	;right = R of RR is getrigger
 	BTFSC   McolorSensed, greenBit     ; M senses green (these three are for the LED 
 	BSF     PORTA,greenBit
 	BTFSC   McolorSensed, blueBit     ; M senses blue   ...that indicates the color 
 	BSF     PORTA,blueBit
 	BTFSC   McolorSensed, redBit     ; M senses red    ...sensed by sensor M)
 	BSF     PORTA,0
-	
-	; BTFSC   raceLinePosition, mBit     ; if M senses race colour, go straight
-	; BSF     PORTA,4
-	; BTFSC   raceLinePosition, mBit     ; if going straight, return
-	; return				
-	
-	; BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
-	; BSF     PORTA,3
-	; BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
-	; BSF     PORTA,3
-	
-	; BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
-	; BSF     PORTA,5
-	; BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
-	; BSF     PORTA,5
+
 
 	BTFSC	raceLinePosition, mBit
 	GOTO	Straight				; GOTO (not call), then the motor control thing returns back to nav
@@ -1114,7 +1094,7 @@ poll_c
 	MOVWF	Touch1
 	
 	
-	SUBFWB	Touch2
+	SUBFWB	Touch2, w
 	CPFSGT	diff
 	goto	stop
 	goto	poll_c
