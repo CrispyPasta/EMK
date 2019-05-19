@@ -88,7 +88,7 @@
 whiteBit    equ .0
 greenBit    equ .1
 blueBit     equ .2
-redBit		equ .3
+redBit	    equ .3
 blackBit    equ .4
 
 llBit   equ .0
@@ -633,7 +633,6 @@ getColor_RR:
 
 	;</editor-fold>
 
-
 ;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
 testBlack:
 	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
@@ -1099,7 +1098,7 @@ poll_c
 	MOVWF	Touch1
 	
 	
-	SUBFWB	Touch2, w
+	SUBWF	Touch2, w
 	CPFSGT	diff
 	goto	stop
 	goto	poll_c
@@ -1109,9 +1108,10 @@ stop
 	call	trans
 	MOVLW   A'\n'
 	call	trans
-	BSF		INTCON,GIEL		; Enable peripheral interrupts
+	call	hunnitMilDelay
+	BSF	INTCON,GIEL		; Enable peripheral interrupts
 	bsf     INTCON,GIEH		; Enable global interrupts
-	BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
+	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
 	GOTO	navigate
 
 ;</editor-fold>	
@@ -1223,7 +1223,7 @@ CALIBRATE					; order is blue, red, green, white, black
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python + ADC stuff">
-    ;<editor-fold defaultstate="collapsed" desc="Setup RC2 (For touch sensor)">
+    ;<editor-fold defaultstate="collapsed" desc="Setup RC3 (For touch sensor)">
 ADC_SETUP_AN15:
 
 	;Configure Port RA0:
@@ -1445,8 +1445,7 @@ ADC_SETUP_AN13:
 	RETURN
 ;</editor-fold>
 
-
-    ;<editor-fold defaultstate="collapsed" desc="READ RC2 (for touch sensor)">
+    ;<editor-fold defaultstate="collapsed" desc="READ RC3 (for touch sensor)">
 Read_AN15:
     BTFSS   TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
     BRA	    Read_AN15
@@ -1464,7 +1463,6 @@ Poll_Go0
     RETURN		    ;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
-	
     ;<editor-fold defaultstate="collapsed" desc="READ AN12">
 Read_AN12:
 ;	BTFSS	TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
