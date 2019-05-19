@@ -777,19 +777,19 @@ LeftMotorControl macro dutyCycle, direction
     BSF	    T2CON, TMR2ON    ; Turn timer on
     MOVLB   0x0
 	
-	BTFSC	direction, 0	  ; if 1, go forward
-	GOTO	forward 
-	GOTO	backward
+    BTFSC   direction, 0	  ; if 1, go forward
+    GOTO    $+4 
+    GOTO    $+8
 	
-forward
-	BSF		PORTC,4
-	BCF		PORTC,5
-	endm 
 
-backward 
-	BCF		PORTC,4
-	BSF		PORTC,5
+    BSF	    PORTC,4		;go forward 
+    BCF	    PORTC,5
+    GOTO    $+6 
 
+
+    BCF	    PORTC,4		;go backward
+    BSF	    PORTC,5
+    
     endm
 
 PWMISRL:
@@ -825,19 +825,18 @@ RightMotorControl macro dutyCycle, direction
     BSF	    T4CON, TMR4ON     ; Turn timer on
     MOVLB   0x0
     
-	BTFSC	direction, 0	  ; if 1, go forward
-	GOTO	forward 
-	GOTO	backward
+    BTFSC   direction, 0	  ; if 1, go forward
+    GOTO    $+4 
+    GOTO    $+8
 	
-forward
-	BSF		PORTC,6
-	BCF		PORTC,7
-	endm 
 
-backward 
-	BCF		PORTC,6
-	BSF		PORTC,7
+    BSF	    PORTC,6		;go forward 
+    BCF	    PORTC,7
+    GOTO    $+6
 
+
+    BCF	    PORTC,6		;go backward
+    BSF	    PORTC,7
     endm
 
 PWMISRR:
