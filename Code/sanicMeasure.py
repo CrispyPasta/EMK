@@ -25,7 +25,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM11' 
+    ser.port = 'COM13' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -38,7 +38,7 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [0]
+sensors = [0, 1,2,3,4]
 def animate(i):
     global calibrationComplete
     global data
@@ -70,7 +70,7 @@ def animate(i):
         # pos += 1
 
     ax1.clear()
-    labels = ['LL', 'L', 'M', 'R', 'RR']
+    labels = ['RR', 'R', 'M', 'L', 'LL']
     for a in sensors:
         ax1.plot(data[a], label= labels[a])
         ax1.legend()
