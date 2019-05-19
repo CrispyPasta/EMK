@@ -88,7 +88,11 @@
 whiteBit    equ .0
 greenBit    equ .1
 blueBit     equ .2
+<<<<<<< HEAD
 redBit	    equ .3
+=======
+redBit		equ .3
+>>>>>>> parent of 04624ff... Update sanic.asm
 blackBit    equ .4
 
 llBit   equ .0
@@ -594,6 +598,7 @@ getColor_R:
 	BSF     RcolorSensed,blueBit     
 	BTFSS	RcolorSensed,blueBit
 	Return			    ; return if blue sensed
+<<<<<<< HEAD
 
 
 	
@@ -601,6 +606,15 @@ getColor_R:
 	Return
     ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
+=======
+
+
+	
+	BSF     RcolorSensed,blackBit     ; else, it's black
+	Return
+    ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+>>>>>>> parent of 04624ff... Update sanic.asm
     ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 getColor_RR:
     MOVF    RRwhiteValue,w
@@ -633,6 +647,10 @@ getColor_RR:
 
 	;</editor-fold>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 04624ff... Update sanic.asm
 ;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
 testBlack:
 	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
@@ -1073,6 +1091,7 @@ PROC
 capTouch:	
 	MOVLW	A's'
 	call	trans
+<<<<<<< HEAD
 	call	delay1s
 poll_c
 	BCF		TRISC,3 	;digital output 
@@ -1083,6 +1102,12 @@ poll_c
 
 	MOVLW	d'47'
 	MOVWF	diff	
+=======
+	MOVLW	d'35'
+	MOVWF	diff
+	call	delay1s
+poll_c	
+>>>>>>> parent of 04624ff... Update sanic.asm
 	call	Read_AN15
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
@@ -1098,17 +1123,27 @@ poll_c
 	MOVWF	Touch1
 	
 	
+<<<<<<< HEAD
 	SUBWF	Touch2, w
+=======
+	SUBFWB	Touch2, w
+>>>>>>> parent of 04624ff... Update sanic.asm
 	CPFSGT	diff
 	goto	stop
 	goto	poll_c
 
 stop	
 	MOVLW	A'D'
+<<<<<<< HEAD
 	call	trans
 	MOVLW   A'\n'
 	call	trans
 	call	hunnitMilDelay
+=======
+	call	trans
+	MOVLW   A'\n'
+	call	trans
+>>>>>>> parent of 04624ff... Update sanic.asm
 	BSF	INTCON,GIEL		; Enable peripheral interrupts
 	bsf     INTCON,GIEH		; Enable global interrupts
 	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
@@ -1223,7 +1258,11 @@ CALIBRATE					; order is blue, red, green, white, black
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python + ADC stuff">
+<<<<<<< HEAD
     ;<editor-fold defaultstate="collapsed" desc="Setup RC3 (For touch sensor)">
+=======
+    ;<editor-fold defaultstate="collapsed" desc="Setup RC2 (For touch sensor)">
+>>>>>>> parent of 04624ff... Update sanic.asm
 ADC_SETUP_AN15:
 
 	;Configure Port RA0:
@@ -1445,7 +1484,12 @@ ADC_SETUP_AN13:
 	RETURN
 ;</editor-fold>
 
+<<<<<<< HEAD
     ;<editor-fold defaultstate="collapsed" desc="READ RC3 (for touch sensor)">
+=======
+
+    ;<editor-fold defaultstate="collapsed" desc="READ RC2 (for touch sensor)">
+>>>>>>> parent of 04624ff... Update sanic.asm
 Read_AN15:
     BTFSS   TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
     BRA	    Read_AN15
