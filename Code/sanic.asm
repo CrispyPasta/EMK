@@ -777,18 +777,16 @@ LeftMotorControl macro dutyCycle, direction
     BSF	    T2CON, TMR2ON    ; Turn timer on
     MOVLB   0x0
 	
-	BTFSC	direction, 0	  ; if 1, go forward
-	GOTO	forward 
-	GOTO	backward
+    BTFSC   direction, 0	  ; if 1, go forward
+    GOTO    $+4 
+    GOTO    $+6
 	
-forward
-	BSF		PORTC,4
-	BCF		PORTC,5
-	endm 
+    BSF	    PORTC,4
+    BCF	    PORTC,5
+    GOTO    $+6 
 
-backward 
-	BCF		PORTC,4
-	BSF		PORTC,5
+    BCF	    PORTC,4
+    BSF	    PORTC,5
 
     endm
 
@@ -825,18 +823,16 @@ RightMotorControl macro dutyCycle, direction
     BSF	    T4CON, TMR4ON     ; Turn timer on
     MOVLB   0x0
     
-	BTFSC	direction, 0	  ; if 1, go forward
-	GOTO	forward 
-	GOTO	backward
+    BTFSC   direction, 0	  ; if 1, go forward
+    GOTO    $+4 
+    GOTO    $+6
 	
-forward
-	BSF		PORTC,6
-	BCF		PORTC,7
-	endm 
+    BSF	    PORTC,6
+    BCF	    PORTC,7
+    GOTO    $+6 
 
-backward 
-	BCF		PORTC,6
-	BSF		PORTC,7
+    BCF	    PORTC,6
+    BSF	    PORTC,7
 
     endm
 
@@ -923,7 +919,9 @@ nav
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	
 ;<editor-fold defaultstate="collapsed" desc="Program Color (PRC)">
-PRC	
+PRC:
+	MOVLW	b'11111001'
+	MOVWF	PORTD	
 	MOVLW	A'W'
 	call    trans
 	MOVLW	A'h'
@@ -1075,10 +1073,10 @@ PROC
 capTouch:	
 	MOVLW	A's'
 	call	trans
-	MOVLW	d'35'
-	MOVWF	diff
 	call	delay1s
 poll_c	
+	MOVLW	d'60'
+	MOVWF	diff
 	call	Read_AN15
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
@@ -1088,13 +1086,12 @@ poll_c
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
-	
 	call	Read_AN15
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
 	
-	SUBFWB	Touch2, w
+	SUBWF	Touch2, w
 	CPFSGT	diff
 	goto	stop
 	goto	poll_c
@@ -1135,81 +1132,90 @@ S1
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="CALIBRATE">	
-CAL							;calibrate the sensors here
-CALIBRATE					; order is blue, red, green, white, black
+CAL:							;calibrate the sensors here
+								; order is blue, red, green, white, black
     CLRF    PORTA
     MOVLW   b'10000000'
     MOVWF   PORTD
-    CALL	Read_AN12
+    CALL	AverageLL
     MOVWF	LLblueValue		;~~~~~BLUE~~~~~
-    CALL	Read_AN10
+    CALL	AverageL
     MOVWF	LblueValue
-    CALL	Read_AN8
+    CALL	AverageM
     MOVWF	MblueValue
-    CALL	Read_AN9
+    CALL	AverageR
     MOVWF	RblueValue
-    CALL	Read_AN13
+    CALL	AverageRR
     MOVWF	RRblueValue		;~~~~~BLUE~~~~~
+    BSF	    PORTA,blueBit
+    call    delay1s
     call    delay1s
 
-    BSF	    PORTA,blueBit
     MOVLW   b'10001000'
     MOVWF   PORTD
-    CALL	Read_AN12
+    CALL	AverageLL
     MOVWF	LLredValue		;~~~~~RED~~~~~
-    CALL	Read_AN10
+    CALL	AverageL
     MOVWF	LredValue
-    CALL	Read_AN8
+    CALL	AverageM
     MOVWF	MredValue
-    CALL	Read_AN9
+    CALL	AverageR
     MOVWF	RredValue
-    CALL	Read_AN13
+    CALL	AverageRR
     MOVWF	RRredValue		;~~~~~RED~~~~~
-    call    delay1s
     BSF	    PORTA,redBit
+    call    delay1s
+    call    delay1s
+
     MOVLW   b'10000010'
     MOVWF   PORTD
-    CALL	Read_AN12
+    CALL	AverageLL
     MOVWF	LLgreenValue		;~~~~~GREEN~~~~~
-    CALL	Read_AN10
+    CALL	AverageL
     MOVWF	LgreenValue
-    CALL	Read_AN8
+    CALL	AverageM
     MOVWF	MgreenValue
-    CALL	Read_AN9
+    CALL	AverageR
     MOVWF	RgreenValue
-    CALL	Read_AN13
+    CALL	AverageRR
     MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
-    call    delay1s
     BSF	    PORTA,greenBit
+    call    delay1s
+    call    delay1s
+
     MOVLW   b'11000001'
     MOVWF   PORTD
-    CALL	Read_AN12
+    CALL	AverageLL
     MOVWF	LLwhiteValue	;~~~~~WHITE~~~~~
-    CALL	Read_AN10
+    CALL	AverageL
     MOVWF	LwhiteValue
-    CALL	Read_AN8
+    CALL	AverageM
     MOVWF	MwhiteValue
-    CALL	Read_AN9
+    CALL	AverageR
     MOVWF	RwhiteValue
-    CALL	Read_AN13
+    CALL	AverageRR
     MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
-    call    delay1s
     BSF	    PORTA,whiteBit
+    call    delay1s
+    call    delay1s
+	
     MOVLW   b'11001000'
     MOVWF   PORTD
-    CALL	Read_AN12
+    CALL	AverageLL
     MOVWF	LLblackValue	;~~~~~BLACK~~~~~
-    CALL	Read_AN10
+    CALL	AverageL
     MOVWF	LblackValue
-    CALL	Read_AN8
+    CALL	AverageM
     MOVWF	MblackValue
-    CALL	Read_AN9
+    CALL	AverageR
     MOVWF	RblackValue
-    CALL	Read_AN13
+    CALL	AverageRR
     MOVWF	RRblackValue	;~~~~~BLACK~~~~~
-    call    delay1s
     BSF	    PORTA,blackBit
     call    delay1s
+    call    delay1s
+
+
     CLRF    PORTA
     call    Ranges		; Use Range function for colour detection values
     GOTO    RCE				

@@ -1,0 +1,26 @@
+Blue
+
+LL - High
+L  -Meduim
+M  -High
+R  - High
+RR - High
+
+
+Red
+
+LL - Meduim
+L  -High
+M  -Meduim
+R  - Meduim
+RR - Meduim
+
+
+Green
+
+LL - Low
+L  -Low
+M  -Low
+R  - Low
+RR - Low
+
