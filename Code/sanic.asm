@@ -633,7 +633,7 @@ getColor_RR:
 
 	;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
+;<editor-fold defaultstate="collapsed" desc="testBlack">
 testBlack:
 	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
 	
@@ -717,7 +717,7 @@ determineDirection:
 
 	CALL	testBlack	
 	CPFSEQ	blackFlag		; check if black was detected on all sensors
-	GOTO	$+4				; skip over "GOTO Stop", to "MOVLW 0x0"
+	GOTO	$+6				; skip over "GOTO Stop", to "MOVLW 0x0"
 	GOTO	Stop
 	
 	MOVLW   0x0
@@ -734,19 +734,19 @@ searchModeLights:
 	bsf	PORTA,4		;go straight in search mode
 	bcf	PORTA,5
 	
-	bsf	PORTA,0
-	bcf	PORTA,1
-	bcf	PORTA,2
+	bsf	PORTA,greenBit
+	bcf	PORTA,redBit
+	bcf	PORTA,blueBit
 	CALL 	threeMilDelay
 	
-	bcf	PORTA,0
-	bsf	PORTA,1
-	bcf	PORTA,2
+	bcf	PORTA,greenBit
+	bsf	PORTA,redBit
+	bcf	PORTA,blueBit
 	CALL 	threeMilDelay
 	
-	bcf	PORTA,0
-	bcf	PORTA,1
-	bsf	PORTA,2
+	bcf	PORTA,greenBit
+	bcf	PORTA,redBit
+	bsf	PORTA,blueBit
 	CALL 	threeMilDelay
 	RETURN 
 ;</editor-fold>
@@ -914,7 +914,7 @@ nav
     CALL    getColor
     CALL    getRaceLinePosition
     CALL    determineDirection
-    ;CALL    hunnitMilDelay
+    CALL    hunnitMilDelay
     GOTO    nav
 	; navigate doesn't end, it must be interruted 
 ;</editor-fold>
