@@ -29,10 +29,10 @@
 	delay3
 	Touch1		; for touch start sensor
 	Touch2
-	diff		
+	diff
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor 0x16
+	LLwhiteValue      ; Hardcoded voltage values for each color for Left Left sensor
 	LLgreenValue
 	LLblueValue
 	LLredValue
@@ -84,20 +84,6 @@
 	aveloop	    ; loop counter for sensor averaging	4B
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  	ENDC
-
-whiteBit    equ .0
-greenBit    equ .1
-blueBit     equ .2
-redBit		equ .3
-blackBit    equ .4
-
-llBit   equ .0
-lBit    equ .1
-mBit    equ .2
-rBit    equ .3
-rrBit   equ .4
-
-blackFlag	equ 0xAA	;if WREG = blackFlag, we should stop 
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -114,7 +100,7 @@ blackFlag	equ 0xAA	;if WREG = blackFlag, we should stop
     
     ;<editor-fold defaultstate="collapsed" desc="Interrupt Handler">
 InterruptHandler:
-    BTFSC   PIR1,RCIF
+    BTFSC   PIR1,RC1IF
     GOTO    touchISR
     BTFSC   PIR1,TMR2IF		;PWM timer interrupts	
     CALL    PWMISRL,FAST		
@@ -242,19 +228,19 @@ setup
     MOVWF   RblackValue
     MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .250             ;set hardcoded values for sensor outputs (for testing)
+    MOVLW   .140             ;set hardcoded values for sensor outputs (for testing)
     MOVWF   LLsensorVal
-    MOVLW   .250
+    MOVLW   .40
     MOVWF   LsensorVal
     MOVLW   .250
     MOVWF   MsensorVal
-    MOVLW   .250
+    MOVLW   .40
     MOVWF   RsensorVal
-    MOVLW   .250
+    MOVLW   .90
     MOVWF   RRsensorVal
     
-    CLRF	raceColor
-    BSF   	raceColor,blueBit
+    MOVLW   b'00000100'	;blue
+    MOVWF   raceColor
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GOTO    RCE
 	
@@ -395,7 +381,7 @@ Pro3
 	MOVLW	A'E'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	capTouch
+	GOTO	RCE1
 	GOTO	err
 	
 Pro4
@@ -456,209 +442,192 @@ getColor:
 	CLRF    McolorSensed
 	CLRF    RcolorSensed
 	CLRF    RRcolorSensed
-	call	AverageLL		;use these cause they have less noise
+	call	AverageLL		;use these cause they have very little noise
 	call	AverageL
 	call	AverageM
 	call	AverageR
 	call	AverageRR
-	call	getColor_LL
-	call	getColor_L
-	call	getColor_M
-	call	getColor_R
-	call	getColor_RR
-	return            
+	
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-getColor_LL:	
+	
 	MOVF    LLwhiteValue,w
 	CPFSGT  LLsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     LLcolorSensed,whiteBit     ; if it is white, set that bit
-	BTFSS	LLcolorSensed,whiteBit
-	Return			    ; return if white sensed
-	
+	BSF     LLcolorSensed,0     ; if it is white, set that bit
+
 	MOVF    LLgreenValue,w
 	CPFSGT  LLsensorVal         
-	BSF     LLcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    BTFSS	LLcolorSensed,greenBit
-	Return			    ; return if green sensed
-
-	MOVF    LLredValue,w
-	CPFSGT  LLsensorVal         
-	BSF     LLcolorSensed,redBit     
-	BTFSS	LLcolorSensed,redBit
-	Return			    ; return if red sensed
+	BSF     LLcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    LLwhiteValue,w    
+	CPFSGT  LLsensorVal         ; it it's smaller than white, it's not green
+	BCF     LLcolorSensed,1     
 
 	MOVF    LLblueValue,w
 	CPFSGT  LLsensorVal         
-	BSF     LLcolorSensed,blueBit     
-	BTFSS	LLcolorSensed,blueBit
-	Return			    ; return if blue sensed
+	BSF     LLcolorSensed,2     
+	MOVF    LLgreenValue,w
+	CPFSGT  LLsensorVal         
+	BCF     LLcolorSensed,2     
 
+	MOVF    LLredValue,w
+	CPFSGT  LLsensorVal         
+	BSF     LLcolorSensed,3     
+	MOVF    LLblueValue,w
+	CPFSGT  LLsensorVal         
+	BCF     LLcolorSensed,3     
 
-	BSF     LLcolorSensed,blackBit     ; else, it's black
-	Return
-	
+	MOVF    LLblackValue,w
+	CPFSGT  LLsensorVal
+	BSF     LLcolorSensed,4     ; else, it's black
+	MOVF    LLredValue,w
+	CPFSGT  LLsensorVal
+	BCF     LLcolorSensed,4     ; else, it's black
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-getColor_L:
 	MOVF    LwhiteValue,w
-	CPFSGT  LsensorVal         	; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     LcolorSensed,whiteBit     ; if it is white, set that bit
-	BTFSS	LcolorSensed,whiteBit
-	Return			    ; return if white sensed
-	
+	CPFSGT  LsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF     LcolorSensed,0     ; if it is white, set that bit
+
 	MOVF    LgreenValue,w
 	CPFSGT  LsensorVal         
-	BSF     LcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    BTFSS	LcolorSensed,greenBit
-	Return			    ; return if green sensed
+	BSF     LcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    LwhiteValue,w    
+	CPFSGT  LsensorVal         ; it it's smaller than white, it's not green
+	BCF     LcolorSensed,1     
 
+	MOVF    LblueValue,w
+	CPFSGT  LsensorVal         
+	BSF     LcolorSensed,2     
+	MOVF    LgreenValue,w
+	CPFSGT  LsensorVal         
+	BCF     LcolorSensed,2     
 
 	MOVF    LredValue,w
 	CPFSGT  LsensorVal         
-	BSF     LcolorSensed,redBit     
-	BTFSS	LcolorSensed,redBit
-	Return			    ; return if red sensed
-	
+	BSF     LcolorSensed,3     
 	MOVF    LblueValue,w
 	CPFSGT  LsensorVal         
-	BSF     LcolorSensed,blueBit
-	BTFSS	LcolorSensed,blueBit
-	Return			    ; return if blue sensed
+	BCF     LcolorSensed,3     
 
-
-	BSF     LcolorSensed,blackBit     ; else, it's black
-	Return
+	MOVF    LblackValue,w
+	CPFSGT  LsensorVal
+	BSF     LcolorSensed,4     ; else, it's black
+	MOVF    LredValue,w
+	CPFSGT  LsensorVal
+	BCF     LcolorSensed,4     ; else, it's black
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Left Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
-getColor_M:
-	
 	MOVF    MwhiteValue,w
 	CPFSGT  MsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     McolorSensed,whiteBit     ; if it is white, set that bit
-	BTFSS	McolorSensed,whiteBit
-	Return			    ; return if white sensed
-	
+	BSF     McolorSensed,0     ; if it is white, set that bit
+
 	MOVF    MgreenValue,w
 	CPFSGT  MsensorVal         
-	BSF     McolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    	BTFSS	McolorSensed,greenBit
-	Return			    ; return if green sensed
+	BSF     McolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    MwhiteValue,w    
+	CPFSGT  MsensorVal         ; it it's smaller than white, it's not green
+	BCF     McolorSensed,1     
 
+	MOVF    MblueValue,w
+	CPFSGT  MsensorVal         
+	BSF     McolorSensed,2     
+	MOVF    MgreenValue,w
+	CPFSGT  MsensorVal         
+	BCF     McolorSensed,2     
 
 	MOVF    MredValue,w
 	CPFSGT  MsensorVal         
-	BSF     McolorSensed,redBit     
-	BTFSS	McolorSensed,redBit
-	Return			    ; return if red sensed
-	
-	
+	BSF     McolorSensed,3     
 	MOVF    MblueValue,w
 	CPFSGT  MsensorVal         
-	BSF     McolorSensed,blueBit     
-	BTFSS	McolorSensed,blueBit
-	Return			    ; return if blue sensed
+	BCF     McolorSensed,3     
 
-
-	BSF     McolorSensed,blackBit     ; else, it's black
-	Return
+	MOVF    MblackValue,w
+	CPFSGT  MsensorVal
+	BSF     McolorSensed,4     ; else, it's black
+	MOVF    MredValue,w
+	CPFSGT  MsensorVal
+	BCF     McolorSensed,4     ; else, it's black
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Middle Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-getColor_R:
-	
 	MOVF    RwhiteValue,w
 	CPFSGT  RsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     RcolorSensed,whiteBit     ; if it is white, set that bit
-	BTFSS	RcolorSensed,whiteBit
-	Return			    ; return if white sensed
-	
+	BSF     RcolorSensed,0     ; if it is white, set that bit
+
 	MOVF    RgreenValue,w
 	CPFSGT  RsensorVal         
-	BSF     RcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    BTFSS	RcolorSensed,greenBit
-	Return			    ; return if green sensed
-
-
-	MOVF    RredValue,w
-	CPFSGT  RsensorVal         
-	BSF     RcolorSensed,redBit     
-	BTFSS	RcolorSensed,redBit
-	Return			    ; return if red sensed
+	BSF     RcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    RwhiteValue,w    
+	CPFSGT  RsensorVal         ; it it's smaller than white, it's not green
+	BCF     RcolorSensed,1     
 
 	MOVF    RblueValue,w
 	CPFSGT  RsensorVal         
-	BSF     RcolorSensed,blueBit     
-	BTFSS	RcolorSensed,blueBit
-	Return			    ; return if blue sensed
+	BSF     RcolorSensed,2     
+	MOVF    RgreenValue,w
+	CPFSGT  RsensorVal         
+	BCF     RcolorSensed,2     
 
+	MOVF    RredValue,w
+	CPFSGT  RsensorVal         
+	BSF     RcolorSensed,3     
+	MOVF    RblueValue,w
+	CPFSGT  RsensorVal         
+	BCF     RcolorSensed,3     
 
+	MOVF    RblackValue,w
+	CPFSGT  RsensorVal
+	BSF     RcolorSensed,4     ; else, it's black
+	MOVF    RredValue,w
+	CPFSGT  RsensorVal
+	BCF     RcolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	
-	BSF     RcolorSensed,blackBit     ; else, it's black
-	Return
-    ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	
-    ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-getColor_RR:
-    MOVF    RRwhiteValue,w
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    RRwhiteValue,w
 	CPFSGT  RRsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
-	BSF     RRcolorSensed,whiteBit     ; if it is white, set that bit
-	BTFSS	RRcolorSensed,whiteBit
-	Return			    ; return if white sensed
-	
+	BSF     RRcolorSensed,0     ; if it is white, set that bit
+
 	MOVF    RRgreenValue,w
 	CPFSGT  RRsensorVal         
-	BSF     RRcolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    BTFSS	RRcolorSensed,greenBit
-	Return			    ; return if green sensed
-
-	MOVF    RRredValue,w
-	CPFSGT  RRsensorVal         
-	BSF     RRcolorSensed,redBit     
-	BTFSS	RRcolorSensed,redBit
-	Return			    ; return if red sensed
+	BSF     RRcolorSensed,1     ; if it's smaller than the max for green, it's could be green
+	MOVF    RRwhiteValue,w    
+	CPFSGT  RRsensorVal         ; it it's smaller than white, it's not green
+	BCF     RRcolorSensed,1     
 
 	MOVF    RRblueValue,w
 	CPFSGT  RRsensorVal         
-	BSF     RRcolorSensed,blueBit     
-	BTFSS	RRcolorSensed,blueBit
-	Return			    ; return if blue sensed
+	BSF     RRcolorSensed,2     
+	MOVF    RRgreenValue,w
+	CPFSGT  RRsensorVal         
+	BCF     RRcolorSensed,2     
 
-	BSF     RRcolorSensed,blackBit     ; else, it's black
-	Return
-;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	MOVF    RRredValue,w
+	CPFSGT  RRsensorVal         
+	BSF     RRcolorSensed,3     
+	MOVF    RRblueValue,w
+	CPFSGT  RRsensorVal         
+	BCF     RRcolorSensed,3     
 
-	;</editor-fold>
+	MOVF    RRblackValue,w
+	CPFSGT  RRsensorVal
+	BSF     RRcolorSensed,4     ; else, it's black
+	MOVF    RRredValue,w
+	CPFSGT  RRsensorVal
+	BCF     RRcolorSensed,4     ; else, it's black
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Determine Right Right Sensor Value~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-;<editor-fold defaultstate="collapsed" desc="Test for black on all sensors">
-testBlack:
-	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
-	
-	CPFSGT	LLsensorVal		;if the sensor value is higher, don't return 
-	RETURN
-	CPFSGT	LsensorVal		;if the sensor value is higher, don't return 
-	RETURN
-	CPFSGT	MsensorVal		;if the sensor value is higher, don't return 
-	RETURN
-	CPFSGT	RsensorVal		;if the sensor value is higher, don't return 
-	RETURN
-	CPFSGT	RRsensorVal		;if the sensor value is higher, don't return 
-	RETURN
-
-	; if the code gets to here, there's black everywhere 
-	RETLW	0xAA			;just a value that's unlikely to occur naturally 
-
+	return                             ; Return from getColor (determine color sensed by each sensor)
 ;</editor-fold>
 
 ;<editor-fold defaultstate="collapsed" desc="getRaceLinePosition">
 getRaceLinePosition:
 	MOVLW   b'11100000'
 	MOVWF   raceLinePosition        ;raceLinePosition is vol ones 
-	MOVF    raceColor,w             ;move die one-hot encoded race color in die wreg in, vir comparisons 
+	MOVF    raceColor,w               ;move die one-hot encoded race color in die wreg in, vir comparisons 
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	CPFSEQ  LLcolorSensed
@@ -693,33 +662,31 @@ getRaceLinePosition:
 ;<editor-fold defaultstate="collapsed" desc="Determine Direction">
 
 determineDirection:
-	BTFSC   McolorSensed, greenBit     ; M senses green (these three are for the LED 
-	BSF     PORTA,greenBit
-	BTFSC   McolorSensed, blueBit     ; M senses blue   ...that indicates the color 
-	BSF     PORTA,blueBit
-	BTFSC   McolorSensed, redBit     ; M senses red    ...sensed by sensor M)
+	;forward = middle sensor is die regte kleur
+	;forward = race color is nie opgetel nie
+	;left = L of LL is getrigger
+	;right = R of RR is getrigger
+	BTFSC   McolorSensed, 1     ; M senses green (these three are for the LED 
+	BSF     PORTA,1
+	BTFSC   McolorSensed, 2     ; M senses blue   ...that indicates the color 
+	BSF     PORTA,2
+	BTFSC   McolorSensed, 3     ; M senses red    ...sensed by sensor M)
 	BSF     PORTA,0
-
-
-	BTFSC	raceLinePosition, mBit
-	GOTO	Straight				; GOTO (not call), then the motor control thing returns back to nav
 	
-	BTFSC	raceLinePosition, lBit
-	GOTO	Left	
-
-	BTFSC	raceLinePosition, rBit
-	GOTO	Right	
-
-	BTFSC	raceLinePosition, llBit
-	GOTO	HardLeft	
-
-	BTFSC	raceLinePosition, rrBit
-	GOTO	HardRight	
-
-	CALL	testBlack	
-	CPFSEQ	blackFlag		; check if black was detected on all sensors
-	GOTO	$+4				; skip over "GOTO Stop", to "MOVLW 0x0"
-	GOTO	Stop
+	BTFSC   raceLinePosition, 2     ; if M senses race colour, go straight
+	BSF     PORTA,4
+	BTFSC   raceLinePosition, 2     ; if going straight, return
+	return				
+	
+	BTFSC   raceLinePosition, 0     ; if LL senses race colour, turn left
+	BSF     PORTA,3
+	BTFSC   raceLinePosition, 1     ; if L senses race colour, turn left
+	BSF     PORTA,3
+	
+	BTFSC   raceLinePosition, 3     ; if R senses race colour, turn right
+	BSF     PORTA,5
+	BTFSC   raceLinePosition, 4     ; if RR senses race colour, turn right
+	BSF     PORTA,5
 	
 	MOVLW   0x0
 	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
@@ -728,7 +695,7 @@ determineDirection:
 	return
 
 ;</editor-fold>
-	
+
 ;<editor-fold defaultstate="collapsed" desc="Search mode">
 searchModeLights:
 	bcf	PORTA,3
@@ -765,10 +732,10 @@ LeftMotorControl macro dutyCycle, direction
     
     CLRF    CCPTMRS0
   
-    MOVLW   b'00001100'	     ;PWM mode
+    MOVLW   b'00001100'	    ;PWM mode
     MOVWF   CCP1CON 
     MOVLB   0xF
-    MOVLW   b'01111010'	     ;16 prescale, 16 postscale, timer off
+    MOVLW   b'01111010'	    ;16 prescale, 16 postscale, timer off
     MOVWF   T2CON 
     CLRF    TMR2
     BSF     PIE1, TMR2IE     ; enable interrupts from the timer
@@ -776,20 +743,7 @@ LeftMotorControl macro dutyCycle, direction
     bsf     INTCON,GIE       ; Enable global interrupts
     BSF	    T2CON, TMR2ON    ; Turn timer on
     MOVLB   0x0
-	
-    BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    $+4 
-    GOTO    $+8
-	
-
-    BSF	    PORTC,4		;go forward 
-    BCF	    PORTC,5
-    GOTO    $+6 
-
-
-    BCF	    PORTC,4		;go backward
-    BSF	    PORTC,5
-    
+	; BSF     PORTA,5        ;indicate that the setup was performed
     endm
 
 PWMISRL:
@@ -824,19 +778,7 @@ RightMotorControl macro dutyCycle, direction
     bsf     INTCON, GIE       ; Enable global interrupts
     BSF	    T4CON, TMR4ON     ; Turn timer on
     MOVLB   0x0
-    
-    BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    $+4 
-    GOTO    $+8
-	
-
-    BSF	    PORTC,6		;go forward 
-    BCF	    PORTC,7
-    GOTO    $+6
-
-
-    BCF	    PORTC,6		;go backward
-    BSF	    PORTC,7
+    ; BSF     PORTA,6         ; indicate tea the setup was performed
     endm
 
 PWMISRR:
@@ -847,64 +789,26 @@ PWMISRR:
     RETURN
     ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Direction Controls">
-HardRight:
-    BSF	    PORTA, 5	;indicates right 
-    RightMotorControl	.20, 0x01
-    LeftMotorControl	.100,0x00
-    RETURN		;return to navigation 
-	
-HardLeft:
-    BSF	    PORTA, 3	;indicates left
-    RightMotorControl	.100,0x00
-    LeftMotorControl	.20, 0x01
-    RETURN		;return to navigation 
-
-Right:
-    BSF	    PORTA, 5	;indicates right
-    RightMotorControl	.60, 0x01
-    LeftMotorControl	.100,0x00
-    RETURN		;return to navigation 
-
-Left:
-    BSF	    PORTA, 3	;indicates left
-    RightMotorControl	.100,0x00
-    LeftMotorControl	.60, 0x01
-    RETURN		;return to navigation 
-
-Stop:
-	MOVLW	0xFF
-    MOVWF   PORTA		;turn off all leddies for stop
-    RightMotorControl	.0,0x00		;turn motors off 
-    LeftMotorControl	.0,0x00
-    RETURN		;return to navigation 
-
-Straight:
-    BSF	    PORTA, 4
-    RightMotorControl	.200, 0x00	; g2g  f�st
-    LeftMotorControl	.200, 0x00
-    RETURN		;return to navigation  
-    ;</editor-fold>
-    
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
-    CALL    Straight				;initially go forward 
+    RightMotorControl .150, b'0'
+    LeftMotorControl  .150, b'0'
 	
-    BTFSC   raceColor,whiteBit		;check white
+    BTFSC   raceColor,0		;check white
     MOVLW   b'10101011'
-    BTFSC   raceColor,greenBit		;check green
+    BTFSC   raceColor,1		;check green
     MOVLW   b'10000010'
-    BTFSC   raceColor,greenBit		;check green
+    BTFSC   raceColor,1		;check green
     BSF	    PORTA,1
-    BTFSC   raceColor,blueBit		;check blue
+    BTFSC   raceColor,2		;check blue
     MOVLW   b'10000000'
-    BTFSC   raceColor,blueBit		;check blue
+    BTFSC   raceColor,2		;check blue
     BSF	    PORTA,2
-    BTFSC   raceColor,redBit		;check red
+    BTFSC   raceColor,3		;check red
     MOVLW   b'10001000'
-    BTFSC   raceColor,redBit		;check red
+    BTFSC   raceColor,3		;check red
     BSF	    PORTA,0
-    BTFSC   raceColor,blackBit		;check black
+    BTFSC   raceColor,4		;check black
     MOVLW   b'10101011'
     MOVWF   PORTD
     
@@ -1070,42 +974,38 @@ PROC
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;<editor-fold defaultstate="collapsed" desc="Touch Start (capTouch)">	
-capTouch:	
-	MOVLW	A's'
+;<editor-fold defaultstate="collapsed" desc="Touch Start (RCE1)">	
+RCE1	MOVLW	A's'
 	call	trans
-	MOVLW	d'35'
-	MOVWF	diff
 	call	delay1s
-poll_c	
-	call	Read_AN15
+poll_c	MOVLW	d'47'
+	MOVWF	diff
+	call	Read_AN14
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
-	call	Read_AN15
+	call	Read_AN14
 	
-	MOVFF	Touch1,Touch2
-	MOVWF	Touch1
-	
-	
-	call	Read_AN15
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
 	
-	SUBFWB	Touch2, w
+	call	Read_AN14
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
+	
+	
+	SUBFWB	Touch2
 	CPFSGT	diff
 	goto	stop
+	MOVLW   A'\n'
 	goto	poll_c
 
-stop	
-	MOVLW	A'D'
+stop	MOVLW	A'D'
 	call	trans
-	MOVLW   A'\n'
-	call	trans
-	BSF	INTCON,GIEL		; Enable peripheral interrupts
-	bsf     INTCON,GIEH		; Enable global interrupts
-	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
+	BSF	    INTCON,GIEL		; Enable peripheral interrupts
+	bsf     INTCON,GIEH  ; Enable global interrupts
+	BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
 	GOTO	navigate
 
 ;</editor-fold>	
@@ -1139,78 +1039,77 @@ CALIBRATE					; order is blue, red, green, white, black
     CLRF    PORTA
     MOVLW   b'10000000'
     MOVWF   PORTD
-    CALL	Read_AN12
-    MOVWF	LLblueValue		;~~~~~BLUE~~~~~
-    CALL	Read_AN10
-    MOVWF	LblueValue
-    CALL	Read_AN8
-    MOVWF	MblueValue
-    CALL	Read_AN9
-    MOVWF	RblueValue
-    CALL	Read_AN13
-    MOVWF	RRblueValue		;~~~~~BLUE~~~~~
+	CALL	Read_AN12
+	MOVWF	LLblueValue		;~~~~~BLUE~~~~~
+	CALL	Read_AN10
+	MOVWF	LblueValue
+	CALL	Read_AN8
+	MOVWF	MblueValue
+	CALL	Read_AN9
+	MOVWF	RblueValue
+	CALL	Read_AN13
+	MOVWF	RRblueValue		;~~~~~BLUE~~~~~
     call    delay1s
 
-    BSF	    PORTA,blueBit
+    BSF	    PORTA,0
     MOVLW   b'10001000'
     MOVWF   PORTD
-    CALL	Read_AN12
-    MOVWF	LLredValue		;~~~~~RED~~~~~
-    CALL	Read_AN10
-    MOVWF	LredValue
-    CALL	Read_AN8
-    MOVWF	MredValue
-    CALL	Read_AN9
-    MOVWF	RredValue
-    CALL	Read_AN13
-    MOVWF	RRredValue		;~~~~~RED~~~~~
+	CALL	Read_AN12
+	MOVWF	LLredValue		;~~~~~RED~~~~~
+	CALL	Read_AN10
+	MOVWF	LredValue
+	CALL	Read_AN8
+	MOVWF	MredValue
+	CALL	Read_AN9
+	MOVWF	RredValue
+	CALL	Read_AN13
+	MOVWF	RRredValue		;~~~~~RED~~~~~
     call    delay1s
-    BSF	    PORTA,redBit
+    BSF	    PORTA,1
     MOVLW   b'10000010'
     MOVWF   PORTD
-    CALL	Read_AN12
-    MOVWF	LLgreenValue		;~~~~~GREEN~~~~~
-    CALL	Read_AN10
-    MOVWF	LgreenValue
-    CALL	Read_AN8
-    MOVWF	MgreenValue
-    CALL	Read_AN9
-    MOVWF	RgreenValue
-    CALL	Read_AN13
-    MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
+	CALL	Read_AN12
+	MOVWF	LLgreenValue		;~~~~~GREEN~~~~~
+	CALL	Read_AN10
+	MOVWF	LgreenValue
+	CALL	Read_AN8
+	MOVWF	MgreenValue
+	CALL	Read_AN9
+	MOVWF	RgreenValue
+	CALL	Read_AN13
+	MOVWF	RRgreenValue		;~~~~~GREEN~~~~~
     call    delay1s
-    BSF	    PORTA,greenBit
+    BSF	    PORTA,2
     MOVLW   b'11000001'
     MOVWF   PORTD
-    CALL	Read_AN12
-    MOVWF	LLwhiteValue	;~~~~~WHITE~~~~~
-    CALL	Read_AN10
-    MOVWF	LwhiteValue
-    CALL	Read_AN8
-    MOVWF	MwhiteValue
-    CALL	Read_AN9
-    MOVWF	RwhiteValue
-    CALL	Read_AN13
-    MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
+	CALL	Read_AN12
+	MOVWF	LLwhiteValue	;~~~~~WHITE~~~~~
+	CALL	Read_AN10
+	MOVWF	LwhiteValue
+	CALL	Read_AN8
+	MOVWF	MwhiteValue
+	CALL	Read_AN9
+	MOVWF	RwhiteValue
+	CALL	Read_AN13
+	MOVWF	RRwhiteValue	;~~~~~WHITE~~~~~
     call    delay1s
-    BSF	    PORTA,whiteBit
+    BSF	    PORTA,3
     MOVLW   b'11001000'
     MOVWF   PORTD
-    CALL	Read_AN12
-    MOVWF	LLblackValue	;~~~~~BLACK~~~~~
-    CALL	Read_AN10
-    MOVWF	LblackValue
-    CALL	Read_AN8
-    MOVWF	MblackValue
-    CALL	Read_AN9
-    MOVWF	RblackValue
-    CALL	Read_AN13
-    MOVWF	RRblackValue	;~~~~~BLACK~~~~~
+	CALL	Read_AN12
+	MOVWF	LLblackValue	;~~~~~BLACK~~~~~
+	CALL	Read_AN10
+	MOVWF	LblackValue
+	CALL	Read_AN8
+	MOVWF	MblackValue
+	CALL	Read_AN9
+	MOVWF	RblackValue
+	CALL	Read_AN13
+	MOVWF	RRblackValue	;~~~~~BLACK~~~~~
     call    delay1s
-    BSF	    PORTA,blackBit
+    BSF	    PORTA,4
     call    delay1s
     CLRF    PORTA
-    call    Ranges		; Use Range function for colour detection values
     GOTO    RCE				
 ;</editor-fold>
     
@@ -1218,11 +1117,11 @@ CALIBRATE					; order is blue, red, green, white, black
 
 ;<editor-fold defaultstate="collapsed" desc="Calibrate with python + ADC stuff">
     ;<editor-fold defaultstate="collapsed" desc="Setup RC2 (For touch sensor)">
-ADC_SETUP_AN15:
+ADC_SETUP_AN14:
 
 	;Configure Port RA0:
-    BSF    TRISC,3	;Disable pin output driver (See TRIS register) 	    
-    BSF    ANSELC,3     ;Configure pin as analog       
+    BSF    TRISC,2	;Disable pin output driver (See TRIS register) 	    
+    BSF    ANSELC,2     ;Configure pin as analog       
 					
 	
 	;Configure the ADC module: 
@@ -1234,11 +1133,11 @@ ADC_SETUP_AN15:
     CLRF    ADCON1
 	
 	;Select ADC input channel
-    BCF	    ADCON0, CHS4	    ;Select AN14 - 01110
-    BSF	    ADCON0, CHS3	    
+    BCF	    ADCON0, CHS4	    ;Select AN12 - 01100
+    BSF	    ADCON0, CHS3	    ;We must stull decide which chanel we are using for the practical
     BSF	    ADCON0, CHS2
     BSF	    ADCON0, CHS1
-    BSF	    ADCON0, CHS0
+    BCF	    ADCON0, CHS0
 
 	;Select result format
     BCF	    ADCON2, ADFM	    ;Left Justify
@@ -1441,11 +1340,11 @@ ADC_SETUP_AN13:
 
 
     ;<editor-fold defaultstate="collapsed" desc="READ RC2 (for touch sensor)">
-Read_AN15:
+Read_AN14:
     BTFSS   TXSTA1, TRMT		    ;Check if TMRT is set, to ensure that shift register is empty (p263)
-    BRA	    Read_AN15
+    BRA	    Read_AN14
 
-    CALL    ADC_SETUP_AN15	;do setup
+    CALL    ADC_SETUP_AN14	;do setup
 
     BSF	    ADCON0, GO	    ;start a conversion
 
@@ -1559,18 +1458,14 @@ rep1
 	CALL	Read_AN12
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep1
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	; BCF	WREG,2
-	
 	MOVWF	LLsensorVal
 	RETURN
     ;</editor-fold>
@@ -1585,18 +1480,14 @@ rep2
 	CALL	Read_AN10
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep2
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	; BCF	WREG,2
-	
 	MOVWF	LsensorVal
 	RETURN
     ;</editor-fold>
@@ -1611,18 +1502,14 @@ rep3
 	CALL	Read_AN8
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep3
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	; BCF	WREG,2
-	
 	MOVWF	MsensorVal
 	RETURN
     ;</editor-fold>
@@ -1637,18 +1524,14 @@ rep4
 	CALL	Read_AN9
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep4
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	; BCF	WREG,2
-	
 	MOVWF	RsensorVal
 	RETURN
     ;</editor-fold>
@@ -1663,18 +1546,14 @@ rep5
 	CALL	Read_AN13
 	RRNCF	WREG,w		;divide by 2
 	RRNCF	WREG,w		;divide by 2
-	; RRNCF	WREG,w		;divide by 2
 	BCF	WREG,7		;incase rotation causes a mistake
 	BCF	WREG,6		;incase rotation causes a mistake
-	; BCF	WREG,5		;incase rotation causes a mistake
 	ADDWF	temp
 	DECFSZ	aveloop
 	GOTO	rep5
 	MOVF	temp,w		;move to w
 	BCF	WREG,0		;clear to reduce noise 
 	BCF	WREG,1
-	; BCF	WREG,2
-	
 	MOVWF	RRsensorVal
 	RETURN
     ;</editor-fold>
@@ -1717,11 +1596,10 @@ not_done
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
-	CALL	Ranges
     CALL    sendCals
     movlw   b'00001100'
     MOVWF   PORTD
-    movlw   .250		;24 * 250 * 0.01s = 60s
+    movlw   .255		;24 * 250 * 0.01s = 60s
     movwf   pythonCounter2		
 pythonLoop1
     movlw   .250
@@ -1761,108 +1639,6 @@ pythonLoop2
 
     GOTO    RCE
 ;</editor-fold>
-    
-    ;<editor-fold defaultstate="collapsed" desc="Range Calculation">
-Ranges:
-    
-;   Half all readings
-	LFSR	FSR0,0x10	;load FRS0 with address of first range value
-	MOVLW	.25		;we have 25 values 
-	MOVWF	delay3
-
-repRanges
-	RRNCF	INDF0,f 		;divide by 2
-	BCF	POSTINC0,7		;clear bit to correct mistake and move pointer one on afterwards 
-
-	DECFSZ	delay3
-	goto	repRanges 
-
-;	AVG white and green
-   
-	MOVF	LLgreenValue,w
-	ADDWF	LLwhiteValue,f	
-
-	
-	MOVF	LgreenValue,w
-	ADDWF	LwhiteValue,f	
-
-
-	MOVF	MgreenValue,w
-	ADDWF	MwhiteValue,f	
-
-	MOVF	RgreenValue,w
-	ADDWF	RwhiteValue,f	
-
-	MOVF	RRgreenValue,w
-	ADDWF	RRwhiteValue,f	
-
-	
-;	AVG green and red
-	MOVF	LLredValue,w
-	ADDWF	LLgreenValue,f	
-	
-	MOVF	LredValue,w
-	ADDWF	LgreenValue,f	
-	
-	MOVF	MredValue,w
-	ADDWF	MgreenValue,f	
-	
-	MOVF	RredValue,w
-	ADDWF	RgreenValue,f	
-	
-	MOVF	RRredValue,w
-	ADDWF	RRgreenValue,f	
-
-	
-;	AVG red and blue
-	MOVF	LLblueValue,w
-	ADDWF	LLredValue,f	
-
-	
-	MOVF	LblueValue,w
-	ADDWF	LredValue,f	
-
-	MOVF	MblueValue,w
-	ADDWF	MredValue,f	
-
-	
-	MOVF	RblueValue,w
-	ADDWF	RredValue,f	
-
-	
-	MOVF	RRblueValue,w
-	ADDWF	RRredValue,f	
-
-	
-	
-;	AVG blue and black
-	MOVF	LLblackValue,w
-	ADDWF	LLblueValue,f	
-	ADDWF	LLblackValue,f	;reset black to it's normal value 
-
-	
-	MOVF	LblackValue,w
-	ADDWF	LblueValue,f	
-	ADDWF	LblackValue,f	
-
-	
-	MOVF	MblackValue,w
-	ADDWF	MblueValue,f	
-	ADDWF	MblackValue,f	
-
-	
-	MOVF	RblackValue,w
-	ADDWF	RblueValue,f	
-	ADDWF	RblackValue,f	
-
-	
-	MOVF	RRblackValue,w
-	ADDWF	RRblueValue,f	
-	ADDWF	RRblackValue,f	
-
-	
-	RETURN
-    ;</editor-fold>
 
 ;</editor-fold>
      
