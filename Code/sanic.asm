@@ -635,18 +635,30 @@ getColor_RR:
 
 ;<editor-fold defaultstate="collapsed" desc="testBlack">
 testBlack:
-	MOVLW	0.150		    ;check of die voltage > 4.8 V is 
-	
-	CPFSGT	LLsensorVal		;if the sensor value is higher, don't return 
+	MOVLW	.150
+
+	CPFSGT	LLsensorVal		  
 	RETURN
-	CPFSGT	LsensorVal		;if the sensor value is higher, don't return 
+	CPFSGT	LsensorVal		  
 	RETURN
-	CPFSGT	MsensorVal		;if the sensor value is higher, don't return 
+	CPFSGT	MsensorVal		  
 	RETURN
-	CPFSGT	RsensorVal		;if the sensor value is higher, don't return 
+	CPFSGT	RsensorVal		  
 	RETURN
-	CPFSGT	RRsensorVal		;if the sensor value is higher, don't return 
+	CPFSGT	RRsensorVal		  
 	RETURN
+
+	;Hierdie is die deel wat behoort te werk na calibration 
+	; BTFSS	LLcolorSensed,blackBit		;pretty self-explanetory  
+	; RETURN
+	; BTFSS	LcolorSensed,blackBit		;pretty self-explanetory  
+	; RETURN
+	; BTFSS	McolorSensed,blackBit		;pretty self-explanetory  
+	; RETURN
+	; BTFSS	RcolorSensed,blackBit		;pretty self-explanetory  
+	; RETURN
+	; BTFSS	RRcolorSensed,blackBit		;pretty self-explanetory  
+	; RETURN
 
 	; if the code gets to here, there's black everywhere 
 	RETLW	0xAA			;just a value that's unlikely to occur naturally 
@@ -694,9 +706,9 @@ getRaceLinePosition:
 determineDirection:
 	BTFSC   McolorSensed, greenBit     ; M senses green (these three are for the LED 
 	BSF     PORTA,greenBit
-	BTFSC   McolorSensed, blueBit     ; M senses blue   ...that indicates the color 
+	BTFSC   McolorSensed, blueBit      ; M senses blue   ...that indicates the color 
 	BSF     PORTA,blueBit
-	BTFSC   McolorSensed, redBit     ; M senses red    ...sensed by sensor M)
+	BTFSC   McolorSensed, redBit       ; M senses red    ...sensed by sensor M)
 	BSF     PORTA,0
 
 
@@ -1028,26 +1040,27 @@ transmitForPy
 	MOVLW	A'R'
 	CPFSEQ	col
 	GOTO	C1
-	MOVLW	b'00001000'
-	MOVWF	raceColor
+	CLRF	raceColor
+	BSF		raceCOlor,redBit
+
 	
 C1	MOVLW	A'B'
 	CPFSEQ	col
 	GOTO	C2
-	MOVLW	b'00000100'
-	MOVWF	raceColor
+	CLRF	raceColor
+	BSF		raceCOlor,blueBit
 	
 C2	MOVLW	A'G'
 	CPFSEQ	col
 	GOTO	C3
-	MOVLW	b'00000010'
-	MOVWF	raceColor
+	CLRF	raceColor
+	BSF		raceCOlor,greenBit
 	
 C3	MOVLW	A'n'
 	CPFSEQ	col
 	GOTO	C4
-	MOVLW	b'00010000'
-	MOVWF	raceColor
+	CLRF	raceColor
+	BSF		raceCOlor,blackBit
 	
 C4	GOTO	R4
 	;L = Maze is not implemented yet
