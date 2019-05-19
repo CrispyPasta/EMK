@@ -635,7 +635,7 @@ getColor_RR:
 
 ;<editor-fold defaultstate="collapsed" desc="testBlack">
 testBlack:
-	MOVLW	0xF4		    ;check of die voltage > 4.8 V is 
+	MOVLW	0.150		    ;check of die voltage > 4.8 V is 
 	
 	CPFSGT	LLsensorVal		;if the sensor value is higher, don't return 
 	RETURN
@@ -777,12 +777,12 @@ LeftMotorControl macro dutyCycle, direction
     MOVLB   0x0
 	
     BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    $+4 
     GOTO    $+6
+    GOTO    $+8
 	
     BSF	    PORTC,4
     BCF	    PORTC,5
-    GOTO    $+6 
+    GOTO    $+8
 
     BCF	    PORTC,4
     BSF	    PORTC,5
@@ -827,12 +827,12 @@ RightMotorControl macro dutyCycle, direction
     MOVLB   0x0
     
     BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    $+4 
     GOTO    $+6
+    GOTO    $+8
 	
     BSF	    PORTC,6
     BCF	    PORTC,7
-    GOTO    $+6 
+    GOTO    $+8
 
     BCF	    PORTC,6
     BSF	    PORTC,7
@@ -1080,7 +1080,13 @@ capTouch:
 	call	trans
 	call	delay1s
 poll_c	
-	MOVLW	d'60'
+	BCF	TRISC,3	    ;enable digital output buffer
+	BCF	ANSELC,3    ;set as not analog 
+	BCF	PORTC,3	    ;clear
+	BSF	TRISC,3	    ;disable digital buffer 
+	BsF	ANSELC,3    ;set as not analog 
+	
+	MOVLW	d'80'
 	MOVWF	diff
 	call	Read_AN15
 	MOVFF	Touch1,Touch2
@@ -1916,6 +1922,9 @@ Go_on2_100
     
     ;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
 threeMilDelay: ;(actually now 333ms)
+    BSF	    INTCON,GIEL		; Enable peripheral interrupts
+    bsf     INTCON,GIEH		; Enable global interrupts
+    BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
     movlw   .3
     movwf   delay3
 Go_on0_333

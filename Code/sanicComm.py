@@ -28,7 +28,7 @@ def setupSerial(baud):
 
 #\OwO/
 sensors = [0, 1, 2, 3, 4]
-ranges  = [2]
+ranges  = []
 #LL L M R RR
 calValues = [[], [], [], [], []]
 def animate(i):
@@ -63,7 +63,7 @@ def animate(i):
 
         for a in range(0,5):
             try:
-                voltage = 5 * ord(line[a]) / 255.0
+                voltage = ord(line[a]) * 100.0 / 255
                 data[a].append(voltage)
             except:
                 try:
@@ -85,7 +85,7 @@ def animate(i):
     for a in sensors:
         ax1.plot(data[a], label= labels[a])
         for b in (ranges):
-            ax1.hlines(y = calVals[b] * (5.0 / 255), xmin = 0, xmax = 2000, color = cols, linestyle = '--' , alpha = 0.1)
+            ax1.hlines(y = calVals[b] * (100.0 / 255), xmin = 0, xmax = 2000, color = cols, linestyle = '--' , alpha = 0.1)
         ax1.legend()
     # ax1.plot(data[0][2000 * pos:])
     # ax1.plot(data[1][2000 * pos:])
