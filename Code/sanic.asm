@@ -148,6 +148,11 @@ setup
     CLRF    ANSELB
     MOVLW   b'10010001'
     MOVWF   TRISB
+
+	CLRF 	PORTE
+	CLRF	LATE 
+	CLRF	TRISE
+	CLRF	ANSELE
     
     
     
@@ -191,48 +196,48 @@ setup
     MOVWF   col
     
     ;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATION SETUP~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    MOVLW   .128
+    MOVLW   .140
     MOVWF   LLwhiteValue
-    MOVLW   .128
+    MOVLW   .130
     MOVWF   LwhiteValue
-    MOVLW   .138
+    MOVLW   .130
     MOVWF   MwhiteValue
-    MOVLW   .133
+    MOVLW   .140
     MOVWF   RwhiteValue
-    MOVLW   .125
+    MOVLW   .140
     MOVWF   RRwhiteValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .148
+    MOVLW   .168
     MOVWF   LLgreenValue
-    MOVLW   .138
+    MOVLW   .178
     MOVWF   LgreenValue
-    MOVLW   .156
+    MOVLW   .165
     MOVWF   MgreenValue
-    MOVLW   .148
+    MOVLW   .170
     MOVWF   RgreenValue
-    MOVLW   .143
+    MOVLW   .185
     MOVWF   RRgreenValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .189
+    MOVLW   .185
     MOVWF   LLblueValue
-    MOVLW   .184
+    MOVLW   .188
     MOVWF   LblueValue
-    MOVLW   .209
+    MOVLW   .188
     MOVWF   MblueValue
-    MOVLW   .204
+    MOVLW   .200
     MOVWF   RblueValue
     MOVLW   .199
     MOVWF   RRblueValue    ;move hardcoded voltage values into their registers
 
-    MOVLW   .230
+    MOVLW   .185
     MOVWF   LLredValue
-    MOVLW   .230
+    MOVLW   .180
     MOVWF   LredValue
-    MOVLW   .230
+    MOVLW   .175
     MOVWF   MredValue
-    MOVLW   .235
+    MOVLW   .210
     MOVWF   RredValue
-    MOVLW   .230
+    MOVLW   .195
     MOVWF   RRredValue    ;move hardcoded voltage values into their registers
 
     MOVLW   .255
@@ -797,15 +802,15 @@ LeftMotorControl macro dutyCycle, direction
     MOVLB   0x0
 	
     BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    $+6
-    GOTO    $+10
+    GOTO    leftMotorForward
+    GOTO    leftMotorBackward
 	
-    BSF	    PORTC,4		;forward 
-    BCF	    PORTC,5
-    GOTO    $+8
+    ; BCF	    PORTC,4		;forward 
+    ; BSF	    PORTC,5
+    ; GOTO    $+8
 
-    BCF	    PORTC,4		;go backward
-    BSF	    PORTC,5
+    ; BSF	    PORTC,4		;go backward
+    ; BCF	    PORTC,5
     
     endm
 
@@ -846,12 +851,12 @@ RightMotorControl macro dutyCycle, direction
     GOTO    $+6
     GOTO    $+10
 	
-    BSF	    PORTC,6		;forwards 
-    BCF	    PORTC,7
+    BSF	    PORTE,0		;forwards 
+    BCF	    PORTE,1
     GOTO    $+8
 
-    BCF	    PORTC,6		;go backward
-    BSF	    PORTC,7
+    BCF	    PORTE,0		;go backward
+    BSF	    PORTE,1
     endm
 
 PWMISRR:
@@ -860,6 +865,26 @@ PWMISRR:
     CLRF    TMR4
     MOVLB   0x0
     RETURN
+
+leftMotorForward:
+	BSF		PORTC, 4
+	BCF		PORTC, 5
+	return 
+
+leftMotorBackward:
+	BCF		PORTC, 4
+	BSF		PORTC, 5
+	return 
+
+rightMotorForward:
+	BSF		PORTE, 1
+	BCF		PORTE, 0
+	return 
+
+rightMotorBackward:
+	BCF		PORTE, 1
+	BSF		PORTE, 0
+	return 
     ;</editor-fold>
 
 ;<editor-fold defaultstate="collapsed" desc="Direction Controls">
@@ -896,8 +921,8 @@ Stop:
 
 Straight:
     BSF	    PORTA, 4
-    RightMotorControl	.200, 0x00	; g2g  f�st
-    LeftMotorControl	.200, 0x00
+    RightMotorControl	.199, 0x00	; g2g  f�st
+    LeftMotorControl	.199, 0x00
     RETURN		;return to navigation  
     ;</editor-fold>
     
@@ -924,10 +949,10 @@ navigate:
     MOVWF   PORTD
     
 nav    
-    CALL    getColor
-    CALL    getRaceLinePosition
-    CALL    determineDirection
-    CALL    hunnitMilDelay
+    ; CALL    getColor
+    ; CALL    getRaceLinePosition
+    ; CALL    determineDirection
+    ; CALL    hunnitMilDelay
     GOTO    nav
 	; navigate doesn't end, it must be interruted 
 ;</editor-fold>
@@ -1092,6 +1117,8 @@ PROC
 capTouch:	
 	MOVLW	A's'
 	call	trans
+	MOVLW	.0
+	MOVWF	Touch1
 	call	delay1s
 poll_c	
 	call	tenmsDelay
@@ -1102,32 +1129,26 @@ poll_c
 	BSF	TRISC,3	    ;disable digital buffer 
 	BsF	ANSELC,3    ;set as not analog 
 	
-	MOVLW	d'40'
+	MOVLW	d'80'
 	MOVWF	diff
 	call	Read_AN15
-	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
-	
+	call	tenmsDelay
 	call	Read_AN15
-	
-	MOVFF	Touch1,Touch2
-	MOVWF	Touch1
-	
-	call	Read_AN15
-	MOVFF	Touch1,Touch2
-	MOVWF	Touch1
+	MOVWF	Touch2
 	
 	
-	SUBWFB	Touch2, w
+	SUBFWB	Touch1
 	CPFSGT	diff
-	goto	stop
 	goto	poll_c
+	goto	bigDiff
 
 bigDiff
 ;	call	trans
 	BTFSS	STATUS, N 	;check if negative
 	goto 	stop 
 	goto	poll_c
+
 	
 stop	
 	MOVLW	A'D'
@@ -1494,7 +1515,7 @@ Poll_Go0
 
     MOVF    ADRESH,W	    ;copy result of conversion into WREG
     ;MOVWF   Touch	    ;copy this into LLsensorVal
-    call    trans
+    ; call    trans
     RETURN		    ;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1756,6 +1777,8 @@ not_done
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
+	LeftMotorControl	.0, .0
+	RightMotorControl	.0, .0
 	BCF 	PORTC,4		;make sure the motors aren't running
 	BCF 	PORTC,5
 	BCF 	PORTC,6
