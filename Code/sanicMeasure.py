@@ -25,7 +25,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM13' 
+    ser.port = 'COM15' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None

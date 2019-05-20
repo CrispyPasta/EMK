@@ -671,29 +671,37 @@ getRaceLinePosition:
 	MOVWF   raceLinePosition        ;raceLinePosition is vol ones 
 	MOVF    raceColor,w             ;move die one-hot encoded race color in die wreg in, vir comparisons 
 
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	CPFSEQ  LLcolorSensed
-	BSF     raceLinePosition,0
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-	CPFSEQ  LcolorSensed
-	BSF     raceLinePosition,1
-	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	CPFSEQ  McolorSensed
 	BSF     raceLinePosition,2
+	CPFSEQ  McolorSensed
+	GOTO	$+30		;jump na COMF toe, reduce kanse dat ons false positives kry
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Middle Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  LcolorSensed
+	BSF     raceLinePosition,lBit
+	CPFSEQ  LcolorSensed
+	GOTO	$+24		;jump na COMF toe, reduce kanse dat ons false positives kry
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	CPFSEQ  RcolorSensed
-	BSF     raceLinePosition,3
+	BSF     raceLinePosition,rBit
+	CPFSEQ  RcolorSensed
+	GOTO	$+16		;jump na COMF toe, reduce kanse dat ons false positives kry
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	CPFSEQ  LLcolorSensed
+	BSF     raceLinePosition,llBit
+	CPFSEQ  LLcolorSensed
+	GOTO	$+8		;jump na COMF toe, reduce kanse dat ons false positives kry
+	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Left Left Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sens~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	CPFSEQ  RRcolorSensed
-	BSF     raceLinePosition,4
+	BSF     raceLinePosition,rrBit
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~Check Right Right Sen~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	COMF    raceLinePosition        ;invert die position, dan behoort hy te wys waar die race line opgetel word
@@ -790,15 +798,11 @@ LeftMotorControl macro dutyCycle, direction
 	
     BTFSC   direction, 0	  ; if 1, go forward
     GOTO    $+6
-    GOTO    $+8
+    GOTO    $+10
 	
-    BSF	    PORTC,4
+    BSF	    PORTC,4		;forward 
     BCF	    PORTC,5
     GOTO    $+8
-
-    BCF	    PORTC,4
-    BSF	    PORTC,5
-
 
     BCF	    PORTC,4		;go backward
     BSF	    PORTC,5
@@ -840,14 +844,11 @@ RightMotorControl macro dutyCycle, direction
     
     BTFSC   direction, 0	  ; if 1, go forward
     GOTO    $+6
-    GOTO    $+8
+    GOTO    $+10
 	
-    BSF	    PORTC,6
+    BSF	    PORTC,6		;forwards 
     BCF	    PORTC,7
     GOTO    $+8
-
-    BCF	    PORTC,6
-    BSF	    PORTC,7
 
     BCF	    PORTC,6		;go backward
     BSF	    PORTC,7
@@ -1041,26 +1042,26 @@ transmitForPy
 	CPFSEQ	col
 	GOTO	C1
 	CLRF	raceColor
-	BSF		raceCOlor,redBit
+	BSF	raceColor,redBit
 
 	
 C1	MOVLW	A'B'
 	CPFSEQ	col
 	GOTO	C2
 	CLRF	raceColor
-	BSF		raceCOlor,blueBit
+	BSF	raceColor,blueBit
 	
 C2	MOVLW	A'G'
 	CPFSEQ	col
 	GOTO	C3
 	CLRF	raceColor
-	BSF		raceCOlor,greenBit
+	BSF	raceColor,greenBit
 	
 C3	MOVLW	A'n'
 	CPFSEQ	col
 	GOTO	C4
 	CLRF	raceColor
-	BSF		raceCOlor,blackBit
+	BSF		raceColor,blackBit
 	
 C4	GOTO	R4
 	;L = Maze is not implemented yet
@@ -1093,13 +1094,14 @@ capTouch:
 	call	trans
 	call	delay1s
 poll_c	
+	BCF	STATUS, N
 	BCF	TRISC,3	    ;enable digital output buffer
 	BCF	ANSELC,3    ;set as not analog 
 	BCF	PORTC,3	    ;clear
 	BSF	TRISC,3	    ;disable digital buffer 
 	BsF	ANSELC,3    ;set as not analog 
 	
-	MOVLW	d'80'
+	MOVLW	d'20'
 	MOVWF	diff
 	call	Read_AN15
 	MOVFF	Touch1,Touch2
@@ -1110,22 +1112,26 @@ poll_c
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
-	call	Read_AN15
-	MOVFF	Touch1,Touch2
-	MOVWF	Touch1
+;	call	Read_AN15
+;	MOVFF	Touch1,Touch2
+;	MOVWF	Touch1
 	
 	
 	SUBWF	Touch2, w
 	CPFSGT	diff
-	goto	stop
+	goto	bigDiff
 	goto	poll_c
 
+bigDiff
+;	BTFSS	STATUS, N 	;check if negative
+	goto 	stop 
+;	goto	poll_c
+	
 stop	
 	MOVLW	A'D'
 	call	trans
 	MOVLW   A'\n'
 	call	trans
-	call	hunnitMilDelay
 	BSF	INTCON,GIEL		; Enable peripheral interrupts
 	bsf     INTCON,GIEH		; Enable global interrupts
 	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
@@ -1486,6 +1492,7 @@ Poll_Go0
 
     MOVF    ADRESH,W	    ;copy result of conversion into WREG
     ;MOVWF   Touch	    ;copy this into LLsensorVal
+    call    trans
     RETURN		    ;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1747,6 +1754,11 @@ not_done
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
+	BCF 	PORTC,4		;make sure the motors aren't running
+	BCF 	PORTC,5
+	BCF 	PORTC,6
+	BCF 	PORTC,7
+
 	CALL	Ranges
     CALL    sendCals
     movlw   b'00001100'
@@ -1802,7 +1814,7 @@ Ranges:
 
 repRanges
 	RRNCF	INDF0,f 		;divide by 2
-	BCF	POSTINC0,7		;clear bit to correct mistake and move pointer one on afterwards 
+	BCF		POSTINC0,7		;clear bit to correct mistake and move pointer one on afterwards 
 
 	DECFSZ	delay3
 	goto	repRanges 
