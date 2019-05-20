@@ -83,6 +83,7 @@
 	temp	    ; temp variable for sensor output averaging	4A
 	aveloop	    ; loop counter for sensor averaging	4B
 	;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~NAVIGATE VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	blackFlag
  	ENDC
 
 whiteBit    equ .0
@@ -97,7 +98,6 @@ mBit    equ .2
 rBit    equ .3
 rrBit   equ .4
 
-blackFlag	equ 0xAA	;if WREG = blackFlag, we should stop 
 ;</editor-fold>
     
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -128,6 +128,8 @@ InterruptHandler:
     
 ;<editor-fold defaultstate="collapsed" desc="Setup">
 setup
+    MOVLW	0xAA
+    MOVWF	blackFlag
     BSF		OSCCON,IRCF0
     BCF		OSCCON,IRCF1
     BSF		OSCCON,IRCF2
@@ -640,16 +642,16 @@ getColor_RR:
 
 ;<editor-fold defaultstate="collapsed" desc="testBlack">
 testBlack:
-	MOVLW	.150
+	MOVLW	.240
 
 	CPFSGT	LLsensorVal		  
 	RETURN
-	CPFSGT	LsensorVal		  
-	RETURN
+;	CPFSGT	LsensorVal		  
+;	RETURN
 	CPFSGT	MsensorVal		  
 	RETURN
-	CPFSGT	RsensorVal		  
-	RETURN
+;	CPFSGT	RsensorVal		  
+;	RETURN
 	CPFSGT	RRsensorVal		  
 	RETURN
 
@@ -724,27 +726,26 @@ determineDirection:
 	BTFSC   McolorSensed, redBit       ; M senses red    ...sensed by sensor M)
 	BSF     PORTA,0
 
+	CALL	testBlack	
+	CPFSEQ	blackFlag		; check if black was detected on all sensors
+	GOTO	$+8				; skip over "GOTO Stop", to "MOVLW 0x0"
+	GOTO	Stop
 
 	BTFSC	raceLinePosition, mBit
 	GOTO	Straight				; GOTO (not call), then the motor control thing returns back to nav
 	
-	BTFSC	raceLinePosition, lBit
-	GOTO	Left	
+;	BTFSC	raceLinePosition, lBit
+;	GOTO	Left	
+;
+;	BTFSC	raceLinePosition, rBit
+;	GOTO	Right	
+;
+;	BTFSC	raceLinePosition, llBit
+;	GOTO	HardLeft	
+;
+;	BTFSC	raceLinePosition, rrBit
+;	GOTO	HardRight	
 
-	BTFSC	raceLinePosition, rBit
-	GOTO	Right	
-
-	BTFSC	raceLinePosition, llBit
-	GOTO	HardLeft	
-
-	BTFSC	raceLinePosition, rrBit
-	GOTO	HardRight	
-
-	CALL	testBlack	
-	CPFSEQ	blackFlag		; check if black was detected on all sensors
-	GOTO	$+6				; skip over "GOTO Stop", to "MOVLW 0x0"
-	GOTO	Stop
-	
 	MOVLW   0x0
 	CPFSEQ  raceLinePosition	    ; if none sense the colour, go to search mode
 	return 
@@ -779,13 +780,14 @@ searchModeLights:
 ;<editor-fold defaultstate="collapsed" desc="Left motor control">
 LeftMotorControl macro dutyCycle, direction
     MOVLB   0x0f
+    BSF	    PORTA, 7
     CLRF    CCP1CON
     MOVLW   .200
     MOVWF   PR2
     MOVLW   dutyCycle
     MOVWF   CCPR1L
     
-    BCF	    TRISC,CCP1      ;C2
+    BCF	    TRISC,2      ;C2
     
     CLRF    CCPTMRS0
   
@@ -805,6 +807,7 @@ LeftMotorControl macro dutyCycle, direction
     GOTO    leftMotorForward
     GOTO    leftMotorBackward
 	
+    
     ; BCF	    PORTC,4		;forward 
     ; BSF	    PORTC,5
     ; GOTO    $+8
@@ -848,15 +851,17 @@ RightMotorControl macro dutyCycle, direction
     MOVLB   0x0
     
     BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    $+6
-    GOTO    $+10
-	
-    BSF	    PORTE,0		;forwards 
-    BCF	    PORTE,1
-    GOTO    $+8
-
-    BCF	    PORTE,0		;go backward
-    BSF	    PORTE,1
+;    GOTO    $+6
+;    GOTO    $+10
+    GOTO    rightMotorForward
+    GOTO    rightMotorBackward
+;	
+;    BSF	    PORTE,0		;forwards 
+;    BCF	    PORTE,1
+;    GOTO    $+8
+;
+;    BCF	    PORTE,0		;go backward
+;    BSF	    PORTE,1
     endm
 
 PWMISRR:
@@ -867,23 +872,23 @@ PWMISRR:
     RETURN
 
 leftMotorForward:
-	BSF		PORTC, 4
-	BCF		PORTC, 5
+	; BSF		PORTC, 4
+	; BCF		PORTC, 5
 	return 
 
 leftMotorBackward:
-	BCF		PORTC, 4
-	BSF		PORTC, 5
+	; BCF		PORTC, 4
+	; BSF		PORTC, 5
 	return 
 
 rightMotorForward:
-	BSF		PORTE, 1
-	BCF		PORTE, 0
+	; BSF		PORTE, 1
+	; BCF		PORTE, 0
 	return 
 
 rightMotorBackward:
-	BCF		PORTE, 1
-	BSF		PORTE, 0
+	; BCF		PORTE, 1
+	; BSF		PORTE, 0
 	return 
     ;</editor-fold>
 
@@ -913,22 +918,35 @@ Left:
     RETURN		;return to navigation 
 
 Stop:
-	MOVLW	0xFF
+    MOVLW   0xFF
     MOVWF   PORTA		;turn off all leddies for stop
-    RightMotorControl	.0,0x00		;turn motors off 
-    LeftMotorControl	.0,0x00
+;    RightMotorControl	.0,0x00		;turn motors off 
+;    LeftMotorControl	.0,0x00
+    BCF	    PORTC,2
+    BCF	    PORTE,2
     RETURN		;return to navigation 
 
 Straight:
+	CLRF	PORTA 
     BSF	    PORTA, 4
-    RightMotorControl	.199, 0x00	; g2g  f�st
-    LeftMotorControl	.199, 0x00
+    ; LeftMotorControl	.100, 0x00
+    ; RightMotorControl	.100, 0x00	; g2g  f�st
+
+	BSF 	PORTE,2			;right motor on 
+	BSF 	PORTC,2			;left motor on 
+
+	BCF		PORTC, 4
+	BSF		PORTC, 5
+
+	BCF		PORTE, 0
+	BSF		PORTE, 1
+
     RETURN		;return to navigation  
     ;</editor-fold>
     
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
-    CALL    Straight				;initially go forward 
+    CALL    Straight			;initially go forward 
 	
     BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
@@ -949,11 +967,11 @@ navigate:
     MOVWF   PORTD
     
 nav    
-    ; CALL    getColor
-    ; CALL    getRaceLinePosition
-    ; CALL    determineDirection
-    ; CALL    hunnitMilDelay
-    GOTO    nav
+     CALL    getColor
+     CALL    getRaceLinePosition
+     CALL    determineDirection
+     CALL    hunnitMilDelay
+     GOTO    nav
 	; navigate doesn't end, it must be interruted 
 ;</editor-fold>
 	
@@ -1129,16 +1147,18 @@ poll_c
 	BSF	TRISC,3	    ;disable digital buffer 
 	BsF	ANSELC,3    ;set as not analog 
 	
-	MOVLW	d'80'
+	MOVLW	d'60'
 	MOVWF	diff
 	call	Read_AN15
-	MOVWF	Touch1
+	MOVWF	Touch2
+	call	tenmsDelay
+	call	tenmsDelay
 	call	tenmsDelay
 	call	Read_AN15
-	MOVWF	Touch2
+	MOVWF	Touch1
 	
 	
-	SUBFWB	Touch1
+	SUBWFB	Touch2
 	CPFSGT	diff
 	goto	poll_c
 	goto	bigDiff
@@ -1169,6 +1189,8 @@ touchISR
     CLRF    RCREG
     BCF	    PIR1,RCIF
     BCF	    PIE1,RC1IE
+	BCF		PORTC,2
+	BCF		PORTE,2
     GOTO    RCE
 ;</editor-fold>
 
@@ -1515,7 +1537,7 @@ Poll_Go0
 
     MOVF    ADRESH,W	    ;copy result of conversion into WREG
     ;MOVWF   Touch	    ;copy this into LLsensorVal
-    ; call    trans
+    call    trans
     RETURN		    ;WREG still contains the results of the conversion at this point
 ;</editor-fold>
 
@@ -1777,12 +1799,10 @@ not_done
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
-	LeftMotorControl	.0, .0
-	RightMotorControl	.0, .0
-	BCF 	PORTC,4		;make sure the motors aren't running
-	BCF 	PORTC,5
-	BCF 	PORTC,6
-	BCF 	PORTC,7
+	; LeftMotorControl	.0, .0
+	; RightMotorControl	.0, .0
+	BCF 	PORTC,2
+	BCF 	PORTE,2
 
 	CALL	Ranges
     CALL    sendCals
