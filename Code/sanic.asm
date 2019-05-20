@@ -1094,6 +1094,7 @@ capTouch:
 	call	trans
 	call	delay1s
 poll_c	
+	call	tenmsDelay
 	BCF	STATUS, N
 	BCF	TRISC,3	    ;enable digital output buffer
 	BCF	ANSELC,3    ;set as not analog 
@@ -1101,7 +1102,7 @@ poll_c
 	BSF	TRISC,3	    ;disable digital buffer 
 	BsF	ANSELC,3    ;set as not analog 
 	
-	MOVLW	d'20'
+	MOVLW	d'40'
 	MOVWF	diff
 	call	Read_AN15
 	MOVFF	Touch1,Touch2
@@ -1112,20 +1113,21 @@ poll_c
 	MOVFF	Touch1,Touch2
 	MOVWF	Touch1
 	
-;	call	Read_AN15
-;	MOVFF	Touch1,Touch2
-;	MOVWF	Touch1
+	call	Read_AN15
+	MOVFF	Touch1,Touch2
+	MOVWF	Touch1
 	
 	
-	SUBWF	Touch2, w
+	SUBWFB	Touch2, w
 	CPFSGT	diff
-	goto	bigDiff
+	goto	stop
 	goto	poll_c
 
 bigDiff
-;	BTFSS	STATUS, N 	;check if negative
+;	call	trans
+	BTFSS	STATUS, N 	;check if negative
 	goto 	stop 
-;	goto	poll_c
+	goto	poll_c
 	
 stop	
 	MOVLW	A'D'
