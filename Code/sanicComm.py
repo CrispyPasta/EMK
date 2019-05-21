@@ -27,8 +27,8 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [0, 1, 2, 3, 4]
-ranges  = []
+sensors = [2]
+ranges  = [2]
 #LL L M R RR
 calValues = [[], [], [], [], []]
 def animate(i):

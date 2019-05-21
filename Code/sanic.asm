@@ -202,7 +202,7 @@ setup
     MOVWF   LLwhiteValue
     MOVLW   .130
     MOVWF   LwhiteValue
-    MOVLW   .130
+    MOVLW   .160
     MOVWF   MwhiteValue
     MOVLW   .140
     MOVWF   RwhiteValue
@@ -213,7 +213,7 @@ setup
     MOVWF   LLgreenValue
     MOVLW   .178
     MOVWF   LgreenValue
-    MOVLW   .165
+    MOVLW   .205
     MOVWF   MgreenValue
     MOVLW   .170
     MOVWF   RgreenValue
@@ -224,7 +224,7 @@ setup
     MOVWF   LLblueValue
     MOVLW   .188
     MOVWF   LblueValue
-    MOVLW   .188
+    MOVLW   .220
     MOVWF   MblueValue
     MOVLW   .200
     MOVWF   RblueValue
@@ -235,7 +235,7 @@ setup
     MOVWF   LLredValue
     MOVLW   .180
     MOVWF   LredValue
-    MOVLW   .175
+    MOVLW   .240
     MOVWF   MredValue
     MOVLW   .210
     MOVWF   RredValue
@@ -376,7 +376,7 @@ Pro1
 	MOVLW	A'V'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	navigate
+	GOTO	getColor_M_demo3
 	GOTO	err
 	
 Pro2
@@ -552,20 +552,23 @@ getColor_M:
 	MOVF    MgreenValue,w
 	CPFSGT  MsensorVal         
 	BSF     McolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
-    	BTFSS	McolorSensed,greenBit
+	BSF		PORTA, greenBit
+    BTFSS	McolorSensed,greenBit
 	Return			    ; return if green sensed
 
 
 	MOVF    MredValue,w
 	CPFSGT  MsensorVal         
-	BSF     McolorSensed,redBit     
+	BSF     McolorSensed,redBit    
+	BSF		PORTA, redBit
 	BTFSS	McolorSensed,redBit
 	Return			    ; return if red sensed
 	
 	
 	MOVF    MblueValue,w
 	CPFSGT  MsensorVal         
-	BSF     McolorSensed,blueBit     
+	BSF     McolorSensed,blueBit  
+	BSF	PORTA, blueBit
 	BTFSS	McolorSensed,blueBit
 	Return			    ; return if blue sensed
 
@@ -1218,7 +1221,7 @@ CAL:							;calibrate the sensors here
     CALL	AverageL
     MOVWF	LblueValue
     CALL	AverageM
-    MOVWF	MblueValue
+;    MOVWF	MblueValue
     CALL	AverageR
     MOVWF	RblueValue
     CALL	AverageRR
@@ -1234,7 +1237,7 @@ CAL:							;calibrate the sensors here
     CALL	AverageL
     MOVWF	LredValue
     CALL	AverageM
-    MOVWF	MredValue
+;    MOVWF	MredValue
     CALL	AverageR
     MOVWF	RredValue
     CALL	AverageRR
@@ -1250,7 +1253,7 @@ CAL:							;calibrate the sensors here
     CALL	AverageL
     MOVWF	LgreenValue
     CALL	AverageM
-    MOVWF	MgreenValue
+;    MOVWF	MgreenValue
     CALL	AverageR
     MOVWF	RgreenValue
     CALL	AverageRR
@@ -1266,7 +1269,7 @@ CAL:							;calibrate the sensors here
     CALL	AverageL
     MOVWF	LwhiteValue
     CALL	AverageM
-    MOVWF	MwhiteValue
+;    MOVWF	MwhiteValue
     CALL	AverageR
     MOVWF	RwhiteValue
     CALL	AverageRR
@@ -1282,7 +1285,7 @@ CAL:							;calibrate the sensors here
     CALL	AverageL
     MOVWF	LblackValue
     CALL	AverageM
-    MOVWF	MblackValue
+;    MOVWF	MblackValue
     CALL	AverageR
     MOVWF	RblackValue
     CALL	AverageRR
@@ -2040,5 +2043,49 @@ Go_off2
     
 ;</editor-fold>
     
+    
+getColor_M_demo3:
+    CALL    AverageM
+    CALL    trans
+    CALL    threeMilDelay	; sodat die LED bly
+    CLRF    PORTA		;clear all leddies
+    CLRF    McolorSensed
+	
+    MOVF    MwhiteValue,w
+    CPFSGT  MsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+    BSF	    McolorSensed,whiteBit
+    BTFSC   McolorSensed,whiteBit
+    BSF	    PORTA, whiteBit			; return if white sensed
+    BTFSC   McolorSensed, whiteBit
+    GOTO    getColor_M_demo3
+    
+    MOVF    MgreenValue,w
+    CPFSGT  MsensorVal         
+    BSF     McolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
+    BTFSC   McolorSensed,greenBit
+    BSF	    PORTA, greenBit			    ; return if green sensed
+    BTFSC   McolorSensed, greenBit
+    GOTO    getColor_M_demo3
+
+    MOVF    MblueValue,w
+    CPFSGT  MsensorVal         
+    BSF     McolorSensed,blueBit 
+    BTFSC   McolorSensed,blueBit
+    BSF	    PORTA, blueBit			    ; return if blue sensed
+    BTFSC   McolorSensed, blueBit
+    GOTO    getColor_M_demo3
+    
+	MOVF    MredValue,w
+    CPFSGT  MsensorVal         
+    BSF     McolorSensed,redBit 
+    BTFSC   McolorSensed,redBit
+    BSF	    PORTA, redBit			    ; return if red sensed
+    BTFSC   McolorSensed, redBit
+    GOTO    getColor_M_demo3
+	
+
+    BSF     McolorSensed,blackBit     ; else, it's black
+    BSF	    PORTA, blackBit
+    GOTO    getColor_M_demo3	;loop
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     end

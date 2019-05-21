@@ -1,0 +1,556 @@
+%CMF
+# %PSECTS Section
+# For each object file, details of its psects are enumerated here.
+# The begining of the section is indicated by %PSECTS.  The first
+# line indicates the name of the first object file, e.g.
+#    $foo.obj
+# Each line that follows describes a psect in that object file, until
+# the next object file.  The lines that describe a psect have the
+# format:
+#    <psect name> <class name> <space> <link address> <load addresses> <length> <delta>
+# All addresses and the length are given in unqualified hexadecimal
+# in delta units.  Any other numeric values are decimal.
+%PSECTS
+$C:\Users\Armandt\AppData\Local\Temp\scec.o
+idloc IDLOC 0 200000 200000 8 1
+init CODE 0 0 0 4 1
+config CONFIG 0 300000 300000 E 1
+$dist/default/debug\sanic.X.debug.o
+cinit CODE 0 7E4E 7E4E 2A 1
+text0 CODE 0 7DF0 7DF0 12 1
+text1 CODE 0 7E02 7E02 22 1
+text2 CODE 0 7DE2 7DE2 E 1
+text3 CODE 0 7E78 7E78 30 1
+text4 CODE 0 7DD8 7DD8 A 1
+text5 CODE 0 7F40 7F40 58 1
+text6 CODE 0 7EA8 7EA8 46 1
+text7 CODE 0 7F98 7F98 68 1
+text8 CODE 0 7DCE 7DCE A 1
+text9 CODE 0 7EEE 7EEE 52 1
+idataCOMRAM CODE 0 7E25 7E25 29 1
+cstackCOMRAM COMRAM 1 2A 2A D 1
+dataCOMRAM COMRAM 1 1 1 29 1
+# %UNUSED Section
+# This section enumerates the unused ranges of each CLASS. Each entry
+# is described on a single line as follows:
+#    <class name> <range> <delta>
+# Addresses given in the range are in hexadecimal and units of delta.
+%UNUSED
+RAM 60-5FF 1
+SFR F38-FFF 1
+BANK0 60-FF 1
+BANK1 100-1FF 1
+BANK2 200-2FF 1
+BANK3 300-3FF 1
+BANK4 400-4FF 1
+BANK5 500-5FF 1
+CONST 4-7DCD 1
+CONST 7E24-7E24 1
+STACK 60-5FF 1
+SMALLCONST 600-7DCD 1
+SMALLCONST 7E24-7E24 1
+CODE 4-7DCD 1
+CODE 7E24-7E24 1
+BIGRAM 37-5FF 1
+COMRAM 37-5F 1
+EEDATA F00000-F000FF 1
+MEDIUMCONST 600-7DCD 1
+MEDIUMCONST 7E24-7E24 1
+# %LINETAB Section
+# This section enumerates the file/line to address mappings.
+# The beginning of the section is indicated by %LINETAB.
+# The first line indicates the name of the first object file, e.g.
+#   $foo.obj
+# Each line that follows describes a single mapping until the next
+# object file.  Mappings have the following format:
+#    <address> <psect name> <class name> ><line number>:<file name>
+# The address is absolute and given given in unqualified hex 
+# in delta units of the psect. All mappings within an object file
+# are in ascending order of addresses.
+# All other numeric values are in decimal.
+%LINETAB
+$dist/default/debug\sanic.X.debug.o
+7EEE text9 CODE >7:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7EEE text9 CODE >13:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7EF6 text9 CODE >14:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7EFE text9 CODE >15:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F02 text9 CODE >16:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F04 text9 CODE >17:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F0A text9 CODE >18:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F0C text9 CODE >16:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F10 text9 CODE >21:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F16 text9 CODE >22:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F22 text9 CODE >23:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F2A text9 CODE >24:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F2C text9 CODE >26:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F32 text9 CODE >27:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F36 text9 CODE >28:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F36 text9 CODE >29:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7F3E text9 CODE >30:C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
+7DCE text8 CODE >86:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DCE text8 CODE >87:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DD0 text8 CODE >89:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DD4 text8 CODE >90:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DD6 text8 CODE >91:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F98 text7 CODE >55:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F9A text7 CODE >56:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FAC text7 CODE >58:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FAE text7 CODE >59:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FAE text7 CODE >60:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB0 text7 CODE >61:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB2 text7 CODE >62:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB2 text7 CODE >63:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB4 text7 CODE >64:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB6 text7 CODE >65:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB6 text7 CODE >66:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FB8 text7 CODE >67:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FBA text7 CODE >68:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FBA text7 CODE >69:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FBC text7 CODE >70:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FBE text7 CODE >71:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FBE text7 CODE >72:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC0 text7 CODE >73:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC2 text7 CODE >74:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC2 text7 CODE >75:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC4 text7 CODE >76:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC6 text7 CODE >78:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC6 text7 CODE >79:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FC8 text7 CODE >80:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7FCA text7 CODE >81:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EA8 text6 CODE >94:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EAA text6 CODE >95:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EB0 text6 CODE >96:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EB8 text6 CODE >98:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EBC text6 CODE >99:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7ECA text6 CODE >100:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7ED2 text6 CODE >102:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EEA text6 CODE >104:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EEC text6 CODE >105:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F40 text5 CODE >122:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F40 text5 CODE >123:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F44 text5 CODE >124:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F48 text5 CODE >125:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F4C text5 CODE >126:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F52 text5 CODE >128:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F56 text5 CODE >129:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F5A text5 CODE >130:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F5E text5 CODE >131:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F62 text5 CODE >133:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F66 text5 CODE >134:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F6A text5 CODE >135:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F6E text5 CODE >136:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F72 text5 CODE >138:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F76 text5 CODE >139:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F7A text5 CODE >140:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F7E text5 CODE >141:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F82 text5 CODE >143:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F86 text5 CODE >144:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F8A text5 CODE >145:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F8E text5 CODE >146:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F92 text5 CODE >147:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7F96 text5 CODE >149:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DD8 text4 CODE >152:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DD8 text4 CODE >153:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DE0 text4 CODE >155:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E78 text3 CODE >22:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E78 text3 CODE >23:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E7A text3 CODE >24:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E7C text3 CODE >25:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E7E text3 CODE >27:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E86 text3 CODE >28:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E8A text3 CODE >29:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E8E text3 CODE >31:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E92 text3 CODE >32:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E96 text3 CODE >33:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E98 text3 CODE >34:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E9A text3 CODE >35:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E9C text3 CODE >37:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EA0 text3 CODE >38:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7EA6 text3 CODE >40:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DE2 text2 CODE >108:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DE2 text2 CODE >109:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DE6 text2 CODE >110:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DEA text2 CODE >111:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DEE text2 CODE >112:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7E02 text1 CODE >43:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E02 text1 CODE >44:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E0A text1 CODE >45:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E0E text1 CODE >46:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E16 text1 CODE >47:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E18 text1 CODE >48:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E20 text1 CODE >49:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7E22 text1 CODE >51:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+7DF0 text0 CODE >77:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DF0 text0 CODE >94:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DF4 text0 CODE >95:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7DF8 text0 CODE >97:C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+7E4E cinit CODE >846:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E4E cinit CODE >848:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E4E cinit CODE >851:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E4E cinit CODE >922:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E50 cinit CODE >923:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E52 cinit CODE >924:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E54 cinit CODE >925:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E56 cinit CODE >926:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E58 cinit CODE >927:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E5A cinit CODE >928:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E5E cinit CODE >929:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E62 cinit CODE >930:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E62 cinit CODE >931:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E64 cinit CODE >932:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E68 cinit CODE >933:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E6A cinit CODE >934:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E6C cinit CODE >935:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E6E cinit CODE >941:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E6E cinit CODE >944:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E70 cinit CODE >945:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E72 cinit CODE >946:C:\Users\Armandt\AppData\Local\Temp\scec.
+7E74 cinit CODE >947:C:\Users\Armandt\AppData\Local\Temp\scec.
+# %SYMTAB Section
+# An enumeration of all symbols in the program.
+# The beginning of the section is indicated by %SYMTAB.
+# Each line describes a single symbol as follows:
+#    <label> <value> [-]<load-adj> <class> <space> <psect> <file-name>
+# The value and load-adj are both in unqualified hexadecimal.
+# All other numeric values are in decimal.  The load-adj is the
+# quantity one needs to add to the symbol value in order to obtain the load
+# address of the symbol.  This value may be signed. If the symbol
+# was defined in a psect then <psect> will be "-". File-name
+# is the name of the object file in which the symbol was defined.
+%SYMTAB
+__Lmediumconst 0 0 MEDIUMCONST 0 mediumconst dist/default/debug\sanic.X.debug.o
+__Hspace_0 30000E 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hspace_1 37 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hspace_2 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_IESO$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__end_of_readADC 7DD8 0 CODE 0 text8 dist/default/debug\sanic.X.debug.o
+__Hibigdata 0 0 CODE 0 ibigdata dist/default/debug\sanic.X.debug.o
+__mediumconst 0 0 MEDIUMCONST 0 mediumconst C:\Users\Armandt\AppData\Local\Temp\scec.o
+__Heeprom_data 0 0 EEDATA 0 eeprom_data dist/default/debug\sanic.X.debug.o
+__Lsmallconst 0 0 SMALLCONST 0 smallconst dist/default/debug\sanic.X.debug.o
+_FSR0 FE9 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_LATA F89 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_LATB F8A 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_LATC F8B 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_LATD F8C 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_LATE F8D 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+___sp 0 0 STACK 2 stack C:\Users\Armandt\AppData\Local\Temp\scec.o
+_init 7DE2 0 CODE 0 text2 dist/default/debug\sanic.X.debug.o
+_main 7DF0 0 CODE 0 text0 dist/default/debug\sanic.X.debug.o
+_size 29 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+start 0 0 CODE 0 init C:\Users\Armandt\AppData\Local\Temp\scec.o
+aveSensor@measurements 33 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__size_of_init 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__size_of_main 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__size_of___lwdiv 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_WDTEN$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_Lranges 1E 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__CFG_CCP2MX$PORTC1 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hpowerup 0 0 CODE 0 powerup dist/default/debug\sanic.X.debug.o
+__CFG_CCP3MX$PORTB5 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__HdataCOMRAM 0 0 ABS 0 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__accesstop 60 0 ABS 0 - C:\Users\Armandt\AppData\Local\Temp\scec.o
+intlevel0 0 0 CODE 0 text C:\Users\Armandt\AppData\Local\Temp\scec.o
+intlevel1 0 0 CODE 0 text C:\Users\Armandt\AppData\Local\Temp\scec.o
+intlevel2 0 0 CODE 0 text C:\Users\Armandt\AppData\Local\Temp\scec.o
+intlevel3 0 0 CODE 0 text C:\Users\Armandt\AppData\Local\Temp\scec.o
+_OSCCONbits FD3 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__LnvFARRAM 0 0 FARRAM 0 nvFARRAM dist/default/debug\sanic.X.debug.o
+__CFG_EBTR0$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_EBTR1$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_EBTR2$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_EBTR3$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_EBTRB$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_P2BMX$PORTD2 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hifardata 0 0 CODE 0 ifardata dist/default/debug\sanic.X.debug.o
+__Hclrtext 0 0 ABS 0 clrtext dist/default/debug\sanic.X.debug.o
+__pidataCOMRAM 7E25 0 CODE 0 idataCOMRAM dist/default/debug\sanic.X.debug.o
+__CFG_PRICLKEN$ON 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_FOSC$INTIO67 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ADCON1 FC1 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ADRESH FC4 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ANSELA F38 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ANSELB F39 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ANSELC F3A 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ANSELD F3B 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ANSELE F3C 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+aveSensor@result 35 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+___inthi_sp 0 0 STACK 2 stack C:\Users\Armandt\AppData\Local\Temp\scec.o
+___intlo_sp 0 0 STACK 2 stack C:\Users\Armandt\AppData\Local\Temp\scec.o
+__LdataCOMRAM 0 0 ABS 0 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__Hintcode_body 0 0 ABS 0 intcode_body dist/default/debug\sanic.X.debug.o
+__Lintsave_regs 0 0 BIGRAM 1 intsave_regs dist/default/debug\sanic.X.debug.o
+_LLranges 23 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+_setupSerial 7E78 0 CODE 0 text3 dist/default/debug\sanic.X.debug.o
+__Hmediumconst 0 0 MEDIUMCONST 0 mediumconst dist/default/debug\sanic.X.debug.o
+__Hintcodelo 0 0 CODE 0 intcodelo dist/default/debug\sanic.X.debug.o
+__end_of___lwdiv 7F40 0 CODE 0 text9 dist/default/debug\sanic.X.debug.o
+aveSensor@a 36 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+aveSensor@s 32 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+___lwdiv@quotient 2E 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__LidataCOMRAM 0 0 ABS 0 idataCOMRAM dist/default/debug\sanic.X.debug.o
+__Lintcodelo 0 0 CODE 0 intcodelo dist/default/debug\sanic.X.debug.o
+__CFG_FCMEN$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+start_initialization 7E4E 0 CODE 0 cinit dist/default/debug\sanic.X.debug.o
+__CFG_PBADEN$ON 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_sensorVals A 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__HnvFARRAM 0 0 FARRAM 0 nvFARRAM dist/default/debug\sanic.X.debug.o
+_TRISBbits F93 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TRISCbits F94 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+___rparam_used 1 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_RCSTA1 FAB 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_WDTPS$32768 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_setADCChannel 7F98 0 CODE 0 text7 dist/default/debug\sanic.X.debug.o
+_SPBRG1 FAF 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TXSTA1 FAC 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_Mranges 19 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+_readADC 7DCE 0 CODE 0 text8 dist/default/debug\sanic.X.debug.o
+__Hbank0 0 0 ABS 0 bank0 dist/default/debug\sanic.X.debug.o
+__Hbank1 0 0 ABS 0 bank1 dist/default/debug\sanic.X.debug.o
+__Hbank2 0 0 ABS 0 bank2 dist/default/debug\sanic.X.debug.o
+__Hbank3 0 0 ABS 0 bank3 dist/default/debug\sanic.X.debug.o
+__Hbank4 0 0 ABS 0 bank4 dist/default/debug\sanic.X.debug.o
+__Hbank5 0 0 ABS 0 bank5 dist/default/debug\sanic.X.debug.o
+__Hcinit 0 0 ABS 0 cinit dist/default/debug\sanic.X.debug.o
+__Hconst 0 0 CONST 0 const dist/default/debug\sanic.X.debug.o
+__Hidata 0 0 CODE 0 idata dist/default/debug\sanic.X.debug.o
+__Hidloc 200008 0 IDLOC 0 idloc dist/default/debug\sanic.X.debug.o
+__Hnvbit 0 0 COMRAM 1 nvbit dist/default/debug\sanic.X.debug.o
+__Hparam 0 0 COMRAM 1 rparam dist/default/debug\sanic.X.debug.o
+__Hrdata 0 0 COMRAM 1 rdata dist/default/debug\sanic.X.debug.o
+__Hstack 0 0 STACK 2 stack dist/default/debug\sanic.X.debug.o
+__Htext0 0 0 ABS 0 text0 dist/default/debug\sanic.X.debug.o
+__Htext1 0 0 ABS 0 text1 dist/default/debug\sanic.X.debug.o
+__Htext2 0 0 ABS 0 text2 dist/default/debug\sanic.X.debug.o
+__Htext3 0 0 ABS 0 text3 dist/default/debug\sanic.X.debug.o
+__Htext4 0 0 ABS 0 text4 dist/default/debug\sanic.X.debug.o
+__Htext5 0 0 ABS 0 text5 dist/default/debug\sanic.X.debug.o
+__Htext6 0 0 ABS 0 text6 dist/default/debug\sanic.X.debug.o
+__Htext7 0 0 ABS 0 text7 dist/default/debug\sanic.X.debug.o
+__Htext8 0 0 ABS 0 text8 dist/default/debug\sanic.X.debug.o
+__Htext9 0 0 ABS 0 text9 dist/default/debug\sanic.X.debug.o
+___lwdiv@counter 30 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__Hbigbss 0 0 BIGRAM 1 bigbss dist/default/debug\sanic.X.debug.o
+__Hbigram 0 0 ABS 0 bigram dist/default/debug\sanic.X.debug.o
+__smallconst 0 0 SMALLCONST 0 smallconst C:\Users\Armandt\AppData\Local\Temp\scec.o
+__Hcomram 0 0 ABS 0 comram dist/default/debug\sanic.X.debug.o
+__Hconfig 30000E 0 CONFIG 0 config dist/default/debug\sanic.X.debug.o
+__Lbank0 0 0 ABS 0 bank0 dist/default/debug\sanic.X.debug.o
+__Lbank1 0 0 ABS 0 bank1 dist/default/debug\sanic.X.debug.o
+__Lbank2 0 0 ABS 0 bank2 dist/default/debug\sanic.X.debug.o
+__Lbank3 0 0 ABS 0 bank3 dist/default/debug\sanic.X.debug.o
+__Lbank4 0 0 ABS 0 bank4 dist/default/debug\sanic.X.debug.o
+__Lbank5 0 0 ABS 0 bank5 dist/default/debug\sanic.X.debug.o
+__Lcinit 0 0 ABS 0 cinit dist/default/debug\sanic.X.debug.o
+__Lconst 0 0 CONST 0 const dist/default/debug\sanic.X.debug.o
+__Lidata 0 0 CODE 0 idata dist/default/debug\sanic.X.debug.o
+__Lidloc 200000 0 IDLOC 0 idloc dist/default/debug\sanic.X.debug.o
+__Lnvbit 0 0 COMRAM 1 nvbit dist/default/debug\sanic.X.debug.o
+__Lparam 0 0 COMRAM 1 rparam dist/default/debug\sanic.X.debug.o
+__Lrdata 0 0 COMRAM 1 rdata dist/default/debug\sanic.X.debug.o
+__Lstack 0 0 STACK 2 stack dist/default/debug\sanic.X.debug.o
+__Ltext0 0 0 ABS 0 text0 dist/default/debug\sanic.X.debug.o
+__Ltext1 0 0 ABS 0 text1 dist/default/debug\sanic.X.debug.o
+__Ltext2 0 0 ABS 0 text2 dist/default/debug\sanic.X.debug.o
+__Ltext3 0 0 ABS 0 text3 dist/default/debug\sanic.X.debug.o
+__Ltext4 0 0 ABS 0 text4 dist/default/debug\sanic.X.debug.o
+__Ltext5 0 0 ABS 0 text5 dist/default/debug\sanic.X.debug.o
+__Ltext6 0 0 ABS 0 text6 dist/default/debug\sanic.X.debug.o
+__Ltext7 0 0 ABS 0 text7 dist/default/debug\sanic.X.debug.o
+__Ltext8 0 0 ABS 0 text8 dist/default/debug\sanic.X.debug.o
+__Ltext9 0 0 ABS 0 text9 dist/default/debug\sanic.X.debug.o
+__Hfarbss 0 0 FARRAM 0 farbss dist/default/debug\sanic.X.debug.o
+__Lintcode_body 0 0 ABS 0 intcode_body dist/default/debug\sanic.X.debug.o
+__CFG_T3CMX$PORTC0 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Habs1 0 0 ABS 0 abs1 dist/default/debug\sanic.X.debug.o
+__Hdata 0 0 ABS 0 data dist/default/debug\sanic.X.debug.o
+__Hinit 4 0 CODE 0 init dist/default/debug\sanic.X.debug.o
+__Hrbit 0 0 COMRAM 1 rbit dist/default/debug\sanic.X.debug.o
+__Hrbss 0 0 COMRAM 1 rbss dist/default/debug\sanic.X.debug.o
+__Htemp 0 0 COMRAM 1 temp dist/default/debug\sanic.X.debug.o
+__Htext 0 0 ABS 0 text dist/default/debug\sanic.X.debug.o
+__Labs1 0 0 ABS 0 abs1 dist/default/debug\sanic.X.debug.o
+__Ldata 0 0 ABS 0 data dist/default/debug\sanic.X.debug.o
+__Linit 0 0 CODE 0 init dist/default/debug\sanic.X.debug.o
+__Lrbit 0 0 COMRAM 1 rbit dist/default/debug\sanic.X.debug.o
+__Lrbss 0 0 COMRAM 1 rbss dist/default/debug\sanic.X.debug.o
+__Ltemp 0 0 COMRAM 1 temp dist/default/debug\sanic.X.debug.o
+__Ltext 0 0 ABS 0 text dist/default/debug\sanic.X.debug.o
+__CFG_XINST$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__HcstackCOMRAM 0 0 ABS 0 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__Hintret 0 0 ABS 0 intret dist/default/debug\sanic.X.debug.o
+__Hirdata 0 0 CODE 0 irdata dist/default/debug\sanic.X.debug.o
+__S0 30000E 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__S1 37 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__S2 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_col 28 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__HidataCOMRAM 0 0 ABS 0 idataCOMRAM dist/default/debug\sanic.X.debug.o
+__Lbigdata 0 0 BIGRAM 1 bigdata dist/default/debug\sanic.X.debug.o
+__Hnvrram 0 0 COMRAM 1 nvrram dist/default/debug\sanic.X.debug.o
+__CFG_BORV$190 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__size_of_setADCChannel 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_clearPorts 7F40 0 CODE 0 text5 dist/default/debug\sanic.X.debug.o
+__Lintentry 0 0 ABS 0 intentry dist/default/debug\sanic.X.debug.o
+__Hramtop 600 0 RAM 0 ramtop dist/default/debug\sanic.X.debug.o
+__Hrparam 0 0 COMRAM 1 rparam dist/default/debug\sanic.X.debug.o
+_RRranges F 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__CFG_PWRTEN$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__activetblptr 2 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hstruct 0 0 COMRAM 1 struct dist/default/debug\sanic.X.debug.o
+_PIE1bits F9D 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_HFOFST$ON 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+___lwdiv 7EEE 0 CODE 0 text9 dist/default/debug\sanic.X.debug.o
+__Lbigbss 0 0 BIGRAM 1 bigbss dist/default/debug\sanic.X.debug.o
+__Lbigram 0 0 ABS 0 bigram dist/default/debug\sanic.X.debug.o
+__end_of_setADCChannel 8000 0 CODE 0 text7 dist/default/debug\sanic.X.debug.o
+__Lcomram 0 0 ABS 0 comram dist/default/debug\sanic.X.debug.o
+__Lconfig 300000 0 CONFIG 0 config dist/default/debug\sanic.X.debug.o
+__end_of_setupSerial 7EA8 0 CODE 0 text3 dist/default/debug\sanic.X.debug.o
+__size_of_setupADC 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__size_of_setupOSC 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Lfarbss 0 0 FARRAM 0 farbss dist/default/debug\sanic.X.debug.o
+___lwdiv@divisor 2C 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__Lfardata 0 0 FARRAM 0 fardata dist/default/debug\sanic.X.debug.o
+stackhi 5FF 0 ABS 0 - C:\Users\Armandt\AppData\Local\Temp\scec.o
+stacklo 60 0 ABS 0 - C:\Users\Armandt\AppData\Local\Temp\scec.o
+__Lintcode 0 0 CODE 0 intcode dist/default/debug\sanic.X.debug.o
+__Lintret 0 0 ABS 0 intret dist/default/debug\sanic.X.debug.o
+__end_of_clearPorts 7F98 0 CODE 0 text5 dist/default/debug\sanic.X.debug.o
+__Lirdata 0 0 CODE 0 irdata dist/default/debug\sanic.X.debug.o
+_ADCON0bits FC2 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_ADCON2bits FC0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Lspace_0 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Lspace_1 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Lspace_2 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_PIR1bits F9E 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_LVP$ON 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__LcstackCOMRAM 0 0 ABS 0 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+end_of_initialization 7E6E 0 CODE 0 cinit dist/default/debug\sanic.X.debug.o
+__Lnvrram 0 0 COMRAM 1 nvrram dist/default/debug\sanic.X.debug.o
+__Hintentry 0 0 ABS 0 intentry dist/default/debug\sanic.X.debug.o
+__CFG_STVREN$ON 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+___lwdiv@dividend 2A 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+?___lwdiv 2A 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__Hreset_vec 0 0 CODE 0 reset_vec dist/default/debug\sanic.X.debug.o
+_setupADC 7E02 0 CODE 0 text1 dist/default/debug\sanic.X.debug.o
+_setupOSC 7DD8 0 CODE 0 text4 dist/default/debug\sanic.X.debug.o
+__Lramtop 600 0 RAM 0 ramtop dist/default/debug\sanic.X.debug.o
+__Lrparam 0 0 COMRAM 1 rparam dist/default/debug\sanic.X.debug.o
+__pcinit 7E4E 0 CODE 0 cinit dist/default/debug\sanic.X.debug.o
+__ptext0 7DF0 0 CODE 0 text0 dist/default/debug\sanic.X.debug.o
+__ptext1 7E02 0 CODE 0 text1 dist/default/debug\sanic.X.debug.o
+__ptext2 7DE2 0 CODE 0 text2 dist/default/debug\sanic.X.debug.o
+__ptext3 7E78 0 CODE 0 text3 dist/default/debug\sanic.X.debug.o
+__ptext4 7DD8 0 CODE 0 text4 dist/default/debug\sanic.X.debug.o
+__ptext5 7F40 0 CODE 0 text5 dist/default/debug\sanic.X.debug.o
+__ptext6 7EA8 0 CODE 0 text6 dist/default/debug\sanic.X.debug.o
+__ptext7 7F98 0 CODE 0 text7 dist/default/debug\sanic.X.debug.o
+__ptext8 7DCE 0 CODE 0 text8 dist/default/debug\sanic.X.debug.o
+__ptext9 7EEE 0 CODE 0 text9 dist/default/debug\sanic.X.debug.o
+__Lstruct 0 0 COMRAM 1 struct dist/default/debug\sanic.X.debug.o
+__ramtop 600 0 RAM 0 ramtop C:\Users\Armandt\AppData\Local\Temp\scec.o
+__end_of_setupADC 7E24 0 CODE 0 text1 dist/default/debug\sanic.X.debug.o
+__end_of_setupOSC 7DE2 0 CODE 0 text4 dist/default/debug\sanic.X.debug.o
+__Lpowerup 0 0 CODE 0 powerup dist/default/debug\sanic.X.debug.o
+__Leeprom_data 0 0 EEDATA 0 eeprom_data dist/default/debug\sanic.X.debug.o
+_raceColor 1 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__Lreset_vec 0 0 CODE 0 reset_vec dist/default/debug\sanic.X.debug.o
+__size_of_readADC 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+___param_bank 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hbigdata 0 0 BIGRAM 1 bigdata dist/default/debug\sanic.X.debug.o
+__end_of__initialization 7E6E 0 CODE 0 cinit dist/default/debug\sanic.X.debug.o
+__CFG_WRT0$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_WRT1$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_WRT2$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_WRT3$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__end_of_aveSensor 7EEE 0 CODE 0 text6 dist/default/debug\sanic.X.debug.o
+__CFG_WRTB$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Libigdata 0 0 CODE 0 ibigdata dist/default/debug\sanic.X.debug.o
+__CFG_WRTC$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_WRTD$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__size_of_aveSensor 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Lclrtext 0 0 ABS 0 clrtext dist/default/debug\sanic.X.debug.o
+_SPBRGH1 FB0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+setADCChannel@channel 2C 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+_Rranges 14 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__pcstackCOMRAM 2A 0 COMRAM 1 cstackCOMRAM dist/default/debug\sanic.X.debug.o
+__CFG_BOREN$SBORDIS 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_aveSensor 7EA8 0 CODE 0 text6 dist/default/debug\sanic.X.debug.o
+__end_of_init 7DF0 0 CODE 0 text2 dist/default/debug\sanic.X.debug.o
+__end_of_main 7E02 0 CODE 0 text0 dist/default/debug\sanic.X.debug.o
+__size_of_setupSerial 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_PORTA F80 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_PORTB F81 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_PORTC F82 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_PORTD F83 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_PORTE F84 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TRISA F92 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TRISB F93 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TRISC F94 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TRISD F95 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+_TRISE F96 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_CP0$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_CP1$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__HRAM 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hbss 0 0 RAM 1 bss dist/default/debug\sanic.X.debug.o
+__Hram 0 0 ABS 0 ram dist/default/debug\sanic.X.debug.o
+__Hsfr 0 0 ABS 0 sfr dist/default/debug\sanic.X.debug.o
+__LRAM 1 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Lbss 0 0 RAM 1 bss dist/default/debug\sanic.X.debug.o
+__Lram 0 0 ABS 0 ram dist/default/debug\sanic.X.debug.o
+__Lsfr 0 0 ABS 0 sfr dist/default/debug\sanic.X.debug.o
+__CFG_CP2$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_CP3$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_PLLCFG$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_CPB$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__CFG_CPD$OFF 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__initialization 7E4E 0 CODE 0 cinit dist/default/debug\sanic.X.debug.o
+_BAUDCON1bits FB8 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__pdataCOMRAM 1 0 COMRAM 1 dataCOMRAM dist/default/debug\sanic.X.debug.o
+__Hfardata 0 0 FARRAM 0 fardata dist/default/debug\sanic.X.debug.o
+__Hsmallconst 0 0 SMALLCONST 0 smallconst dist/default/debug\sanic.X.debug.o
+__Lifardata 0 0 CODE 0 ifardata dist/default/debug\sanic.X.debug.o
+__Hintsave_regs 0 0 BIGRAM 1 intsave_regs dist/default/debug\sanic.X.debug.o
+__CFG_MCLRE$EXTMCLR 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+__Hintcode 0 0 CODE 0 intcode dist/default/debug\sanic.X.debug.o
+__size_of_clearPorts 0 0 ABS 0 - dist/default/debug\sanic.X.debug.o
+# %SPLITSTAB Section
+# This section enumerates all the psect splits performed by the assembler.
+# The beginning of the section is indicated by %SPLITSTAB.
+# Each line is a record a particular split, where the parent psect is on
+# the left and the child on the right.  Note that a child psect is always
+# split form the top of the parent psect. All splits from a given parent
+# are listed in the order in which they occurred.
+%SPLITSTAB
+# %DABS Section
+# This section contains a table of all usuage of the assember
+# directive DABS in the program. Each line has the following format:
+#   <name> <space> <address> <size>
+# If the DABS was originally labelled then that shall be <name>,
+# otherwise name will be "-".  The <space> number is in decimal.
+# <address> and <size> are in byte units as unqaulified hexadecimal
+%DABS
+# %SEGMENTS Section
+# This sections enumerates the segments of the program.  Each segment
+# is described on a single line as follows:
+#    <name> <space> <link address> <file address> <size> <delta>
+# Addresses and size are in unqualified hexadecimal.  The link address
+# and size are in units of delta. The file address is in units of bytes.
+# All other numeric quantities are in decimal.
+%SEGMENTS
+cinit 0 7E4E 7E4E 2A 1
+idloc 0 200000 200000 8 1
+text0 0 7DF0 7DF0 12 1
+text1 0 7E02 7E02 22 1
+text2 0 7DE2 7DE2 E 1
+text3 0 7E78 7E78 30 1
+text4 0 7DD8 7DD8 A 1
+text5 0 7F40 7F40 58 1
+text6 0 7EA8 7EA8 46 1
+text7 0 7F98 7F98 68 1
+text8 0 7DCE 7DCE A 1
+text9 0 7EEE 7EEE 52 1
+idataCOMRAM 0 7E25 7E25 29 1
+reset_vec 0 0 0 4 1
+dataCOMRAM 1 1 1 36 1
+config 0 300000 300000 E 1
