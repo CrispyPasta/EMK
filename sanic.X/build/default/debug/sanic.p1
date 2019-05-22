@@ -172,6 +172,28 @@ Version 4.0 HI-TECH Software Intermediate Code
 "8314
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 8314: extern volatile TRISBbits_t TRISBbits __attribute__((address(0xF93)));
 [v _TRISBbits `VS395 ~T0 @X0 0 e@3987 ]
+"103
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 103:     struct {
+[s S4 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S4 . ANSB0 ANSB1 ANSB2 ANSB3 ANSB4 ANSB5 ]
+"102
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 102: typedef union {
+[u S3 `S4 1 ]
+[n S3 . . ]
+"112
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 112: extern volatile ANSELBbits_t ANSELBbits __attribute__((address(0xF39)));
+[v _ANSELBbits `VS3 ~T0 @X0 0 e@3897 ]
+"153
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 153:     struct {
+[s S6 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S6 . . ANSC2 ANSC3 ANSC4 ANSC5 ANSC6 ANSC7 ]
+"152
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 152: typedef union {
+[u S5 `S6 1 ]
+[n S5 . . ]
+"163
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 163: extern volatile ANSELCbits_t ANSELCbits __attribute__((address(0xF3A)));
+[v _ANSELCbits `VS5 ~T0 @X0 0 e@3898 ]
 "13729
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 13729: extern volatile unsigned char ADRESH __attribute__((address(0xFC4)));
 [v _ADRESH `Vuc ~T0 @X0 0 e@4036 ]
@@ -1239,8 +1261,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e :U _setupADC ]
 [f ]
 "44
-[; ;./functions.c: 44:     ADCON2bits.ADCS = 0b001;
-[e = . . _ADCON2bits 0 0 -> -> 1 `i `uc ]
+[; ;./functions.c: 44:     ADCON2bits.ADCS = 0b100;
+[e = . . _ADCON2bits 0 0 -> -> 4 `i `uc ]
 "45
 [; ;./functions.c: 45:     ADCON1 = 0;
 [e = _ADCON1 -> -> 0 `i `uc ]
@@ -1284,64 +1306,85 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;./functions.c: 60:         TRISBbits.TRISB2 = 1;
 [e = . . _TRISBbits 0 2 -> -> 1 `i `uc ]
 "61
-[; ;./functions.c: 61:         break;
-[e $U 854  ]
+[; ;./functions.c: 61:         ANSELBbits.ANSB2 = 1;
+[e = . . _ANSELBbits 0 2 -> -> 1 `i `uc ]
 "62
-[; ;./functions.c: 62:     case 9:
-[e :U 857 ]
+[; ;./functions.c: 62:         break;
+[e $U 854  ]
 "63
-[; ;./functions.c: 63:         TRISBbits.TRISB3 = 1;
-[e = . . _TRISBbits 0 3 -> -> 1 `i `uc ]
+[; ;./functions.c: 63:     case 9:
+[e :U 857 ]
 "64
-[; ;./functions.c: 64:         break;
-[e $U 854  ]
+[; ;./functions.c: 64:         TRISBbits.TRISB3 = 1;
+[e = . . _TRISBbits 0 3 -> -> 1 `i `uc ]
 "65
-[; ;./functions.c: 65:     case 10:
-[e :U 858 ]
+[; ;./functions.c: 65:         ANSELBbits.ANSB3 = 1;
+[e = . . _ANSELBbits 0 3 -> -> 1 `i `uc ]
 "66
-[; ;./functions.c: 66:         TRISBbits.TRISB1 = 1;
-[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
-"67
-[; ;./functions.c: 67:         break;
+[; ;./functions.c: 66:         break;
 [e $U 854  ]
+"67
+[; ;./functions.c: 67:     case 10:
+[e :U 858 ]
 "68
-[; ;./functions.c: 68:     case 12:
-[e :U 859 ]
+[; ;./functions.c: 68:         TRISBbits.TRISB1 = 1;
+[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
 "69
-[; ;./functions.c: 69:         TRISBbits.TRISB0 = 0;
-[e = . . _TRISBbits 0 0 -> -> 0 `i `uc ]
+[; ;./functions.c: 69:         ANSELBbits.ANSB1 = 1;
+[e = . . _ANSELBbits 0 1 -> -> 1 `i `uc ]
 "70
 [; ;./functions.c: 70:         break;
 [e $U 854  ]
 "71
-[; ;./functions.c: 71:     case 13:
-[e :U 860 ]
+[; ;./functions.c: 71:     case 12:
+[e :U 859 ]
 "72
-[; ;./functions.c: 72:         TRISBbits.TRISB5 = 1;
-[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
-"73
-[; ;./functions.c: 73:         break;
-[e $U 854  ]
-"74
-[; ;./functions.c: 74:     case 15:
-[e :U 861 ]
-"75
-[; ;./functions.c: 75:         TRISCbits.TRISC3 = 1;
-[e = . . _TRISCbits 0 3 -> -> 1 `i `uc ]
-"76
-[; ;./functions.c: 76:         break;
-[e $U 854  ]
-"78
-[; ;./functions.c: 78:     default:
-[e :U 862 ]
-"79
-[; ;./functions.c: 79:         TRISBbits.TRISB0 = 1;
+[; ;./functions.c: 72:         TRISBbits.TRISB0 = 1;
 [e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
-"80
-[; ;./functions.c: 80:         break;
+"73
+[; ;./functions.c: 73:         ANSELBbits.ANSB0 = 1;
+[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
+"74
+[; ;./functions.c: 74:         break;
 [e $U 854  ]
+"75
+[; ;./functions.c: 75:     case 13:
+[e :U 860 ]
+"76
+[; ;./functions.c: 76:         TRISBbits.TRISB5 = 1;
+[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
+"77
+[; ;./functions.c: 77:         ANSELBbits.ANSB5 = 1;
+[e = . . _ANSELBbits 0 5 -> -> 1 `i `uc ]
+"78
+[; ;./functions.c: 78:         break;
+[e $U 854  ]
+"79
+[; ;./functions.c: 79:     case 15:
+[e :U 861 ]
+"80
+[; ;./functions.c: 80:         TRISCbits.TRISC3 = 1;
+[e = . . _TRISCbits 0 3 -> -> 1 `i `uc ]
 "81
-[; ;./functions.c: 81:     }
+[; ;./functions.c: 81:         ANSELCbits.ANSC3 = 1;
+[e = . . _ANSELCbits 0 2 -> -> 1 `i `uc ]
+"82
+[; ;./functions.c: 82:         break;
+[e $U 854  ]
+"84
+[; ;./functions.c: 84:     default:
+[e :U 862 ]
+"85
+[; ;./functions.c: 85:         TRISBbits.TRISB0 = 1;
+[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
+"86
+[; ;./functions.c: 86:         ANSELBbits.ANSB0 = 1;
+[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
+"87
+[; ;./functions.c: 87:         break;
+[e $U 854  ]
+"88
+[; ;./functions.c: 88:     }
 }
 [e $U 854  ]
 [e :U 855 ]
@@ -1353,53 +1396,53 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> 15 `i 861
  862 ]
 [e :U 854 ]
-"82
-[; ;./functions.c: 82:     return;
+"89
+[; ;./functions.c: 89:     return;
 [e $UE 853  ]
-"83
-[; ;./functions.c: 83: }
+"90
+[; ;./functions.c: 90: }
 [e :UE 853 ]
 }
-"86
-[; ;./functions.c: 86: unsigned char readADC(){
+"93
+[; ;./functions.c: 93: unsigned char readADC(){
 [v _readADC `(uc ~T0 @X0 1 ef ]
 {
 [e :U _readADC ]
 [f ]
-"87
-[; ;./functions.c: 87:     ADCON0bits.GO = 1;
+"94
+[; ;./functions.c: 94:     ADCON0bits.GO = 1;
 [e = . . _ADCON0bits 2 1 -> -> 1 `i `uc ]
-"89
-[; ;./functions.c: 89:     while (ADCON0bits.GO);
+"96
+[; ;./functions.c: 96:     while (ADCON0bits.GO);
 [e $U 864  ]
 [e :U 865 ]
 [e :U 864 ]
 [e $ != -> . . _ADCON0bits 2 1 `i -> 0 `i 865  ]
 [e :U 866 ]
-"90
-[; ;./functions.c: 90:     return ADRESH;
+"97
+[; ;./functions.c: 97:     return ADRESH;
 [e ) _ADRESH ]
 [e $UE 863  ]
-"91
-[; ;./functions.c: 91: }
+"98
+[; ;./functions.c: 98: }
 [e :UE 863 ]
 }
-"94
-[; ;./functions.c: 94: unsigned char aveSensor(unsigned char s){
+"101
+[; ;./functions.c: 101: unsigned char aveSensor(unsigned char s){
 [v _aveSensor `(uc ~T0 @X0 1 ef1`uc ]
 {
 [e :U _aveSensor ]
 [v _s `uc ~T0 @X0 1 r1 ]
 [f ]
-"95
-[; ;./functions.c: 95:     setADCChannel(s);
+"102
+[; ;./functions.c: 102:     setADCChannel(s);
 [e ( _setADCChannel (1 _s ]
-"96
-[; ;./functions.c: 96:     unsigned int measurements = 0;
+"103
+[; ;./functions.c: 103:     unsigned int measurements = 0;
 [v _measurements `ui ~T0 @X0 1 a ]
 [e = _measurements -> -> 0 `i `ui ]
-"98
-[; ;./functions.c: 98:     for (unsigned char a = 0; a < 10; a++){
+"105
+[; ;./functions.c: 105:     for (unsigned char a = 0; a < 10; a++){
 {
 [v _a `uc ~T0 @X0 1 a ]
 [e = _a -> -> 0 `i `uc ]
@@ -1407,162 +1450,162 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $U 869  ]
 [e :U 868 ]
 {
-"99
-[; ;./functions.c: 99:         measurements += readADC();
+"106
+[; ;./functions.c: 106:         measurements += readADC();
 [e =+ _measurements -> ( _readADC ..  `ui ]
-"100
-[; ;./functions.c: 100:     }
+"107
+[; ;./functions.c: 107:     }
 }
 [e ++ _a -> -> 1 `i `uc ]
 [e $ < -> _a `i -> 10 `i 868  ]
 [e :U 869 ]
 }
-"102
-[; ;./functions.c: 102:     unsigned char result = measurements / 10;
+"109
+[; ;./functions.c: 109:     unsigned char result = measurements / 10;
 [v _result `uc ~T0 @X0 1 a ]
 [e = _result -> / _measurements -> -> 10 `i `ui `uc ]
-"104
-[; ;./functions.c: 104:     return result;
+"111
+[; ;./functions.c: 111:     return result;
 [e ) _result ]
 [e $UE 867  ]
-"105
-[; ;./functions.c: 105: }
+"112
+[; ;./functions.c: 112: }
 [e :UE 867 ]
 }
-"107
-[; ;./functions.c: 107: void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
+"114
+[; ;./functions.c: 114: void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
 [v _setupPWMLeft `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _setupPWMLeft ]
 [v _dutyCycle `uc ~T0 @X0 1 r1 ]
 [v _direction `uc ~T0 @X0 1 r2 ]
 [f ]
-"108
-[; ;./functions.c: 108:     return;
+"115
+[; ;./functions.c: 115:     return;
 [e $UE 871  ]
-"109
-[; ;./functions.c: 109: }
+"116
+[; ;./functions.c: 116: }
 [e :UE 871 ]
 }
-"111
-[; ;./functions.c: 111: void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
+"118
+[; ;./functions.c: 118: void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
 [v _setupPWMRight `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _setupPWMRight ]
 [v _dutyCycle `uc ~T0 @X0 1 r1 ]
 [v _direction `uc ~T0 @X0 1 r2 ]
 [f ]
-"112
-[; ;./functions.c: 112:     return;
+"119
+[; ;./functions.c: 119:     return;
 [e $UE 872  ]
-"113
-[; ;./functions.c: 113: }
+"120
+[; ;./functions.c: 120: }
 [e :UE 872 ]
 }
-"115
-[; ;./functions.c: 115: void setupTimer2(unsigned char PR2Value){
+"122
+[; ;./functions.c: 122: void setupTimer2(unsigned char PR2Value){
 [v _setupTimer2 `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _setupTimer2 ]
 [v _PR2Value `uc ~T0 @X0 1 r1 ]
 [f ]
-"116
-[; ;./functions.c: 116:     return;
+"123
+[; ;./functions.c: 123:     return;
 [e $UE 873  ]
-"117
-[; ;./functions.c: 117: }
+"124
+[; ;./functions.c: 124: }
 [e :UE 873 ]
 }
-"122
-[; ;./functions.c: 122: void clearPorts(){
+"129
+[; ;./functions.c: 129: void clearPorts(){
 [v _clearPorts `(v ~T0 @X0 1 ef ]
 {
 [e :U _clearPorts ]
 [f ]
-"123
-[; ;./functions.c: 123:     PORTA = 0;
-[e = _PORTA -> -> 0 `i `uc ]
-"124
-[; ;./functions.c: 124:     LATA = 0;
-[e = _LATA -> -> 0 `i `uc ]
-"125
-[; ;./functions.c: 125:     TRISA = 0;
-[e = _TRISA -> -> 0 `i `uc ]
-"126
-[; ;./functions.c: 126:     ANSELA = 0;
-[e = _ANSELA -> -> 0 `i `uc ]
-"128
-[; ;./functions.c: 128:     PORTB = 0;
-[e = _PORTB -> -> 0 `i `uc ]
-"129
-[; ;./functions.c: 129:     LATB = 0;
-[e = _LATB -> -> 0 `i `uc ]
 "130
-[; ;./functions.c: 130:     TRISB = 0;
-[e = _TRISB -> -> 0 `i `uc ]
+[; ;./functions.c: 130:     PORTA = 0;
+[e = _PORTA -> -> 0 `i `uc ]
 "131
-[; ;./functions.c: 131:     ANSELB = 0;
-[e = _ANSELB -> -> 0 `i `uc ]
+[; ;./functions.c: 131:     LATA = 0;
+[e = _LATA -> -> 0 `i `uc ]
+"132
+[; ;./functions.c: 132:     TRISA = 0;
+[e = _TRISA -> -> 0 `i `uc ]
 "133
-[; ;./functions.c: 133:     PORTC = 0;
-[e = _PORTC -> -> 0 `i `uc ]
-"134
-[; ;./functions.c: 134:     LATC = 0;
-[e = _LATC -> -> 0 `i `uc ]
+[; ;./functions.c: 133:     ANSELA = 0;
+[e = _ANSELA -> -> 0 `i `uc ]
 "135
-[; ;./functions.c: 135:     TRISC = 0;
-[e = _TRISC -> -> 0 `i `uc ]
+[; ;./functions.c: 135:     PORTB = 0;
+[e = _PORTB -> -> 0 `i `uc ]
 "136
-[; ;./functions.c: 136:     ANSELC = 0;
-[e = _ANSELC -> -> 0 `i `uc ]
+[; ;./functions.c: 136:     LATB = 0;
+[e = _LATB -> -> 0 `i `uc ]
+"137
+[; ;./functions.c: 137:     TRISB = 0;
+[e = _TRISB -> -> 0 `i `uc ]
 "138
-[; ;./functions.c: 138:     PORTD = 0;
-[e = _PORTD -> -> 0 `i `uc ]
-"139
-[; ;./functions.c: 139:     LATD = 0;
-[e = _LATD -> -> 0 `i `uc ]
+[; ;./functions.c: 138:     ANSELB = 0;
+[e = _ANSELB -> -> 0 `i `uc ]
 "140
-[; ;./functions.c: 140:     TRISD = 0;
-[e = _TRISD -> -> 0 `i `uc ]
+[; ;./functions.c: 140:     PORTC = 0;
+[e = _PORTC -> -> 0 `i `uc ]
 "141
-[; ;./functions.c: 141:     ANSELD = 0;
-[e = _ANSELD -> -> 0 `i `uc ]
+[; ;./functions.c: 141:     LATC = 0;
+[e = _LATC -> -> 0 `i `uc ]
+"142
+[; ;./functions.c: 142:     TRISC = 0;
+[e = _TRISC -> -> 0 `i `uc ]
 "143
-[; ;./functions.c: 143:     PORTE = 0;
-[e = _PORTE -> -> 0 `i `uc ]
-"144
-[; ;./functions.c: 144:     LATE = 0;
-[e = _LATE -> -> 0 `i `uc ]
+[; ;./functions.c: 143:     ANSELC = 0;
+[e = _ANSELC -> -> 0 `i `uc ]
 "145
-[; ;./functions.c: 145:     TRISE = 0;
-[e = _TRISE -> -> 0 `i `uc ]
+[; ;./functions.c: 145:     PORTD = 0;
+[e = _PORTD -> -> 0 `i `uc ]
 "146
-[; ;./functions.c: 146:     ANSELE = 0;
-[e = _ANSELE -> -> 0 `i `uc ]
+[; ;./functions.c: 146:     LATD = 0;
+[e = _LATD -> -> 0 `i `uc ]
 "147
-[; ;./functions.c: 147:     raceColor[3] = 1;
-[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+[; ;./functions.c: 147:     TRISD = 0;
+[e = _TRISD -> -> 0 `i `uc ]
 "148
-[; ;./functions.c: 148:     return;
+[; ;./functions.c: 148:     ANSELD = 0;
+[e = _ANSELD -> -> 0 `i `uc ]
+"150
+[; ;./functions.c: 150:     PORTE = 0;
+[e = _PORTE -> -> 0 `i `uc ]
+"151
+[; ;./functions.c: 151:     LATE = 0;
+[e = _LATE -> -> 0 `i `uc ]
+"152
+[; ;./functions.c: 152:     TRISE = 0;
+[e = _TRISE -> -> 0 `i `uc ]
+"153
+[; ;./functions.c: 153:     ANSELE = 0;
+[e = _ANSELE -> -> 0 `i `uc ]
+"154
+[; ;./functions.c: 154:     raceColor[3] = 1;
+[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"155
+[; ;./functions.c: 155:     return;
 [e $UE 874  ]
-"149
-[; ;./functions.c: 149: }
+"156
+[; ;./functions.c: 156: }
 [e :UE 874 ]
 }
-"152
-[; ;./functions.c: 152: void setupOSC(){
+"159
+[; ;./functions.c: 159: void setupOSC(){
 [v _setupOSC `(v ~T0 @X0 1 ef ]
 {
 [e :U _setupOSC ]
 [f ]
-"153
-[; ;./functions.c: 153:     OSCCONbits.IRCF = 0b101;
+"160
+[; ;./functions.c: 160:     OSCCONbits.IRCF = 0b101;
 [e = . . _OSCCONbits 0 3 -> -> 5 `i `uc ]
-"154
-[; ;./functions.c: 154:     return;
+"161
+[; ;./functions.c: 161:     return;
 [e $UE 875  ]
-"155
-[; ;./functions.c: 155: }
+"162
+[; ;./functions.c: 162: }
 [e :UE 875 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]

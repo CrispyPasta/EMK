@@ -9654,7 +9654,7 @@ void setupSerial(){
 
 
 void setupADC(){
-    ADCON2bits.ADCS = 0b001;
+    ADCON2bits.ADCS = 0b100;
     ADCON1 = 0;
     ADCON0bits.CHS = 0b01100;
     ADCON2bits.ADFM = 0;
@@ -9671,25 +9671,32 @@ void setADCChannel(unsigned char channel){
     switch (channel){
     case 8:
         TRISBbits.TRISB2 = 1;
+        ANSELBbits.ANSB2 = 1;
         break;
     case 9:
         TRISBbits.TRISB3 = 1;
+        ANSELBbits.ANSB3 = 1;
         break;
     case 10:
         TRISBbits.TRISB1 = 1;
+        ANSELBbits.ANSB1 = 1;
         break;
     case 12:
-        TRISBbits.TRISB0 = 0;
+        TRISBbits.TRISB0 = 1;
+        ANSELBbits.ANSB0 = 1;
         break;
     case 13:
         TRISBbits.TRISB5 = 1;
+        ANSELBbits.ANSB5 = 1;
         break;
     case 15:
         TRISCbits.TRISC3 = 1;
+        ANSELCbits.ANSC3 = 1;
         break;
 
     default:
         TRISBbits.TRISB0 = 1;
+        ANSELBbits.ANSB0 = 1;
         break;
     }
     return;
