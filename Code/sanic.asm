@@ -1202,7 +1202,7 @@ touchISR
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="Transmit Character Via Serial">
-trans						;general transmission function
+trans:						;general transmission function
 S1
 	BTFSS 	PIR1, TX1IF
 	BRA 	S1

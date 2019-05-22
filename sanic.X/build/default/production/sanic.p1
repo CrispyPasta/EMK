@@ -100,6 +100,9 @@ Version 4.0 HI-TECH Software Intermediate Code
 "147
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 147: extern volatile unsigned char ANSELC __attribute__((address(0xF3A)));
 [v _ANSELC `Vuc ~T0 @X0 0 e@3898 ]
+"11181
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 11181: extern volatile unsigned char TXREG __attribute__((address(0xFAD)));
+[v _TXREG `Vuc ~T0 @X0 0 e@4013 ]
 "13444
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 13444:     struct {
 [s S633 :3 `uc 1 :3 `uc 1 :1 `uc 1 :1 `uc 1 ]
@@ -1254,359 +1257,383 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;./functions.c: 40: }
 [e :UE 851 ]
 }
+"42
+[; ;./functions.c: 42: void trans(unsigned char s){
+[v _trans `(v ~T0 @X0 1 ef1`uc ]
+{
+[e :U _trans ]
+[v _s `uc ~T0 @X0 1 r1 ]
+[f ]
 "43
-[; ;./functions.c: 43: void setupADC(){
+[; ;./functions.c: 43:     while(!PIR1bits.TX1IF);
+[e $U 853  ]
+[e :U 854 ]
+[e :U 853 ]
+[e $ ! != -> . . _PIR1bits 0 4 `i -> 0 `i 854  ]
+[e :U 855 ]
+"44
+[; ;./functions.c: 44:     TXREG = s;
+[e = _TXREG _s ]
+"45
+[; ;./functions.c: 45:     return;
+[e $UE 852  ]
+"46
+[; ;./functions.c: 46: }
+[e :UE 852 ]
+}
+"49
+[; ;./functions.c: 49: void setupADC(){
 [v _setupADC `(v ~T0 @X0 1 ef ]
 {
 [e :U _setupADC ]
 [f ]
-"44
-[; ;./functions.c: 44:     ADCON2bits.ADCS = 0b100;
-[e = . . _ADCON2bits 0 0 -> -> 4 `i `uc ]
-"45
-[; ;./functions.c: 45:     ADCON1 = 0;
-[e = _ADCON1 -> -> 0 `i `uc ]
-"46
-[; ;./functions.c: 46:     ADCON0bits.CHS = 0b01100;
-[e = . . _ADCON0bits 1 2 -> -> 12 `i `uc ]
-"47
-[; ;./functions.c: 47:     ADCON2bits.ADFM = 0;
-[e = . . _ADCON2bits 0 3 -> -> 0 `i `uc ]
-"48
-[; ;./functions.c: 48:     ADCON2bits.ACQT = 0b101;
-[e = . . _ADCON2bits 0 1 -> -> 5 `i `uc ]
-"49
-[; ;./functions.c: 49:     ADCON0bits.ADON = 1;
-[e = . . _ADCON0bits 1 0 -> -> 1 `i `uc ]
 "50
-[; ;./functions.c: 50:     return;
-[e $UE 852  ]
+[; ;./functions.c: 50:     ADCON2bits.ADCS = 0b100;
+[e = . . _ADCON2bits 0 0 -> -> 4 `i `uc ]
 "51
-[; ;./functions.c: 51: }
-[e :UE 852 ]
-}
+[; ;./functions.c: 51:     ADCON1 = 0;
+[e = _ADCON1 -> -> 0 `i `uc ]
+"52
+[; ;./functions.c: 52:     ADCON0bits.CHS = 0b01100;
+[e = . . _ADCON0bits 1 2 -> -> 12 `i `uc ]
+"53
+[; ;./functions.c: 53:     ADCON2bits.ADFM = 0;
+[e = . . _ADCON2bits 0 3 -> -> 0 `i `uc ]
+"54
+[; ;./functions.c: 54:     ADCON2bits.ACQT = 0b101;
+[e = . . _ADCON2bits 0 1 -> -> 5 `i `uc ]
 "55
-[; ;./functions.c: 55: void setADCChannel(unsigned char channel){
+[; ;./functions.c: 55:     ADCON0bits.ADON = 1;
+[e = . . _ADCON0bits 1 0 -> -> 1 `i `uc ]
+"56
+[; ;./functions.c: 56:     return;
+[e $UE 856  ]
+"57
+[; ;./functions.c: 57: }
+[e :UE 856 ]
+}
+"61
+[; ;./functions.c: 61: void setADCChannel(unsigned char channel){
 [v _setADCChannel `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _setADCChannel ]
 [v _channel `uc ~T0 @X0 1 r1 ]
 [f ]
-"56
-[; ;./functions.c: 56:     ADCON0bits.CHS = channel;
-[e = . . _ADCON0bits 1 2 _channel ]
-"58
-[; ;./functions.c: 58:     switch (channel){
-[e $U 855  ]
-{
-"59
-[; ;./functions.c: 59:     case 8:
-[e :U 856 ]
-"60
-[; ;./functions.c: 60:         TRISBbits.TRISB2 = 1;
-[e = . . _TRISBbits 0 2 -> -> 1 `i `uc ]
-"61
-[; ;./functions.c: 61:         ANSELBbits.ANSB2 = 1;
-[e = . . _ANSELBbits 0 2 -> -> 1 `i `uc ]
 "62
-[; ;./functions.c: 62:         break;
-[e $U 854  ]
-"63
-[; ;./functions.c: 63:     case 9:
-[e :U 857 ]
+[; ;./functions.c: 62:     ADCON0bits.CHS = channel;
+[e = . . _ADCON0bits 1 2 _channel ]
 "64
-[; ;./functions.c: 64:         TRISBbits.TRISB3 = 1;
-[e = . . _TRISBbits 0 3 -> -> 1 `i `uc ]
+[; ;./functions.c: 64:     switch (channel){
+[e $U 859  ]
+{
 "65
-[; ;./functions.c: 65:         ANSELBbits.ANSB3 = 1;
-[e = . . _ANSELBbits 0 3 -> -> 1 `i `uc ]
-"66
-[; ;./functions.c: 66:         break;
-[e $U 854  ]
-"67
-[; ;./functions.c: 67:     case 10:
-[e :U 858 ]
-"68
-[; ;./functions.c: 68:         TRISBbits.TRISB1 = 1;
-[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
-"69
-[; ;./functions.c: 69:         ANSELBbits.ANSB1 = 1;
-[e = . . _ANSELBbits 0 1 -> -> 1 `i `uc ]
-"70
-[; ;./functions.c: 70:         break;
-[e $U 854  ]
-"71
-[; ;./functions.c: 71:     case 12:
-[e :U 859 ]
-"72
-[; ;./functions.c: 72:         TRISBbits.TRISB0 = 1;
-[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
-"73
-[; ;./functions.c: 73:         ANSELBbits.ANSB0 = 1;
-[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
-"74
-[; ;./functions.c: 74:         break;
-[e $U 854  ]
-"75
-[; ;./functions.c: 75:     case 13:
+[; ;./functions.c: 65:     case 8:
 [e :U 860 ]
-"76
-[; ;./functions.c: 76:         TRISBbits.TRISB5 = 1;
-[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
-"77
-[; ;./functions.c: 77:         ANSELBbits.ANSB5 = 1;
-[e = . . _ANSELBbits 0 5 -> -> 1 `i `uc ]
-"78
-[; ;./functions.c: 78:         break;
-[e $U 854  ]
-"79
-[; ;./functions.c: 79:     case 15:
+"66
+[; ;./functions.c: 66:         TRISBbits.TRISB2 = 1;
+[e = . . _TRISBbits 0 2 -> -> 1 `i `uc ]
+"67
+[; ;./functions.c: 67:         ANSELBbits.ANSB2 = 1;
+[e = . . _ANSELBbits 0 2 -> -> 1 `i `uc ]
+"68
+[; ;./functions.c: 68:         break;
+[e $U 858  ]
+"69
+[; ;./functions.c: 69:     case 9:
 [e :U 861 ]
-"80
-[; ;./functions.c: 80:         TRISCbits.TRISC3 = 1;
-[e = . . _TRISCbits 0 3 -> -> 1 `i `uc ]
-"81
-[; ;./functions.c: 81:         ANSELCbits.ANSC3 = 1;
-[e = . . _ANSELCbits 0 2 -> -> 1 `i `uc ]
-"82
-[; ;./functions.c: 82:         break;
-[e $U 854  ]
-"84
-[; ;./functions.c: 84:     default:
+"70
+[; ;./functions.c: 70:         TRISBbits.TRISB3 = 1;
+[e = . . _TRISBbits 0 3 -> -> 1 `i `uc ]
+"71
+[; ;./functions.c: 71:         ANSELBbits.ANSB3 = 1;
+[e = . . _ANSELBbits 0 3 -> -> 1 `i `uc ]
+"72
+[; ;./functions.c: 72:         break;
+[e $U 858  ]
+"73
+[; ;./functions.c: 73:     case 10:
 [e :U 862 ]
-"85
-[; ;./functions.c: 85:         TRISBbits.TRISB0 = 1;
+"74
+[; ;./functions.c: 74:         TRISBbits.TRISB1 = 1;
+[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
+"75
+[; ;./functions.c: 75:         ANSELBbits.ANSB1 = 1;
+[e = . . _ANSELBbits 0 1 -> -> 1 `i `uc ]
+"76
+[; ;./functions.c: 76:         break;
+[e $U 858  ]
+"77
+[; ;./functions.c: 77:     case 12:
+[e :U 863 ]
+"78
+[; ;./functions.c: 78:         TRISBbits.TRISB0 = 1;
 [e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
-"86
-[; ;./functions.c: 86:         ANSELBbits.ANSB0 = 1;
+"79
+[; ;./functions.c: 79:         ANSELBbits.ANSB0 = 1;
 [e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
+"80
+[; ;./functions.c: 80:         break;
+[e $U 858  ]
+"81
+[; ;./functions.c: 81:     case 13:
+[e :U 864 ]
+"82
+[; ;./functions.c: 82:         TRISBbits.TRISB5 = 1;
+[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
+"83
+[; ;./functions.c: 83:         ANSELBbits.ANSB5 = 1;
+[e = . . _ANSELBbits 0 5 -> -> 1 `i `uc ]
+"84
+[; ;./functions.c: 84:         break;
+[e $U 858  ]
+"85
+[; ;./functions.c: 85:     case 15:
+[e :U 865 ]
+"86
+[; ;./functions.c: 86:         TRISCbits.TRISC3 = 1;
+[e = . . _TRISCbits 0 3 -> -> 1 `i `uc ]
 "87
-[; ;./functions.c: 87:         break;
-[e $U 854  ]
+[; ;./functions.c: 87:         ANSELCbits.ANSC3 = 1;
+[e = . . _ANSELCbits 0 2 -> -> 1 `i `uc ]
 "88
-[; ;./functions.c: 88:     }
-}
-[e $U 854  ]
-[e :U 855 ]
-[e [\ -> _channel `i , $ -> 8 `i 856
- , $ -> 9 `i 857
- , $ -> 10 `i 858
- , $ -> 12 `i 859
- , $ -> 13 `i 860
- , $ -> 15 `i 861
- 862 ]
-[e :U 854 ]
-"89
-[; ;./functions.c: 89:     return;
-[e $UE 853  ]
+[; ;./functions.c: 88:         break;
+[e $U 858  ]
 "90
-[; ;./functions.c: 90: }
-[e :UE 853 ]
-}
+[; ;./functions.c: 90:     default:
+[e :U 866 ]
+"91
+[; ;./functions.c: 91:         TRISBbits.TRISB0 = 1;
+[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
+"92
+[; ;./functions.c: 92:         ANSELBbits.ANSB0 = 1;
+[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
 "93
-[; ;./functions.c: 93: unsigned char readADC(){
+[; ;./functions.c: 93:         break;
+[e $U 858  ]
+"94
+[; ;./functions.c: 94:     }
+}
+[e $U 858  ]
+[e :U 859 ]
+[e [\ -> _channel `i , $ -> 8 `i 860
+ , $ -> 9 `i 861
+ , $ -> 10 `i 862
+ , $ -> 12 `i 863
+ , $ -> 13 `i 864
+ , $ -> 15 `i 865
+ 866 ]
+[e :U 858 ]
+"95
+[; ;./functions.c: 95:     return;
+[e $UE 857  ]
+"96
+[; ;./functions.c: 96: }
+[e :UE 857 ]
+}
+"99
+[; ;./functions.c: 99: unsigned char readADC(){
 [v _readADC `(uc ~T0 @X0 1 ef ]
 {
 [e :U _readADC ]
 [f ]
-"94
-[; ;./functions.c: 94:     ADCON0bits.GO = 1;
+"100
+[; ;./functions.c: 100:     ADCON0bits.GO = 1;
 [e = . . _ADCON0bits 2 1 -> -> 1 `i `uc ]
-"96
-[; ;./functions.c: 96:     while (ADCON0bits.GO);
-[e $U 864  ]
-[e :U 865 ]
-[e :U 864 ]
-[e $ != -> . . _ADCON0bits 2 1 `i -> 0 `i 865  ]
-[e :U 866 ]
-"97
-[; ;./functions.c: 97:     return ADRESH;
+"102
+[; ;./functions.c: 102:     while (ADCON0bits.GO);
+[e $U 868  ]
+[e :U 869 ]
+[e :U 868 ]
+[e $ != -> . . _ADCON0bits 2 1 `i -> 0 `i 869  ]
+[e :U 870 ]
+"103
+[; ;./functions.c: 103:     return ADRESH;
 [e ) _ADRESH ]
-[e $UE 863  ]
-"98
-[; ;./functions.c: 98: }
-[e :UE 863 ]
+[e $UE 867  ]
+"104
+[; ;./functions.c: 104: }
+[e :UE 867 ]
 }
-"101
-[; ;./functions.c: 101: unsigned char aveSensor(unsigned char s){
+"107
+[; ;./functions.c: 107: unsigned char aveSensor(unsigned char s){
 [v _aveSensor `(uc ~T0 @X0 1 ef1`uc ]
 {
 [e :U _aveSensor ]
 [v _s `uc ~T0 @X0 1 r1 ]
 [f ]
-"102
-[; ;./functions.c: 102:     setADCChannel(s);
+"108
+[; ;./functions.c: 108:     setADCChannel(s);
 [e ( _setADCChannel (1 _s ]
-"103
-[; ;./functions.c: 103:     unsigned int measurements = 0;
+"109
+[; ;./functions.c: 109:     unsigned int measurements = 0;
 [v _measurements `ui ~T0 @X0 1 a ]
 [e = _measurements -> -> 0 `i `ui ]
-"105
-[; ;./functions.c: 105:     for (unsigned char a = 0; a < 10; a++){
+"111
+[; ;./functions.c: 111:     for (unsigned char a = 0; a < 10; a++){
 {
 [v _a `uc ~T0 @X0 1 a ]
 [e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 10 `i 868  ]
-[e $U 869  ]
-[e :U 868 ]
+[e $ < -> _a `i -> 10 `i 872  ]
+[e $U 873  ]
+[e :U 872 ]
 {
-"106
-[; ;./functions.c: 106:         measurements += readADC();
+"112
+[; ;./functions.c: 112:         measurements += readADC();
 [e =+ _measurements -> ( _readADC ..  `ui ]
-"107
-[; ;./functions.c: 107:     }
+"113
+[; ;./functions.c: 113:     }
 }
 [e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 10 `i 868  ]
-[e :U 869 ]
+[e $ < -> _a `i -> 10 `i 872  ]
+[e :U 873 ]
 }
-"109
-[; ;./functions.c: 109:     unsigned char result = measurements / 10;
+"115
+[; ;./functions.c: 115:     unsigned char result = measurements / 10;
 [v _result `uc ~T0 @X0 1 a ]
 [e = _result -> / _measurements -> -> 10 `i `ui `uc ]
-"111
-[; ;./functions.c: 111:     return result;
+"117
+[; ;./functions.c: 117:     return result;
 [e ) _result ]
-[e $UE 867  ]
-"112
-[; ;./functions.c: 112: }
-[e :UE 867 ]
+[e $UE 871  ]
+"118
+[; ;./functions.c: 118: }
+[e :UE 871 ]
 }
-"114
-[; ;./functions.c: 114: void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
+"120
+[; ;./functions.c: 120: void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
 [v _setupPWMLeft `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _setupPWMLeft ]
 [v _dutyCycle `uc ~T0 @X0 1 r1 ]
 [v _direction `uc ~T0 @X0 1 r2 ]
 [f ]
-"115
-[; ;./functions.c: 115:     return;
-[e $UE 871  ]
-"116
-[; ;./functions.c: 116: }
-[e :UE 871 ]
+"121
+[; ;./functions.c: 121:     return;
+[e $UE 875  ]
+"122
+[; ;./functions.c: 122: }
+[e :UE 875 ]
 }
-"118
-[; ;./functions.c: 118: void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
+"124
+[; ;./functions.c: 124: void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
 [v _setupPWMRight `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _setupPWMRight ]
 [v _dutyCycle `uc ~T0 @X0 1 r1 ]
 [v _direction `uc ~T0 @X0 1 r2 ]
 [f ]
-"119
-[; ;./functions.c: 119:     return;
-[e $UE 872  ]
-"120
-[; ;./functions.c: 120: }
-[e :UE 872 ]
+"125
+[; ;./functions.c: 125:     return;
+[e $UE 876  ]
+"126
+[; ;./functions.c: 126: }
+[e :UE 876 ]
 }
-"122
-[; ;./functions.c: 122: void setupTimer2(unsigned char PR2Value){
+"128
+[; ;./functions.c: 128: void setupTimer2(unsigned char PR2Value){
 [v _setupTimer2 `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _setupTimer2 ]
 [v _PR2Value `uc ~T0 @X0 1 r1 ]
 [f ]
-"123
-[; ;./functions.c: 123:     return;
-[e $UE 873  ]
-"124
-[; ;./functions.c: 124: }
-[e :UE 873 ]
-}
 "129
-[; ;./functions.c: 129: void clearPorts(){
+[; ;./functions.c: 129:     return;
+[e $UE 877  ]
+"130
+[; ;./functions.c: 130: }
+[e :UE 877 ]
+}
+"135
+[; ;./functions.c: 135: void clearPorts(){
 [v _clearPorts `(v ~T0 @X0 1 ef ]
 {
 [e :U _clearPorts ]
 [f ]
-"130
-[; ;./functions.c: 130:     PORTA = 0;
-[e = _PORTA -> -> 0 `i `uc ]
-"131
-[; ;./functions.c: 131:     LATA = 0;
-[e = _LATA -> -> 0 `i `uc ]
-"132
-[; ;./functions.c: 132:     TRISA = 0;
-[e = _TRISA -> -> 0 `i `uc ]
-"133
-[; ;./functions.c: 133:     ANSELA = 0;
-[e = _ANSELA -> -> 0 `i `uc ]
-"135
-[; ;./functions.c: 135:     PORTB = 0;
-[e = _PORTB -> -> 0 `i `uc ]
 "136
-[; ;./functions.c: 136:     LATB = 0;
-[e = _LATB -> -> 0 `i `uc ]
+[; ;./functions.c: 136:     PORTA = 0;
+[e = _PORTA -> -> 0 `i `uc ]
 "137
-[; ;./functions.c: 137:     TRISB = 0;
-[e = _TRISB -> -> 0 `i `uc ]
+[; ;./functions.c: 137:     LATA = 0;
+[e = _LATA -> -> 0 `i `uc ]
 "138
-[; ;./functions.c: 138:     ANSELB = 0;
-[e = _ANSELB -> -> 0 `i `uc ]
-"140
-[; ;./functions.c: 140:     PORTC = 0;
-[e = _PORTC -> -> 0 `i `uc ]
+[; ;./functions.c: 138:     TRISA = 0;
+[e = _TRISA -> -> 0 `i `uc ]
+"139
+[; ;./functions.c: 139:     ANSELA = 0;
+[e = _ANSELA -> -> 0 `i `uc ]
 "141
-[; ;./functions.c: 141:     LATC = 0;
-[e = _LATC -> -> 0 `i `uc ]
+[; ;./functions.c: 141:     PORTB = 0;
+[e = _PORTB -> -> 0 `i `uc ]
 "142
-[; ;./functions.c: 142:     TRISC = 0;
-[e = _TRISC -> -> 0 `i `uc ]
+[; ;./functions.c: 142:     LATB = 0;
+[e = _LATB -> -> 0 `i `uc ]
 "143
-[; ;./functions.c: 143:     ANSELC = 0;
-[e = _ANSELC -> -> 0 `i `uc ]
-"145
-[; ;./functions.c: 145:     PORTD = 0;
-[e = _PORTD -> -> 0 `i `uc ]
+[; ;./functions.c: 143:     TRISB = 0;
+[e = _TRISB -> -> 0 `i `uc ]
+"144
+[; ;./functions.c: 144:     ANSELB = 0;
+[e = _ANSELB -> -> 0 `i `uc ]
 "146
-[; ;./functions.c: 146:     LATD = 0;
-[e = _LATD -> -> 0 `i `uc ]
+[; ;./functions.c: 146:     PORTC = 0;
+[e = _PORTC -> -> 0 `i `uc ]
 "147
-[; ;./functions.c: 147:     TRISD = 0;
-[e = _TRISD -> -> 0 `i `uc ]
+[; ;./functions.c: 147:     LATC = 0;
+[e = _LATC -> -> 0 `i `uc ]
 "148
-[; ;./functions.c: 148:     ANSELD = 0;
-[e = _ANSELD -> -> 0 `i `uc ]
-"150
-[; ;./functions.c: 150:     PORTE = 0;
-[e = _PORTE -> -> 0 `i `uc ]
+[; ;./functions.c: 148:     TRISC = 0;
+[e = _TRISC -> -> 0 `i `uc ]
+"149
+[; ;./functions.c: 149:     ANSELC = 0;
+[e = _ANSELC -> -> 0 `i `uc ]
 "151
-[; ;./functions.c: 151:     LATE = 0;
-[e = _LATE -> -> 0 `i `uc ]
+[; ;./functions.c: 151:     PORTD = 0;
+[e = _PORTD -> -> 0 `i `uc ]
 "152
-[; ;./functions.c: 152:     TRISE = 0;
-[e = _TRISE -> -> 0 `i `uc ]
+[; ;./functions.c: 152:     LATD = 0;
+[e = _LATD -> -> 0 `i `uc ]
 "153
-[; ;./functions.c: 153:     ANSELE = 0;
-[e = _ANSELE -> -> 0 `i `uc ]
+[; ;./functions.c: 153:     TRISD = 0;
+[e = _TRISD -> -> 0 `i `uc ]
 "154
-[; ;./functions.c: 154:     raceColor[3] = 1;
-[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
-"155
-[; ;./functions.c: 155:     return;
-[e $UE 874  ]
+[; ;./functions.c: 154:     ANSELD = 0;
+[e = _ANSELD -> -> 0 `i `uc ]
 "156
-[; ;./functions.c: 156: }
-[e :UE 874 ]
-}
+[; ;./functions.c: 156:     PORTE = 0;
+[e = _PORTE -> -> 0 `i `uc ]
+"157
+[; ;./functions.c: 157:     LATE = 0;
+[e = _LATE -> -> 0 `i `uc ]
+"158
+[; ;./functions.c: 158:     TRISE = 0;
+[e = _TRISE -> -> 0 `i `uc ]
 "159
-[; ;./functions.c: 159: void setupOSC(){
+[; ;./functions.c: 159:     ANSELE = 0;
+[e = _ANSELE -> -> 0 `i `uc ]
+"160
+[; ;./functions.c: 160:     raceColor[3] = 1;
+[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"161
+[; ;./functions.c: 161:     return;
+[e $UE 878  ]
+"162
+[; ;./functions.c: 162: }
+[e :UE 878 ]
+}
+"165
+[; ;./functions.c: 165: void setupOSC(){
 [v _setupOSC `(v ~T0 @X0 1 ef ]
 {
 [e :U _setupOSC ]
 [f ]
-"160
-[; ;./functions.c: 160:     OSCCONbits.IRCF = 0b101;
+"166
+[; ;./functions.c: 166:     OSCCONbits.IRCF = 0b101;
 [e = . . _OSCCONbits 0 3 -> -> 5 `i `uc ]
-"161
-[; ;./functions.c: 161:     return;
-[e $UE 875  ]
-"162
-[; ;./functions.c: 162: }
-[e :UE 875 ]
+"167
+[; ;./functions.c: 167:     return;
+[e $UE 879  ]
+"168
+[; ;./functions.c: 168: }
+[e :UE 879 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
 "77 sanic.c
@@ -1625,78 +1652,84 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _setupADC ..  ]
 "96
 [; ;sanic.c: 96:     while(1){
-[e :U 878 ]
+[e :U 882 ]
 {
 "97
 [; ;sanic.c: 97:         PORTA = aveSensor(12);
 [e = _PORTA ( _aveSensor (1 -> -> 12 `i `uc ]
 "98
-[; ;sanic.c: 98:     }
-}
-[e :U 877 ]
-[e $U 878  ]
-[e :U 879 ]
+[; ;sanic.c: 98:         trans(PORTA);
+[e ( _trans (1 _PORTA ]
 "99
-[; ;sanic.c: 99: }
-[e :UE 876 ]
+[; ;sanic.c: 99:         trans('\n');
+[e ( _trans (1 -> -> 10 `ui `uc ]
+"100
+[; ;sanic.c: 100:     }
 }
+[e :U 881 ]
+[e $U 882  ]
+[e :U 883 ]
 "101
-[; ;sanic.c: 101: void delay(){
+[; ;sanic.c: 101: }
+[e :UE 880 ]
+}
+"103
+[; ;sanic.c: 103: void delay(){
 [v _delay `(v ~T0 @X0 1 ef ]
 {
 [e :U _delay ]
 [f ]
-"102
-[; ;sanic.c: 102:     for (unsigned int x = 0; x < 900; x++){
+"104
+[; ;sanic.c: 104:     for (unsigned int x = 0; x < 900; x++){
 {
 [v _x `ui ~T0 @X0 1 a ]
 [e = _x -> -> 0 `i `ui ]
-[e $ < _x -> -> 900 `i `ui 881  ]
-[e $U 882  ]
-[e :U 881 ]
+[e $ < _x -> -> 900 `i `ui 885  ]
+[e $U 886  ]
+[e :U 885 ]
 {
-"103
-[; ;sanic.c: 103:         for(unsigned char b =0 ; b < 100; b++);
+"105
+[; ;sanic.c: 105:         for(unsigned char b =0 ; b < 100; b++);
 {
 [v _b `uc ~T0 @X0 1 a ]
 [e = _b -> -> 0 `i `uc ]
-[e $ < -> _b `i -> 100 `i 884  ]
-[e $U 885  ]
-[e :U 884 ]
+[e $ < -> _b `i -> 100 `i 888  ]
+[e $U 889  ]
+[e :U 888 ]
 [e ++ _b -> -> 1 `i `uc ]
-[e $ < -> _b `i -> 100 `i 884  ]
-[e :U 885 ]
+[e $ < -> _b `i -> 100 `i 888  ]
+[e :U 889 ]
 }
-"104
-[; ;sanic.c: 104:     }
+"106
+[; ;sanic.c: 106:     }
 }
 [e ++ _x -> -> 1 `i `ui ]
-[e $ < _x -> -> 900 `i `ui 881  ]
-[e :U 882 ]
+[e $ < _x -> -> 900 `i `ui 885  ]
+[e :U 886 ]
 }
-"105
-[; ;sanic.c: 105:     return;
-[e $UE 880  ]
-"106
-[; ;sanic.c: 106: }
-[e :UE 880 ]
-}
+"107
+[; ;sanic.c: 107:     return;
+[e $UE 884  ]
 "108
-[; ;sanic.c: 108: void init(){
+[; ;sanic.c: 108: }
+[e :UE 884 ]
+}
+"110
+[; ;sanic.c: 110: void init(){
 [v _init `(v ~T0 @X0 1 ef ]
 {
 [e :U _init ]
 [f ]
-"109
-[; ;sanic.c: 109:     setupOSC();
-[e ( _setupOSC ..  ]
-"110
-[; ;sanic.c: 110:     clearPorts();
-[e ( _clearPorts ..  ]
 "111
-[; ;sanic.c: 111:     setupSerial();
-[e ( _setupSerial ..  ]
+[; ;sanic.c: 111:     setupOSC();
+[e ( _setupOSC ..  ]
 "112
-[; ;sanic.c: 112: }
-[e :UE 887 ]
+[; ;sanic.c: 112:     clearPorts();
+[e ( _clearPorts ..  ]
+"113
+[; ;sanic.c: 113:     setupSerial();
+[e ( _setupSerial ..  ]
+"114
+[; ;sanic.c: 114: }
+[e :UE 891 ]
 }

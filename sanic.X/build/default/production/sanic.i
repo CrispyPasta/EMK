@@ -9599,6 +9599,7 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 
 
 void setupSerial();
+void trans(unsigned char s);
 void setupADC();
 void setADCChannel(unsigned char channel);
 unsigned char readADC();
@@ -9649,6 +9650,12 @@ void setupSerial(){
 
     PORTC = 0;
     ANSELC = 0;
+    return;
+}
+
+void trans(unsigned char s){
+    while(!PIR1bits.TX1IF);
+    TXREG = s;
     return;
 }
 
@@ -9786,6 +9793,8 @@ void main(void)
     setupADC();
     while(1){
         PORTA = aveSensor(12);
+        trans(PORTA);
+        trans('\n');
     }
 }
 

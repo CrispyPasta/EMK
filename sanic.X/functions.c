@@ -39,6 +39,12 @@ void setupSerial(){
     return;
 }
 
+void trans(unsigned char s){
+    while(!PIR1bits.TX1IF);     //wait for previous transmission to finish
+    TXREG = s;                  //move character into txreg
+    return;
+}
+
 //Does setup for ADC, default channel is AN12
 void setupADC(){
     ADCON2bits.ADCS = 0b100;        //Fosc/4

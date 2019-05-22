@@ -3,19 +3,21 @@
 [d edition pro ]
 [d chip 18F45K22 ]
 [d frameptr 4065 ]
-"22 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+"22 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
 [v _setupSerial setupSerial `(v  1 e 1 0 ]
-"43
+"42
+[v _trans trans `(v  1 e 1 0 ]
+"49
 [v _setupADC setupADC `(v  1 e 1 0 ]
-"55
+"61
 [v _setADCChannel setADCChannel `(v  1 e 1 0 ]
-"93
+"99
 [v _readADC readADC `(uc  1 e 1 0 ]
-"101
+"107
 [v _aveSensor aveSensor `(uc  1 e 1 0 ]
-"129
+"135
 [v _clearPorts clearPorts `(v  1 e 1 0 ]
-"159
+"165
 [v _setupOSC setupOSC `(v  1 e 1 0 ]
 "4 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\fleq.c
 [v ___fleq __fleq `(b  1 e 0 0 ]
@@ -43,17 +45,17 @@
 [v ___lmul __lmul `(ul  1 e 4 0 ]
 "91 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\Umul64.c
 [v ___omul __omul `(uo  1 e 8 0 ]
-"77 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+"77 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
 [v _main main `(v  1 e 1 0 ]
-"108
+"110
 [v _init init `(v  1 e 1 0 ]
-"18 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+"18 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
 [v _raceColor raceColor `[9]uc  1 e 9 0 ]
 "52 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h
 [v _ANSELA ANSELA `VEuc  1 e 1 @3896 ]
 "97
 [v _ANSELB ANSELB `VEuc  1 e 1 @3897 ]
-[s S353 . 1 `uc 1 ANSB0 1 0 :1:0 
+[s S354 . 1 `uc 1 ANSB0 1 0 :1:0 
 `uc 1 ANSB1 1 0 :1:1 
 `uc 1 ANSB2 1 0 :1:2 
 `uc 1 ANSB3 1 0 :1:3 
@@ -61,11 +63,11 @@
 `uc 1 ANSB5 1 0 :1:5 
 ]
 "112
-[u S360 . 1 `S353 1 . 1 0 ]
-[v _ANSELBbits ANSELBbits `VES360  1 e 1 @3897 ]
+[u S361 . 1 `S354 1 . 1 0 ]
+[v _ANSELBbits ANSELBbits `VES361  1 e 1 @3897 ]
 "147
 [v _ANSELC ANSELC `VEuc  1 e 1 @3898 ]
-[s S370 . 1 `uc 1 . 1 0 :2:0 
+[s S371 . 1 `uc 1 . 1 0 :2:0 
 `uc 1 ANSC2 1 0 :1:2 
 `uc 1 ANSC3 1 0 :1:3 
 `uc 1 ANSC4 1 0 :1:4 
@@ -74,8 +76,8 @@
 `uc 1 ANSC7 1 0 :1:7 
 ]
 "163
-[u S378 . 1 `S370 1 . 1 0 ]
-[v _ANSELCbits ANSELCbits `VES378  1 e 1 @3898 ]
+[u S379 . 1 `S371 1 . 1 0 ]
+[v _ANSELCbits ANSELCbits `VES379  1 e 1 @3898 ]
 "198
 [v _ANSELD ANSELD `VEuc  1 e 1 @3899 ]
 "260
@@ -104,7 +106,7 @@
 [v _TRISA TRISA `VEuc  1 e 1 @3986 ]
 "8282
 [v _TRISB TRISB `VEuc  1 e 1 @3987 ]
-[s S313 . 1 `uc 1 TRISB0 1 0 :1:0 
+[s S314 . 1 `uc 1 TRISB0 1 0 :1:0 
 `uc 1 TRISB1 1 0 :1:1 
 `uc 1 TRISB2 1 0 :1:2 
 `uc 1 TRISB3 1 0 :1:3 
@@ -114,7 +116,7 @@
 `uc 1 TRISB7 1 0 :1:7 
 ]
 "8314
-[s S322 . 1 `uc 1 RB0 1 0 :1:0 
+[s S323 . 1 `uc 1 RB0 1 0 :1:0 
 `uc 1 RB1 1 0 :1:1 
 `uc 1 RB2 1 0 :1:2 
 `uc 1 RB3 1 0 :1:3 
@@ -123,8 +125,8 @@
 `uc 1 RB6 1 0 :1:6 
 `uc 1 RB7 1 0 :1:7 
 ]
-[u S331 . 1 `S313 1 . 1 0 `S322 1 . 1 0 ]
-[v _TRISBbits TRISBbits `VES331  1 e 1 @3987 ]
+[u S332 . 1 `S314 1 . 1 0 `S323 1 . 1 0 ]
+[v _TRISBbits TRISBbits `VES332  1 e 1 @3987 ]
 "8504
 [v _TRISC TRISC `VEuc  1 e 1 @3988 ]
 [s S172 . 1 `uc 1 TRISC0 1 0 :1:0 
@@ -188,6 +190,8 @@
 [v _RCSTA1 RCSTA1 `VEuc  1 e 1 @4011 ]
 "10801
 [v _TXSTA1 TXSTA1 `VEuc  1 e 1 @4012 ]
+"11181
+[v _TXREG TXREG `VEuc  1 e 1 @4013 ]
 "11332
 [v _SPBRG1 SPBRG1 `VEuc  1 e 1 @4015 ]
 "11410
@@ -232,32 +236,32 @@
 ]
 [u S126 . 1 `S89 1 . 1 0 `S98 1 . 1 0 `S101 1 . 1 0 `S110 1 . 1 0 `S115 1 . 1 0 `S120 1 . 1 0 `S123 1 . 1 0 ]
 [v _BAUDCON1bits BAUDCON1bits `VES126  1 e 1 @4024 ]
-[s S214 . 1 `uc 1 ADCS 1 0 :3:0 
+[s S215 . 1 `uc 1 ADCS 1 0 :3:0 
 `uc 1 ACQT 1 0 :3:3 
 `uc 1 . 1 0 :1:6 
 `uc 1 ADFM 1 0 :1:7 
 ]
 "13459
-[s S219 . 1 `uc 1 ADCS0 1 0 :1:0 
+[s S220 . 1 `uc 1 ADCS0 1 0 :1:0 
 `uc 1 ADCS1 1 0 :1:1 
 `uc 1 ADCS2 1 0 :1:2 
 `uc 1 ACQT0 1 0 :1:3 
 `uc 1 ACQT1 1 0 :1:4 
 `uc 1 ACQT2 1 0 :1:5 
 ]
-[u S226 . 1 `S214 1 . 1 0 `S219 1 . 1 0 ]
-[v _ADCON2bits ADCON2bits `VES226  1 e 1 @4032 ]
+[u S227 . 1 `S215 1 . 1 0 `S220 1 . 1 0 ]
+[v _ADCON2bits ADCON2bits `VES227  1 e 1 @4032 ]
 "13509
 [v _ADCON1 ADCON1 `VEuc  1 e 1 @4033 ]
-[s S243 . 1 `uc 1 . 1 0 :1:0 
+[s S244 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 GO_NOT_DONE 1 0 :1:1 
 ]
 "13622
-[s S246 . 1 `uc 1 ADON 1 0 :1:0 
+[s S247 . 1 `uc 1 ADON 1 0 :1:0 
 `uc 1 GO_nDONE 1 0 :1:1 
 `uc 1 CHS 1 0 :5:2 
 ]
-[s S250 . 1 `uc 1 . 1 0 :1:0 
+[s S251 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 GO 1 0 :1:1 
 `uc 1 CHS0 1 0 :1:2 
 `uc 1 CHS1 1 0 :1:3 
@@ -265,33 +269,33 @@
 `uc 1 CHS3 1 0 :1:5 
 `uc 1 CHS4 1 0 :1:6 
 ]
-[s S258 . 1 `uc 1 . 1 0 :1:0 
+[s S259 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 DONE 1 0 :1:1 
 ]
-[s S261 . 1 `uc 1 . 1 0 :1:0 
+[s S262 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 NOT_DONE 1 0 :1:1 
 ]
-[s S264 . 1 `uc 1 . 1 0 :1:0 
+[s S265 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 nDONE 1 0 :1:1 
 ]
-[s S267 . 1 `uc 1 . 1 0 :1:0 
+[s S268 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 GO_DONE 1 0 :1:1 
 ]
-[s S270 . 1 `uc 1 . 1 0 :1:0 
+[s S271 . 1 `uc 1 . 1 0 :1:0 
 `uc 1 GODONE 1 0 :1:1 
 ]
-[u S273 . 1 `S243 1 . 1 0 `S246 1 . 1 0 `S250 1 . 1 0 `S258 1 . 1 0 `S261 1 . 1 0 `S264 1 . 1 0 `S267 1 . 1 0 `S270 1 . 1 0 ]
-[v _ADCON0bits ADCON0bits `VES273  1 e 1 @4034 ]
+[u S274 . 1 `S244 1 . 1 0 `S247 1 . 1 0 `S251 1 . 1 0 `S259 1 . 1 0 `S262 1 . 1 0 `S265 1 . 1 0 `S268 1 . 1 0 `S271 1 . 1 0 ]
+[v _ADCON0bits ADCON0bits `VES274  1 e 1 @4034 ]
 "13729
 [v _ADRESH ADRESH `VEuc  1 e 1 @4036 ]
-[s S408 . 1 `uc 1 SCS 1 0 :2:0 
+[s S409 . 1 `uc 1 SCS 1 0 :2:0 
 `uc 1 HFIOFS 1 0 :1:2 
 `uc 1 OSTS 1 0 :1:3 
 `uc 1 IRCF 1 0 :3:4 
 `uc 1 IDLEN 1 0 :1:7 
 ]
 "16035
-[s S414 . 1 `uc 1 SCS0 1 0 :1:0 
+[s S415 . 1 `uc 1 SCS0 1 0 :1:0 
 `uc 1 SCS1 1 0 :1:1 
 `uc 1 IOFS 1 0 :1:2 
 `uc 1 . 1 0 :1:3 
@@ -299,67 +303,75 @@
 `uc 1 IRCF1 1 0 :1:5 
 `uc 1 IRCF2 1 0 :1:6 
 ]
-[u S422 . 1 `S408 1 . 1 0 `S414 1 . 1 0 ]
-[v _OSCCONbits OSCCONbits `VES422  1 e 1 @4051 ]
+[u S423 . 1 `S409 1 . 1 0 `S415 1 . 1 0 ]
+[v _OSCCONbits OSCCONbits `VES423  1 e 1 @4051 ]
 "16596
 [v _FSR0 FSR0 `VEus  1 e 2 @4073 ]
-"77 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+"77 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
 [v _main main `(v  1 e 1 0 ]
 {
-"99
+"101
 } 0
-"43 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+"42 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+[v _trans trans `(v  1 e 1 0 ]
+{
+[v trans@s s `uc  1 a 1 wreg ]
+[v trans@s s `uc  1 a 1 wreg ]
+[v trans@s s `uc  1 a 1 0 ]
+"46
+} 0
+"49
 [v _setupADC setupADC `(v  1 e 1 0 ]
 {
-"51
+"57
 } 0
-"108 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X\sanic.c
+"110 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
 [v _init init `(v  1 e 1 0 ]
 {
-"112
+"114
 } 0
-"22 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\sanic.X/functions.c
+"22 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
 [v _setupSerial setupSerial `(v  1 e 1 0 ]
 {
 "40
 } 0
-"159
+"165
 [v _setupOSC setupOSC `(v  1 e 1 0 ]
+{
+"168
+} 0
+"135
+[v _clearPorts clearPorts `(v  1 e 1 0 ]
 {
 "162
 } 0
-"129
-[v _clearPorts clearPorts `(v  1 e 1 0 ]
-{
-"156
-} 0
-"101
+"107
 [v _aveSensor aveSensor `(uc  1 e 1 0 ]
 {
 [v aveSensor@s s `uc  1 a 1 wreg ]
-"105
+"111
 [v aveSensor@a a `uc  1 a 1 12 ]
-"103
-[v aveSensor@measurements measurements `ui  1 a 2 9 ]
 "109
+[v aveSensor@measurements measurements `ui  1 a 2 9 ]
+"115
 [v aveSensor@result result `uc  1 a 1 11 ]
-"101
+"107
 [v aveSensor@s s `uc  1 a 1 wreg ]
 [v aveSensor@s s `uc  1 a 1 8 ]
-"112
+"118
 } 0
-"55
+"61
 [v _setADCChannel setADCChannel `(v  1 e 1 0 ]
 {
 [v setADCChannel@channel channel `uc  1 a 1 wreg ]
 [v setADCChannel@channel channel `uc  1 a 1 wreg ]
 [v setADCChannel@channel channel `uc  1 a 1 2 ]
-"90
+"96
 } 0
-"93
+"99
 [v _readADC readADC `(uc  1 e 1 0 ]
 {
-"98
+"104
 } 0
 "7 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
 [v ___lwdiv __lwdiv `(ui  1 e 2 0 ]

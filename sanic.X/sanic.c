@@ -95,6 +95,8 @@ void main(void)
     setupADC();
     while(1){
         PORTA = aveSensor(12);
+        trans(PORTA);
+        trans('\n');
     }
 }
 

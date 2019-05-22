@@ -2,6 +2,7 @@
 #define FUNCTIONS_H
 
 void setupSerial();
+void trans(unsigned char s);
 void setupADC();
 void setADCChannel(unsigned char channel);
 unsigned char readADC();
