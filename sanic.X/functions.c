@@ -56,8 +56,15 @@ void setupADC(){
     return;
 }
 
+
 //changes the ADC channel.
 //Enter only number eg 15 for AN15
+//LL = 12
+//L  = 10
+//M  = 8
+//R  = 9
+//RR = 13
+//CT = 15
 void setADCChannel(unsigned char channel){
     ADCON0bits.CHS = channel;       //select channel with this 
 
@@ -165,4 +172,71 @@ void clearPorts(){
 void setupOSC(){
     OSCCONbits.IRCF = 0b101;
     return;
+}
+
+//Determines the voltage ranges for color on each sensor
+void calibrate(){
+    PORTA = 0;
+    unsigned char sensors[5] = {12, 8, 9, 10, 13};
+    PORTD = 0b10000000;
+    
+    LLranges[blueBit] = aveSensor(12);
+    Lranges[blueBit] = aveSensor(8);
+    Mranges[blueBit] = aveSensor(9);
+    Rranges[blueBit] = aveSensor(10);
+    RRranges[blueBit] = aveSensor(13);
+    PORTAbits.RA3 = 1;          //turn on the blue LED
+    twoSecondDelay();
+    
+    LLranges[redBit] = aveSensor(12);
+    Lranges[redBit] = aveSensor(8);
+    Mranges[redBit] = aveSensor(9);
+    Rranges[redBit] = aveSensor(10);
+    RRranges[redBit] = aveSensor(13);
+    PORTAbits.RA2 = 1;          //turn on the red LED
+    twoSecondDelay();
+    
+    LLranges[greenBit] = aveSensor(12);
+    Lranges[greenBit] = aveSensor(8);
+    Mranges[greenBit] = aveSensor(9);
+    Rranges[greenBit] = aveSensor(10);
+    RRranges[greenBit] = aveSensor(13);
+    PORTAbits.RA0 = 1;          //turn on the green LED
+    twoSecondDelay();
+    
+    LLranges[whiteBit] = aveSensor(12);
+    Lranges[whiteBit] = aveSensor(8);
+    Mranges[whiteBit] = aveSensor(9);
+    Rranges[whiteBit] = aveSensor(10);
+    RRranges[whiteBit] = aveSensor(13);
+    PORTAbits.RA4 = 1;          //turn on the white LED
+    twoSecondDelay();
+    
+    LLranges[blackBit] = aveSensor(12);
+    Lranges[blackBit] = aveSensor(8);
+    Mranges[blackBit] = aveSensor(9);
+    Rranges[blackBit] = aveSensor(10);
+    RRranges[blackBit] = aveSensor(13);
+    PORTAbits.RA4 = 1;          //turn on the black LED
+    twoSecondDelay();
+    
+    return;
+}
+
+void ranges(){
+    for (unsigned char a = 0; a < 4; a++){
+        LLranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+        Lranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+        Mranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+        Rranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+        RRranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+    }
+    return;
+}
+
+//I actually have no idea how long this will take 
+void twoSecondDelay(){
+    for (unsigned char a = 0; a < 255; a++){
+        for (unsigned char b = 0; b < 255; b++);
+    }
 }

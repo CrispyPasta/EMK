@@ -12,5 +12,8 @@ void setupPWMRight(unsigned char dutyCycle, unsigned char direction);
 void setupTimer2(unsigned char PR2Value);
 void clearPorts(void);
 void setupOSC();
+void calibrate();
+void ranges();
+void twoSecondDelay();
 
 #endif
