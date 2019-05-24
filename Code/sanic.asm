@@ -379,6 +379,8 @@ Pro1
 	LFSR	0,0x04
 	MOVLW	A'V'
 	XORWF	INDF0,W
+;	BCF	PIR1,	RC1IF
+;	BCF	PIE1,	RC1IE
 	BTFSC	STATUS,Z
 	GOTO	navigate
 	GOTO	err
@@ -806,9 +808,9 @@ LeftMotorSetup:
     MOVLW   b'01111010'	     ;16 prescale, 16 postscale, timer off
     MOVWF   T2CON 
     CLRF    TMR2
-    BCF     PIE1, TMR2IE     ; disable interrupts from the timer
-    bsf     INTCON,PEIE      ; Enable peripheral interrupts
-    bsf     INTCON,GIE       ; Enable global interrupts
+;    BCF     PIE1, TMR2IE     ; disable interrupts from the timer
+;    bsf     INTCON,PEIE      ; Enable peripheral interrupts
+;    bsf     INTCON,GIE       ; Enable global interrupts
     BSF	    T2CON, TMR2ON    ; Turn timer on
 
     RETURN
@@ -840,9 +842,9 @@ RightMotorSetup:
     MOVLW   b'01111010'	      ;16 prescale, 16 postscale, timer off
     MOVWF   T4CON 
     CLRF    TMR4
-    BCF     PIE5, TMR4IE      ; disable interrupts from the timer
-    bsf     INTCON, PEIE      ; Enable peripheral interrupts
-    bsf     INTCON, GIE       ; Enable global interrupts
+;    BCF     PIE5, TMR4IE      ; disable interrupts from the timer
+;    bsf     INTCON, PEIE      ; Enable peripheral interrupts
+;    bsf     INTCON, GIE       ; Enable global interrupts
     BSF	    T4CON, TMR4ON     ; Turn timer on
     MOVLB   0x0
     
@@ -951,10 +953,18 @@ Straight:
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
 	;enable serial interrupts 
+	
+    BCF		PIR1,RC1IF    
+    BCF		INTCON,GIEL		; Enable peripheral interrupts
+    BCF		INTCON,GIEH		; Enable global interrupts
+    BCF		PIE1,RC1IE		; Set RCIE Interrupt Enable
+
+    CALL	tenmsDelay
+    
+    BCF		PIR1,RC1IF    
     BSF		INTCON,GIEL		; Enable peripheral interrupts
     BSF		INTCON,GIEH		; Enable global interrupts
     BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
-	BCF		PIR1,RC1IF 
 
     CALL    LeftMotorSetup
     CALL    RightMotorSetup
