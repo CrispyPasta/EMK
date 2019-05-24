@@ -2021,7 +2021,7 @@ Go_on2_333
 ;</editor-fold>
       
     ;<editor-fold defaultstate="collapsed" desc="One second delay">
-delay1s
+delay1s:
 
     MOVLW   0x0F
     MOVWF   delay3

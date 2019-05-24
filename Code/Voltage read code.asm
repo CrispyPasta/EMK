@@ -118,7 +118,7 @@
 ; CONFIG3H
   CONFIG  CCP2MX = PORTC1       ; CCP2 MUX bit (CCP2 input/output is multiplexed with RC1)
   CONFIG  PBADEN = ON           ; PORTB A/D Enable bit (PORTB<5:0> pins are configured as analog input channels on Reset)
-  CONFIG  CCP3MX = PORTB5       ; P3A/CCP3 Mux bit (P3A/CCP3 input/output is multiplexed with RB5)
+  CONFIG  CCP3MX = PORTE0       ; P3A/CCP3 Mux bit (P3A/CCP3 input/output is mulitplexed with RE0)
   CONFIG  HFOFST = ON           ; HFINTOSC Fast Start-up (HFINTOSC output and ready status are not delayed by the oscillator stable status)
   CONFIG  T3CMX = PORTC0        ; Timer3 Clock input mux bit (T3CKI is on RC0)
   CONFIG  P2BMX = PORTD2        ; ECCP2 B output mux bit (P2B is on RD2)
@@ -194,13 +194,16 @@
 	    ADCLOW
 	    delayCounter1        ; I want to make a 10ms delay
 	    delayCounter2
-        sensor1
-        sensor2
-        sensor3
-        sensor4
-        sensor5
-        temp
-        loopvar
+	    sensor1
+	    sensor2
+	    sensor3
+	    sensor4
+	    sensor5
+	    temp
+	    loopvar
+	    delay1
+	    delay2
+	    delay3
     ENDC
 
 ;*******************************************************************************
@@ -282,10 +285,10 @@ START
 
 ;Initialize Port E
 
-    CLRF    PORTE 		; Initialize PORTA by clearing output data latches
-    CLRF    LATE 		; Alternate method to clear output data latches
-    CLRF    ANSELE 		; Configure I/O
-    CLRF    TRISE		; All digital outputs
+;    CLRF    PORTE 		; Initialize PORTA by clearing output data latches
+;    CLRF    LATE 		; Alternate method to clear output data latches
+;    CLRF    ANSELE 		; Configure I/O
+;    CLRF    TRISE		; All digital outputs
     
 ;Initialize Port B
     
@@ -293,8 +296,26 @@ START
     CLRF    LATB 		; Alternate method to clear output data latches
     CLRF    ANSELB 		; Configure I/O
     CLRF    TRISB		; All digital outputs
-		    
-				    
+    
+;Initialize Port C
+    CLRF	LATC
+    CLRF	TRISC
+    CLRF	ANSELC
+    CLRF	PORTC
+;        
+; Initialize Port D	
+    CLRF	PORTD		; Initialize PORTD by clearing output data latches
+    CLRF	LATD		; Alternate method to clear output data latches
+    CLRF	TRISD		; clear bits for all pins
+    CLRF	ANSELD		; clear bits for all pins
+;    
+;; Initialize Port A	(just flashes an LED in my program)
+;    CLRF	PORTA		; Initialize PORTA by clearing output data latches
+;    CLRF	LATA		; Alternate method to clear output data latches
+;    CLRF	TRISA		; clear bits for all pins
+;    CLRF	ANSELA		; clear bits for all pins
+;		    
+;				    
 ;Initialize clock speed    
     
     BSF	    OSCCON, IRCF0
@@ -305,6 +326,22 @@ START
    
     
     CALL    UART_SETUP
+    
+;PWM SETUP FOR RC1
+    CALL    PWM_SETUP_CCP2
+
+;PWM SETUP FOR RC2
+    CALL    PWM_SETUP_CCP3
+    
+    
+;Enable global interrupts
+    
+    BSF    INTCON, GIEH
+    BSF    INTCON, GIEL
+    
+    CALL    LEFT_MOTOR_F
+    CALL    RIGHT_MOTOR_F
+    
     
     
     MOVLB   0X00		    ;Go back to GPR after setup
@@ -361,8 +398,44 @@ Headers:
     
 MAIN:
 
-    MOVLW   0x4 		
-    MOVWF   PORTE
+    ;SET BITS FOR MOTOR CONTROL
+    
+;    CALL    LEFT_PWM_50
+;    CALL    LEFT_MOTOR_F
+;    CALL    delay1s
+;    
+;    CALL    LEFT_PWM_75
+;    CALL    delay1s
+;    
+;    CALL    LEFT_PWM_100
+;    CALL    delay1s
+;    
+;    CALL    LEFT_MOTOR_R
+;    CALL    delay1s
+;    
+;    CALL    LEFT_MOTOR_OFF
+;    CALL    delay1s
+;    
+;    CALL    RIGHT_PWM_50
+;    CALL    RIGHT_MOTOR_F
+;    CALL    delay1s
+;    
+;    CALL    RIGHT_PWM_75
+;    CALL    delay1s
+;    
+;    CALL    RIGHT_PWM_100
+;    CALL    delay1s
+;    
+;    CALL    RIGHT_MOTOR_R
+;    CALL    delay1s
+;    
+;    CALL    RIGHT_MOTOR_OFF
+;    CALL    delay1s
+    
+;    MOVLW   0x4 		
+;    MOVWF   PORTE
+    
+;    GOTO    MAIN
 
 ;    ;<editor-fold defaultstate="collapsed" desc="Read AN0 for testing">
 ;    
@@ -907,7 +980,7 @@ UART_SETUP:
 ;2. Set the RXx/DTx and TXx/CKx TRIS controls to ?1?.
 
     CLRF    TRISC
-    BSF	    TRISC, TRISC6	    ;Set the RC6 pin to transmit 
+    BSF	    TRISC, RC6	    ;Set the RC6 pin to transmit 
     CLRF    ANSELC
     
 ;3. Enable the asynchronous serial port by clearing the SYNC bit and setting the SPEN bit.
@@ -942,7 +1015,7 @@ UART_SETUP:
 
 ;2. Set the RXx/DTx and TXx/CKx TRIS controls to ?1?.
 
-    BSF	    TRISC, TRISC7	    ;Set the RC7 pin to receive 
+    BSF	    TRISC, RC7	    ;Set the RC7 pin to receive 
     
 ;3. Enable the serial port by setting the SPEN bit and the RXx/DTx pin TRIS bit. The SYNC bit must be clear for asynchronous operation.
 
@@ -962,10 +1035,7 @@ UART_SETUP:
     BCF    PIR1, RC1IF		    ;interrupt results* - SO WE DONT GET FALSE FLAGS
     BSF    PIE1, RC1IE		    ;Interrupt enables  
     
-;Enable global interrupts
-    
-    BSF    INTCON, GIEH
-    BSF    INTCON, GIEL
+
     
 ;9. Read the RCSTAx register to get the error flags and, if 9-bit data reception is enabled, the ninth data bit.
 
@@ -1311,6 +1381,174 @@ ISR:
     RETFIE
     
     ;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="PWM SETUP">
+    
+PWM_SETUP_CCP2:; ON CCP2 = RC1
+    BSF     TRISC,  RC1
+    BCF     ANSELC, RC1
+; USE TIMER2 = 00
+    BCF     CCPTMRS0,C2TSEL0
+    BCF     CCPTMRS0,C2TSEL1
+; LOAD PR2 = 77
+;    MOVLW   .10
+    MOVLW   .77
+    MOVWF   PR2
+; SET CCP2CON TO PWM MODE = 11XX
+    BSF     CCP2CON, CCP2M2
+    BSF     CCP2CON, CCP2M3
+
+; LOAD DCB BITS = 11
+;    MOVLW   0x35
+    MOVLW   .53
+;    MOVLW   .200
+    MOVWF   CCPR2L
+    BSF     CCP2CON, DC2B0
+    BSF     CCP2CON, DC2B1
+; SET UP TIMER, BY CLEAR FLAG, THEN FREE RUN
+    BCF     PIR2, TMR2IF
+    BCF     T2CON, T2CKPS0
+    BCF     T2CON, T2CKPS1
+    BSF     T2CON, TMR2ON
+; WAIT FOR OVERFLOW
+    BTFSC   PIR2, TMR2IF
+    BRA     $-2
+    BCF     TRISC,  RC1
+    
+    RETURN
+
+    
+;USE TMR4 FOR CCP1
+    
+PWM_SETUP_CCP3:; ON CCP3 = RE0
+    BSF     TRISE,  RE0
+    BCF     ANSELE, RE0
+; USE TIMER4 = 01
+    BSF     CCPTMRS0,C3TSEL0
+    BCF     CCPTMRS0,C3TSEL1
+; LOAD PR4 = 77
+    MOVLW   .77
+    MOVWF   PR4
+; SET CCP2CON TO PWM MODE = 11XX
+    BSF     CCP3CON, CCP3M2
+    BSF     CCP3CON, CCP3M3
+
+; LOAD DCB BITS = 11
+;    MOVLW   0x35
+    MOVLW   .53
+    MOVWF   CCPR3L
+    BSF     CCP3CON, DC3B0
+    BSF     CCP3CON, DC3B1
+; SET UP TIMER, BY CLEAR FLAG, THEN FREE RUN
+    BCF     PIR5, TMR4IF
+    BCF     T4CON, T4CKPS0
+    BCF     T4CON, T4CKPS1
+    BSF     T4CON, TMR4ON
+; WAIT FOR OVERFLOW
+    BTFSC   PIR5, TMR4IF
+    BRA     $-2
+    BCF     TRISE,  RE0
+    
+    RETURN
+    
+    ;</editor-fold>
+    
+    ;<editor-fold defaultstate="collapsed" desc="Motor control">
+    
+RIGHT_PWM_50:    
+;    MOVLW   0x35
+    MOVLB   0xF
+; LOAD PR2 = 77
+    MOVLW   .100
+    MOVWF   PR4
+    MOVLB   0x0
+    RETURN
+
+LEFT_PWM_50:    
+;    MOVLW   0x35
+    
+; LOAD PR2 = 77
+    MOVLW   .100
+    MOVWF   PR2
+    RETURN
+
+RIGHT_PWM_75:    
+;    MOVLW   0x35
+    MOVLB   0xF
+; LOAD PR2 = 77
+    MOVLW   .65
+    MOVWF   PR4
+    MOVLB   0x0
+    RETURN
+
+LEFT_PWM_75:    
+;    MOVLW   0x35
+    
+; LOAD PR2 = 77
+    MOVLW   .65
+    MOVWF   PR2
+    RETURN
+
+RIGHT_PWM_100:    
+;    MOVLW   0x35
+    MOVLB   0xF
+; LOAD PR2 = 77
+    MOVLW   .5
+    MOVWF   PR4
+    MOVLB   0x0
+    RETURN
+
+LEFT_PWM_100:    
+;    MOVLW   0x35
+    
+; LOAD PR2 = 77
+    MOVLW   .5
+    MOVWF   PR2
+    RETURN
+    
+LEFT_MOTOR_F:
+    
+    BSF     PORTC,  RC4
+    BCF     PORTC,  RC5
+    
+    RETURN
+
+LEFT_MOTOR_R:
+    
+    BCF     PORTC,  RC4
+    BSF     PORTC,  RC5
+    
+    RETURN
+
+LEFT_MOTOR_OFF:
+    
+    BSF     PORTC,  RC4
+    BSF     PORTC,  RC5
+    
+    RETURN
+
+RIGHT_MOTOR_F:
+    
+    BCF     PORTD,  RD3
+    BSF     PORTD,  RD2
+    
+    RETURN
+
+RIGHT_MOTOR_R:
+    
+    BSF     PORTD,  RD3
+    BCF     PORTD,  RD2
+    
+    RETURN
+
+RIGHT_MOTOR_OFF:
+    
+    BSF     PORTD,  RD3
+    BSF     PORTD,  RD2
+    
+    RETURN
+    
+    ;</editor-fold>
    
     
 tenmsDelay:
@@ -1335,6 +1573,27 @@ Go_on
     decfsz	delayCounter1,f	
     goto	Go_on	        ; (768+5) * 13 = 10049 instructions / 1M instructions per second = 10.05 ms.
 
+    RETURN
+    
+delay1s:
+
+    MOVLW	0x0F
+    MOVWF	delay3
+Go_off0
+
+    movlw	0xFF
+    movwf	delay2
+Go_off1					
+    movlw	0xFF	
+    movwf	delay1
+Go_off2
+
+    decfsz	delay1,f
+    goto	Go_off2
+    decfsz	delay2,f
+    goto	Go_off1
+    decfsz	delay3,f
+    goto	Go_off0
     RETURN
     
     END
