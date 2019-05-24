@@ -1005,7 +1005,9 @@ checkStop:
 	MOVLW	A'S' 		
 	CPFSEQ	RCREG		;compare RCREG with 'S'
 	GOTO	nav
-	GOTO	RCE 
+	CALL	touchISR
+	CALL	Stop 
+	GOTO	RCE  
 ;</editor-fold>	
 	
 ;</editor-fold>	
