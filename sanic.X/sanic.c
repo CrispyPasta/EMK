@@ -71,8 +71,10 @@
 #include "functions.h"
 #include "functions.c"
 
-void init();
-void delay();
+void init(void);
+void delay(void);
+void RCE(void);
+
 
 void main(void)
 {
@@ -92,12 +94,15 @@ void main(void)
 
     // while(1);       //hang here forever
     init();
-    setupADC();
-    while(1){
-        PORTA = aveSensor(12);
-        trans(PORTA);
-        trans('\n');
-    }
+    RCE();
+    while(1);
+    // setupADC();
+    // while(1){
+    //     PORTA = aveSensor(12);
+    //     trans(PORTA);
+    //     trans('\n');
+    // }
+
 }
 
 void delay(){
@@ -108,7 +113,79 @@ void delay(){
 }
 
 void init(){
+    raceColor[blueBit] = 1;     //set default color 
     setupOSC();
     clearPorts();
     setupSerial();
 }
+
+void RCE(){
+    while(1){
+        PORTD = 0b10100100; //show in 7seg
+        
+        unsigned char message[] = "Sanic races ";
+
+        for (unsigned char a = 0; a < 12; a++)
+        {
+            trans(message[a]);
+        }
+
+        if (raceColor[blueBit] == 1){
+            trans("B");
+        }
+        else if (raceColor[redBit] == 1){
+            trans("R");  
+        }
+        else if (raceColor[greenBit] == 1){
+            trans("G");
+        }
+        else {
+            trans("n");
+        }
+        trans("\n");
+        
+
+        INTCONbits.GIE = 0;     //disable global interrupts
+        INTCONbits.PEIE = 0;    //disable peripheral interrupts 
+        unsigned char nCharsReceived = 0;        //init to 0
+        unsigned char commandReceived[3];
+
+        while(nCharsReceived < 3){
+            if (PIR1bits.RC1IF){
+                commandReceived[nCharsReceived] = RCREG;        //save received character
+                nCharsReceived++;       //inc num chars received
+            }
+        }
+
+
+        switch (commandReceived[0])
+        {
+        case 'R':
+            //go to cap touch wait mode 
+            break;
+        case 'P':
+            PRC();
+            break;
+        case 'N':
+            //go to navigation 
+            break;
+        case 'Q':
+            //go to python serial mode  
+            break;
+        case 'C':
+            //go to calibration mode  
+            break;
+        
+        default:
+            error();
+            break;
+        }
+        
+        for (unsigned char a = 0; a < 3; a++){
+            commandReceived[a] = 0;
+        }
+        nCharsReceived = 0;
+    }
+    return;
+}
+

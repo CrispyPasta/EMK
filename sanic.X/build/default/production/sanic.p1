@@ -269,10 +269,97 @@ Version 4.0 HI-TECH Software Intermediate Code
 "16035
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 16035: extern volatile OSCCONbits_t OSCCONbits __attribute__((address(0xFD3)));
 [v _OSCCONbits `VS757 ~T0 @X0 0 e@4051 ]
+"6286
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6286:     struct {
+[s S327 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S327 . RA0 RA1 RA2 RA3 RA4 RA5 RA6 RA7 ]
+"6296
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6296:     struct {
+[s S328 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S328 . AN0 AN1 AN2 AN3 . AN4 ]
+"6304
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6304:     struct {
+[s S329 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S329 . C12IN0M C12IN1M C2INP C1INP C1OUT C2OUT ]
+"6312
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6312:     struct {
+[s S330 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S330 . C12IN0N C12IN1N VREFM VREFP T0CKI SS ]
+"6320
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6320:     struct {
+[s S331 :5 `uc 1 :1 `uc 1 ]
+[n S331 . . NOT_SS ]
+"6324
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6324:     struct {
+[s S332 :2 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S332 . . VREFN . SRQ nSS ]
+"6331
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6331:     struct {
+[s S333 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
+[n S333 . . CVREF . LVDIN ]
+"6337
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6337:     struct {
+[s S334 :2 `uc 1 :1 `uc 1 :2 `uc 1 :1 `uc 1 ]
+[n S334 . . DACOUT . HLVDIN ]
+"6343
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6343:     struct {
+[s S335 :5 `uc 1 :1 `uc 1 ]
+[n S335 . . SS1 ]
+"6347
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6347:     struct {
+[s S336 :5 `uc 1 :1 `uc 1 ]
+[n S336 . . NOT_SS1 ]
+"6351
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6351:     struct {
+[s S337 :5 `uc 1 :1 `uc 1 ]
+[n S337 . . nSS1 ]
+"6355
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6355:     struct {
+[s S338 :5 `uc 1 :1 `uc 1 ]
+[n S338 . . SRNQ ]
+"6359
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6359:     struct {
+[s S339 :1 `uc 1 :6 `uc 1 :1 `uc 1 ]
+[n S339 . ULPWUIN . RJPU ]
+"6285
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6285: typedef union {
+[u S326 `S327 1 `S328 1 `S329 1 `S330 1 `S331 1 `S332 1 `S333 1 `S334 1 `S335 1 `S336 1 `S337 1 `S338 1 `S339 1 ]
+[n S326 . . . . . . . . . . . . . . ]
+"6365
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 6365: extern volatile PORTAbits_t PORTAbits __attribute__((address(0xF80)));
+[v _PORTAbits `VS326 ~T0 @X0 0 e@3968 ]
+"17 ./functions.h
+[; ;./functions.h: 17: void twoSecondDelay();
+[v _twoSecondDelay `(v ~T0 @X0 0 e? ]
+"11259 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 11259: extern volatile unsigned char RCREG __attribute__((address(0xFAE)));
+[v _RCREG `Vuc ~T0 @X0 0 e@4014 ]
 [p mainexit ]
 "74 sanic.c
-[; ;sanic.c: 74: void init();
-[v _init `(v ~T0 @X0 0 e? ]
+[; ;sanic.c: 74: void init(void);
+[v _init `(v ~T0 @X0 0 ef ]
+"76
+[; ;sanic.c: 76: void RCE(void);
+[v _RCE `(v ~T0 @X0 0 ef ]
+"16898 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 16898:     struct {
+[s S818 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S818 . RBIF INT0IF TMR0IF RBIE INT0IE TMR0IE PEIE_GIEL GIE_GIEH ]
+"16908
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 16908:     struct {
+[s S819 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S819 . . INT0F T0IF . INT0E T0IE PEIE GIE ]
+"16918
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 16918:     struct {
+[s S820 :6 `uc 1 :1 `uc 1 :1 `uc 1 ]
+[n S820 . . GIEL GIEH ]
+"16897
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 16897: typedef union {
+[u S817 `S818 1 `S819 1 `S820 1 ]
+[n S817 . . . . ]
+"16924
+[; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 16924: extern volatile INTCONbits_t INTCONbits __attribute__((address(0xFF2)));
+[v _INTCONbits `VS817 ~T0 @X0 0 e@4082 ]
 "54 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h
 [; ;C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h: 54: __asm("ANSELA equ 0F38h");
 [; <" ANSELA equ 0F38h ;# ">
@@ -1190,7 +1277,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 "18
-[; ;./functions.c: 18: unsigned char raceColor[] = "00000000";
+[; ;./functions.c: 18: unsigned char raceColor[] = "00001000";
 [v _raceColor `uc ~T0 @X0 -> 9 `i e ]
 [i _raceColor
 :U ..
@@ -1198,7 +1285,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> 48 `c
 -> 48 `c
 -> 48 `c
--> 48 `c
+-> 49 `c
 -> 48 `c
 -> 48 `c
 -> 48 `c
@@ -1281,137 +1368,137 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;./functions.c: 46: }
 [e :UE 852 ]
 }
-"49
-[; ;./functions.c: 49: void setupADC(){
+"50
+[; ;./functions.c: 50: void setupADC(){
 [v _setupADC `(v ~T0 @X0 1 ef ]
 {
 [e :U _setupADC ]
 [f ]
-"50
-[; ;./functions.c: 50:     ADCON2bits.ADCS = 0b100;
-[e = . . _ADCON2bits 0 0 -> -> 4 `i `uc ]
 "51
-[; ;./functions.c: 51:     ADCON1 = 0;
-[e = _ADCON1 -> -> 0 `i `uc ]
+[; ;./functions.c: 51:     ADCON2bits.ADCS = 0b100;
+[e = . . _ADCON2bits 0 0 -> -> 4 `i `uc ]
 "52
-[; ;./functions.c: 52:     ADCON0bits.CHS = 0b01100;
-[e = . . _ADCON0bits 1 2 -> -> 12 `i `uc ]
+[; ;./functions.c: 52:     ADCON1 = 0;
+[e = _ADCON1 -> -> 0 `i `uc ]
 "53
-[; ;./functions.c: 53:     ADCON2bits.ADFM = 0;
-[e = . . _ADCON2bits 0 3 -> -> 0 `i `uc ]
+[; ;./functions.c: 53:     ADCON0bits.CHS = 0b01100;
+[e = . . _ADCON0bits 1 2 -> -> 12 `i `uc ]
 "54
-[; ;./functions.c: 54:     ADCON2bits.ACQT = 0b101;
-[e = . . _ADCON2bits 0 1 -> -> 5 `i `uc ]
+[; ;./functions.c: 54:     ADCON2bits.ADFM = 0;
+[e = . . _ADCON2bits 0 3 -> -> 0 `i `uc ]
 "55
-[; ;./functions.c: 55:     ADCON0bits.ADON = 1;
-[e = . . _ADCON0bits 1 0 -> -> 1 `i `uc ]
+[; ;./functions.c: 55:     ADCON2bits.ACQT = 0b101;
+[e = . . _ADCON2bits 0 1 -> -> 5 `i `uc ]
 "56
-[; ;./functions.c: 56:     return;
-[e $UE 856  ]
+[; ;./functions.c: 56:     ADCON0bits.ADON = 1;
+[e = . . _ADCON0bits 1 0 -> -> 1 `i `uc ]
 "57
-[; ;./functions.c: 57: }
+[; ;./functions.c: 57:     return;
+[e $UE 856  ]
+"58
+[; ;./functions.c: 58: }
 [e :UE 856 ]
 }
-"61
-[; ;./functions.c: 61: void setADCChannel(unsigned char channel){
+"69
+[; ;./functions.c: 69: void setADCChannel(unsigned char channel){
 [v _setADCChannel `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _setADCChannel ]
 [v _channel `uc ~T0 @X0 1 r1 ]
 [f ]
-"62
-[; ;./functions.c: 62:     ADCON0bits.CHS = channel;
+"70
+[; ;./functions.c: 70:     ADCON0bits.CHS = channel;
 [e = . . _ADCON0bits 1 2 _channel ]
-"64
-[; ;./functions.c: 64:     switch (channel){
+"72
+[; ;./functions.c: 72:     switch (channel){
 [e $U 859  ]
 {
-"65
-[; ;./functions.c: 65:     case 8:
-[e :U 860 ]
-"66
-[; ;./functions.c: 66:         TRISBbits.TRISB2 = 1;
-[e = . . _TRISBbits 0 2 -> -> 1 `i `uc ]
-"67
-[; ;./functions.c: 67:         ANSELBbits.ANSB2 = 1;
-[e = . . _ANSELBbits 0 2 -> -> 1 `i `uc ]
-"68
-[; ;./functions.c: 68:         break;
-[e $U 858  ]
-"69
-[; ;./functions.c: 69:     case 9:
-[e :U 861 ]
-"70
-[; ;./functions.c: 70:         TRISBbits.TRISB3 = 1;
-[e = . . _TRISBbits 0 3 -> -> 1 `i `uc ]
-"71
-[; ;./functions.c: 71:         ANSELBbits.ANSB3 = 1;
-[e = . . _ANSELBbits 0 3 -> -> 1 `i `uc ]
-"72
-[; ;./functions.c: 72:         break;
-[e $U 858  ]
 "73
-[; ;./functions.c: 73:     case 10:
-[e :U 862 ]
+[; ;./functions.c: 73:     case 8:
+[e :U 860 ]
 "74
-[; ;./functions.c: 74:         TRISBbits.TRISB1 = 1;
-[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
+[; ;./functions.c: 74:         TRISBbits.TRISB2 = 1;
+[e = . . _TRISBbits 0 2 -> -> 1 `i `uc ]
 "75
-[; ;./functions.c: 75:         ANSELBbits.ANSB1 = 1;
-[e = . . _ANSELBbits 0 1 -> -> 1 `i `uc ]
+[; ;./functions.c: 75:         ANSELBbits.ANSB2 = 1;
+[e = . . _ANSELBbits 0 2 -> -> 1 `i `uc ]
 "76
 [; ;./functions.c: 76:         break;
 [e $U 858  ]
 "77
-[; ;./functions.c: 77:     case 12:
-[e :U 863 ]
+[; ;./functions.c: 77:     case 9:
+[e :U 861 ]
 "78
-[; ;./functions.c: 78:         TRISBbits.TRISB0 = 1;
-[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
+[; ;./functions.c: 78:         TRISBbits.TRISB3 = 1;
+[e = . . _TRISBbits 0 3 -> -> 1 `i `uc ]
 "79
-[; ;./functions.c: 79:         ANSELBbits.ANSB0 = 1;
-[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
+[; ;./functions.c: 79:         ANSELBbits.ANSB3 = 1;
+[e = . . _ANSELBbits 0 3 -> -> 1 `i `uc ]
 "80
 [; ;./functions.c: 80:         break;
 [e $U 858  ]
 "81
-[; ;./functions.c: 81:     case 13:
-[e :U 864 ]
+[; ;./functions.c: 81:     case 10:
+[e :U 862 ]
 "82
-[; ;./functions.c: 82:         TRISBbits.TRISB5 = 1;
-[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
+[; ;./functions.c: 82:         TRISBbits.TRISB1 = 1;
+[e = . . _TRISBbits 0 1 -> -> 1 `i `uc ]
 "83
-[; ;./functions.c: 83:         ANSELBbits.ANSB5 = 1;
-[e = . . _ANSELBbits 0 5 -> -> 1 `i `uc ]
+[; ;./functions.c: 83:         ANSELBbits.ANSB1 = 1;
+[e = . . _ANSELBbits 0 1 -> -> 1 `i `uc ]
 "84
 [; ;./functions.c: 84:         break;
 [e $U 858  ]
 "85
-[; ;./functions.c: 85:     case 15:
-[e :U 865 ]
+[; ;./functions.c: 85:     case 12:
+[e :U 863 ]
 "86
-[; ;./functions.c: 86:         TRISCbits.TRISC3 = 1;
-[e = . . _TRISCbits 0 3 -> -> 1 `i `uc ]
+[; ;./functions.c: 86:         TRISBbits.TRISB0 = 1;
+[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
 "87
-[; ;./functions.c: 87:         ANSELCbits.ANSC3 = 1;
-[e = . . _ANSELCbits 0 2 -> -> 1 `i `uc ]
+[; ;./functions.c: 87:         ANSELBbits.ANSB0 = 1;
+[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
 "88
 [; ;./functions.c: 88:         break;
 [e $U 858  ]
+"89
+[; ;./functions.c: 89:     case 13:
+[e :U 864 ]
 "90
-[; ;./functions.c: 90:     default:
-[e :U 866 ]
+[; ;./functions.c: 90:         TRISBbits.TRISB5 = 1;
+[e = . . _TRISBbits 0 5 -> -> 1 `i `uc ]
 "91
-[; ;./functions.c: 91:         TRISBbits.TRISB0 = 1;
-[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
+[; ;./functions.c: 91:         ANSELBbits.ANSB5 = 1;
+[e = . . _ANSELBbits 0 5 -> -> 1 `i `uc ]
 "92
-[; ;./functions.c: 92:         ANSELBbits.ANSB0 = 1;
-[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
-"93
-[; ;./functions.c: 93:         break;
+[; ;./functions.c: 92:         break;
 [e $U 858  ]
+"93
+[; ;./functions.c: 93:     case 15:
+[e :U 865 ]
 "94
-[; ;./functions.c: 94:     }
+[; ;./functions.c: 94:         TRISCbits.TRISC3 = 1;
+[e = . . _TRISCbits 0 3 -> -> 1 `i `uc ]
+"95
+[; ;./functions.c: 95:         ANSELCbits.ANSC3 = 1;
+[e = . . _ANSELCbits 0 2 -> -> 1 `i `uc ]
+"96
+[; ;./functions.c: 96:         break;
+[e $U 858  ]
+"98
+[; ;./functions.c: 98:     default:
+[e :U 866 ]
+"99
+[; ;./functions.c: 99:         TRISBbits.TRISB0 = 1;
+[e = . . _TRISBbits 0 0 -> -> 1 `i `uc ]
+"100
+[; ;./functions.c: 100:         ANSELBbits.ANSB0 = 1;
+[e = . . _ANSELBbits 0 0 -> -> 1 `i `uc ]
+"101
+[; ;./functions.c: 101:         break;
+[e $U 858  ]
+"102
+[; ;./functions.c: 102:     }
 }
 [e $U 858  ]
 [e :U 859 ]
@@ -1423,53 +1510,53 @@ Version 4.0 HI-TECH Software Intermediate Code
  , $ -> 15 `i 865
  866 ]
 [e :U 858 ]
-"95
-[; ;./functions.c: 95:     return;
+"103
+[; ;./functions.c: 103:     return;
 [e $UE 857  ]
-"96
-[; ;./functions.c: 96: }
+"104
+[; ;./functions.c: 104: }
 [e :UE 857 ]
 }
-"99
-[; ;./functions.c: 99: unsigned char readADC(){
+"107
+[; ;./functions.c: 107: unsigned char readADC(){
 [v _readADC `(uc ~T0 @X0 1 ef ]
 {
 [e :U _readADC ]
 [f ]
-"100
-[; ;./functions.c: 100:     ADCON0bits.GO = 1;
+"108
+[; ;./functions.c: 108:     ADCON0bits.GO = 1;
 [e = . . _ADCON0bits 2 1 -> -> 1 `i `uc ]
-"102
-[; ;./functions.c: 102:     while (ADCON0bits.GO);
+"110
+[; ;./functions.c: 110:     while (ADCON0bits.GO);
 [e $U 868  ]
 [e :U 869 ]
 [e :U 868 ]
 [e $ != -> . . _ADCON0bits 2 1 `i -> 0 `i 869  ]
 [e :U 870 ]
-"103
-[; ;./functions.c: 103:     return ADRESH;
+"111
+[; ;./functions.c: 111:     return ADRESH;
 [e ) _ADRESH ]
 [e $UE 867  ]
-"104
-[; ;./functions.c: 104: }
+"112
+[; ;./functions.c: 112: }
 [e :UE 867 ]
 }
-"107
-[; ;./functions.c: 107: unsigned char aveSensor(unsigned char s){
+"115
+[; ;./functions.c: 115: unsigned char aveSensor(unsigned char s){
 [v _aveSensor `(uc ~T0 @X0 1 ef1`uc ]
 {
 [e :U _aveSensor ]
 [v _s `uc ~T0 @X0 1 r1 ]
 [f ]
-"108
-[; ;./functions.c: 108:     setADCChannel(s);
+"116
+[; ;./functions.c: 116:     setADCChannel(s);
 [e ( _setADCChannel (1 _s ]
-"109
-[; ;./functions.c: 109:     unsigned int measurements = 0;
+"117
+[; ;./functions.c: 117:     unsigned int measurements = 0;
 [v _measurements `ui ~T0 @X0 1 a ]
 [e = _measurements -> -> 0 `i `ui ]
-"111
-[; ;./functions.c: 111:     for (unsigned char a = 0; a < 10; a++){
+"119
+[; ;./functions.c: 119:     for (unsigned char a = 0; a < 10; a++){
 {
 [v _a `uc ~T0 @X0 1 a ]
 [e = _a -> -> 0 `i `uc ]
@@ -1477,259 +1564,1053 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e $U 873  ]
 [e :U 872 ]
 {
-"112
-[; ;./functions.c: 112:         measurements += readADC();
+"120
+[; ;./functions.c: 120:         measurements += readADC();
 [e =+ _measurements -> ( _readADC ..  `ui ]
-"113
-[; ;./functions.c: 113:     }
+"121
+[; ;./functions.c: 121:     }
 }
 [e ++ _a -> -> 1 `i `uc ]
 [e $ < -> _a `i -> 10 `i 872  ]
 [e :U 873 ]
 }
-"115
-[; ;./functions.c: 115:     unsigned char result = measurements / 10;
+"123
+[; ;./functions.c: 123:     unsigned char result = measurements / 10;
 [v _result `uc ~T0 @X0 1 a ]
 [e = _result -> / _measurements -> -> 10 `i `ui `uc ]
-"117
-[; ;./functions.c: 117:     return result;
+"125
+[; ;./functions.c: 125:     return result;
 [e ) _result ]
 [e $UE 871  ]
-"118
-[; ;./functions.c: 118: }
+"126
+[; ;./functions.c: 126: }
 [e :UE 871 ]
 }
-"120
-[; ;./functions.c: 120: void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
+"128
+[; ;./functions.c: 128: void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
 [v _setupPWMLeft `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _setupPWMLeft ]
 [v _dutyCycle `uc ~T0 @X0 1 r1 ]
 [v _direction `uc ~T0 @X0 1 r2 ]
 [f ]
-"121
-[; ;./functions.c: 121:     return;
+"129
+[; ;./functions.c: 129:     return;
 [e $UE 875  ]
-"122
-[; ;./functions.c: 122: }
+"130
+[; ;./functions.c: 130: }
 [e :UE 875 ]
 }
-"124
-[; ;./functions.c: 124: void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
+"132
+[; ;./functions.c: 132: void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
 [v _setupPWMRight `(v ~T0 @X0 1 ef2`uc`uc ]
 {
 [e :U _setupPWMRight ]
 [v _dutyCycle `uc ~T0 @X0 1 r1 ]
 [v _direction `uc ~T0 @X0 1 r2 ]
 [f ]
-"125
-[; ;./functions.c: 125:     return;
+"133
+[; ;./functions.c: 133:     return;
 [e $UE 876  ]
-"126
-[; ;./functions.c: 126: }
+"134
+[; ;./functions.c: 134: }
 [e :UE 876 ]
 }
-"128
-[; ;./functions.c: 128: void setupTimer2(unsigned char PR2Value){
+"136
+[; ;./functions.c: 136: void setupTimer2(unsigned char PR2Value){
 [v _setupTimer2 `(v ~T0 @X0 1 ef1`uc ]
 {
 [e :U _setupTimer2 ]
 [v _PR2Value `uc ~T0 @X0 1 r1 ]
 [f ]
-"129
-[; ;./functions.c: 129:     return;
+"137
+[; ;./functions.c: 137:     return;
 [e $UE 877  ]
-"130
-[; ;./functions.c: 130: }
+"138
+[; ;./functions.c: 138: }
 [e :UE 877 ]
 }
-"135
-[; ;./functions.c: 135: void clearPorts(){
+"143
+[; ;./functions.c: 143: void clearPorts(){
 [v _clearPorts `(v ~T0 @X0 1 ef ]
 {
 [e :U _clearPorts ]
 [f ]
-"136
-[; ;./functions.c: 136:     PORTA = 0;
-[e = _PORTA -> -> 0 `i `uc ]
-"137
-[; ;./functions.c: 137:     LATA = 0;
-[e = _LATA -> -> 0 `i `uc ]
-"138
-[; ;./functions.c: 138:     TRISA = 0;
-[e = _TRISA -> -> 0 `i `uc ]
-"139
-[; ;./functions.c: 139:     ANSELA = 0;
-[e = _ANSELA -> -> 0 `i `uc ]
-"141
-[; ;./functions.c: 141:     PORTB = 0;
-[e = _PORTB -> -> 0 `i `uc ]
-"142
-[; ;./functions.c: 142:     LATB = 0;
-[e = _LATB -> -> 0 `i `uc ]
-"143
-[; ;./functions.c: 143:     TRISB = 0;
-[e = _TRISB -> -> 0 `i `uc ]
 "144
-[; ;./functions.c: 144:     ANSELB = 0;
-[e = _ANSELB -> -> 0 `i `uc ]
+[; ;./functions.c: 144:     PORTA = 0;
+[e = _PORTA -> -> 0 `i `uc ]
+"145
+[; ;./functions.c: 145:     LATA = 0;
+[e = _LATA -> -> 0 `i `uc ]
 "146
-[; ;./functions.c: 146:     PORTC = 0;
-[e = _PORTC -> -> 0 `i `uc ]
+[; ;./functions.c: 146:     TRISA = 0;
+[e = _TRISA -> -> 0 `i `uc ]
 "147
-[; ;./functions.c: 147:     LATC = 0;
-[e = _LATC -> -> 0 `i `uc ]
-"148
-[; ;./functions.c: 148:     TRISC = 0;
-[e = _TRISC -> -> 0 `i `uc ]
+[; ;./functions.c: 147:     ANSELA = 0;
+[e = _ANSELA -> -> 0 `i `uc ]
 "149
-[; ;./functions.c: 149:     ANSELC = 0;
-[e = _ANSELC -> -> 0 `i `uc ]
+[; ;./functions.c: 149:     PORTB = 0;
+[e = _PORTB -> -> 0 `i `uc ]
+"150
+[; ;./functions.c: 150:     LATB = 0;
+[e = _LATB -> -> 0 `i `uc ]
 "151
-[; ;./functions.c: 151:     PORTD = 0;
-[e = _PORTD -> -> 0 `i `uc ]
+[; ;./functions.c: 151:     TRISB = 0;
+[e = _TRISB -> -> 0 `i `uc ]
 "152
-[; ;./functions.c: 152:     LATD = 0;
-[e = _LATD -> -> 0 `i `uc ]
-"153
-[; ;./functions.c: 153:     TRISD = 0;
-[e = _TRISD -> -> 0 `i `uc ]
+[; ;./functions.c: 152:     ANSELB = 0;
+[e = _ANSELB -> -> 0 `i `uc ]
 "154
-[; ;./functions.c: 154:     ANSELD = 0;
-[e = _ANSELD -> -> 0 `i `uc ]
+[; ;./functions.c: 154:     PORTC = 0;
+[e = _PORTC -> -> 0 `i `uc ]
+"155
+[; ;./functions.c: 155:     LATC = 0;
+[e = _LATC -> -> 0 `i `uc ]
 "156
-[; ;./functions.c: 156:     PORTE = 0;
-[e = _PORTE -> -> 0 `i `uc ]
+[; ;./functions.c: 156:     TRISC = 0;
+[e = _TRISC -> -> 0 `i `uc ]
 "157
-[; ;./functions.c: 157:     LATE = 0;
-[e = _LATE -> -> 0 `i `uc ]
-"158
-[; ;./functions.c: 158:     TRISE = 0;
-[e = _TRISE -> -> 0 `i `uc ]
+[; ;./functions.c: 157:     ANSELC = 0;
+[e = _ANSELC -> -> 0 `i `uc ]
 "159
-[; ;./functions.c: 159:     ANSELE = 0;
-[e = _ANSELE -> -> 0 `i `uc ]
+[; ;./functions.c: 159:     PORTD = 0;
+[e = _PORTD -> -> 0 `i `uc ]
 "160
-[; ;./functions.c: 160:     raceColor[3] = 1;
-[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+[; ;./functions.c: 160:     LATD = 0;
+[e = _LATD -> -> 0 `i `uc ]
 "161
-[; ;./functions.c: 161:     return;
-[e $UE 878  ]
+[; ;./functions.c: 161:     TRISD = 0;
+[e = _TRISD -> -> 0 `i `uc ]
 "162
-[; ;./functions.c: 162: }
+[; ;./functions.c: 162:     ANSELD = 0;
+[e = _ANSELD -> -> 0 `i `uc ]
+"164
+[; ;./functions.c: 164:     PORTE = 0;
+[e = _PORTE -> -> 0 `i `uc ]
+"165
+[; ;./functions.c: 165:     LATE = 0;
+[e = _LATE -> -> 0 `i `uc ]
+"166
+[; ;./functions.c: 166:     TRISE = 0;
+[e = _TRISE -> -> 0 `i `uc ]
+"167
+[; ;./functions.c: 167:     ANSELE = 0;
+[e = _ANSELE -> -> 0 `i `uc ]
+"168
+[; ;./functions.c: 168:     raceColor[3] = 1;
+[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"169
+[; ;./functions.c: 169:     return;
+[e $UE 878  ]
+"170
+[; ;./functions.c: 170: }
 [e :UE 878 ]
 }
-"165
-[; ;./functions.c: 165: void setupOSC(){
+"173
+[; ;./functions.c: 173: void setupOSC(){
 [v _setupOSC `(v ~T0 @X0 1 ef ]
 {
 [e :U _setupOSC ]
 [f ]
-"166
-[; ;./functions.c: 166:     OSCCONbits.IRCF = 0b101;
+"174
+[; ;./functions.c: 174:     OSCCONbits.IRCF = 0b101;
 [e = . . _OSCCONbits 0 3 -> -> 5 `i `uc ]
-"167
-[; ;./functions.c: 167:     return;
+"175
+[; ;./functions.c: 175:     return;
 [e $UE 879  ]
-"168
-[; ;./functions.c: 168: }
+"176
+[; ;./functions.c: 176: }
 [e :UE 879 ]
 }
+"179
+[; ;./functions.c: 179: void calibrate(){
+[v _calibrate `(v ~T0 @X0 1 ef ]
+{
+[e :U _calibrate ]
+[f ]
+"180
+[; ;./functions.c: 180:     PORTA = 0;
+[e = _PORTA -> -> 0 `i `uc ]
+[v F6007 `uc ~T0 @X0 -> 5 `i s ]
+[i F6007
+:U ..
+"181
+[; ;./functions.c: 181:     unsigned char sensors[5] = {12, 8, 9, 10, 13};
+-> -> 12 `i `uc
+-> -> 8 `i `uc
+-> -> 9 `i `uc
+-> -> 10 `i `uc
+-> -> 13 `i `uc
+..
+]
+[v _sensors `uc ~T0 @X0 -> 5 `i a ]
+[e = _sensors F6007 ]
+"182
+[; ;./functions.c: 182:     PORTD = 0b10000000;
+[e = _PORTD -> -> 128 `i `uc ]
+"184
+[; ;./functions.c: 184:     PORTD = 0b10000000;
+[e = _PORTD -> -> 128 `i `uc ]
+"185
+[; ;./functions.c: 185:     LLranges[3] = aveSensor(12);
+[e = *U + &U _LLranges * -> -> -> 3 `i `ui `ux -> -> # *U &U _LLranges `ui `ux ( _aveSensor (1 -> -> 12 `i `uc ]
+"186
+[; ;./functions.c: 186:     Lranges[3] = aveSensor(8);
+[e = *U + &U _Lranges * -> -> -> 3 `i `ui `ux -> -> # *U &U _Lranges `ui `ux ( _aveSensor (1 -> -> 8 `i `uc ]
+"187
+[; ;./functions.c: 187:     Mranges[3] = aveSensor(9);
+[e = *U + &U _Mranges * -> -> -> 3 `i `ui `ux -> -> # *U &U _Mranges `ui `ux ( _aveSensor (1 -> -> 9 `i `uc ]
+"188
+[; ;./functions.c: 188:     Rranges[3] = aveSensor(10);
+[e = *U + &U _Rranges * -> -> -> 3 `i `ui `ux -> -> # *U &U _Rranges `ui `ux ( _aveSensor (1 -> -> 10 `i `uc ]
+"189
+[; ;./functions.c: 189:     RRranges[3] = aveSensor(13);
+[e = *U + &U _RRranges * -> -> -> 3 `i `ui `ux -> -> # *U &U _RRranges `ui `ux ( _aveSensor (1 -> -> 13 `i `uc ]
+"190
+[; ;./functions.c: 190:     PORTAbits.RA3 = 1;
+[e = . . _PORTAbits 0 3 -> -> 1 `i `uc ]
+"191
+[; ;./functions.c: 191:     twoSecondDelay();
+[e ( _twoSecondDelay ..  ]
+"193
+[; ;./functions.c: 193:     PORTD = 0b10001000;
+[e = _PORTD -> -> 136 `i `uc ]
+"194
+[; ;./functions.c: 194:     LLranges[2] = aveSensor(12);
+[e = *U + &U _LLranges * -> -> -> 2 `i `ui `ux -> -> # *U &U _LLranges `ui `ux ( _aveSensor (1 -> -> 12 `i `uc ]
+"195
+[; ;./functions.c: 195:     Lranges[2] = aveSensor(8);
+[e = *U + &U _Lranges * -> -> -> 2 `i `ui `ux -> -> # *U &U _Lranges `ui `ux ( _aveSensor (1 -> -> 8 `i `uc ]
+"196
+[; ;./functions.c: 196:     Mranges[2] = aveSensor(9);
+[e = *U + &U _Mranges * -> -> -> 2 `i `ui `ux -> -> # *U &U _Mranges `ui `ux ( _aveSensor (1 -> -> 9 `i `uc ]
+"197
+[; ;./functions.c: 197:     Rranges[2] = aveSensor(10);
+[e = *U + &U _Rranges * -> -> -> 2 `i `ui `ux -> -> # *U &U _Rranges `ui `ux ( _aveSensor (1 -> -> 10 `i `uc ]
+"198
+[; ;./functions.c: 198:     RRranges[2] = aveSensor(13);
+[e = *U + &U _RRranges * -> -> -> 2 `i `ui `ux -> -> # *U &U _RRranges `ui `ux ( _aveSensor (1 -> -> 13 `i `uc ]
+"199
+[; ;./functions.c: 199:     PORTAbits.RA2 = 1;
+[e = . . _PORTAbits 0 2 -> -> 1 `i `uc ]
+"200
+[; ;./functions.c: 200:     twoSecondDelay();
+[e ( _twoSecondDelay ..  ]
+"202
+[; ;./functions.c: 202:     PORTD = 0b10000010;
+[e = _PORTD -> -> 130 `i `uc ]
+"203
+[; ;./functions.c: 203:     LLranges[1] = aveSensor(12);
+[e = *U + &U _LLranges * -> -> -> 1 `i `ui `ux -> -> # *U &U _LLranges `ui `ux ( _aveSensor (1 -> -> 12 `i `uc ]
+"204
+[; ;./functions.c: 204:     Lranges[1] = aveSensor(8);
+[e = *U + &U _Lranges * -> -> -> 1 `i `ui `ux -> -> # *U &U _Lranges `ui `ux ( _aveSensor (1 -> -> 8 `i `uc ]
+"205
+[; ;./functions.c: 205:     Mranges[1] = aveSensor(9);
+[e = *U + &U _Mranges * -> -> -> 1 `i `ui `ux -> -> # *U &U _Mranges `ui `ux ( _aveSensor (1 -> -> 9 `i `uc ]
+"206
+[; ;./functions.c: 206:     Rranges[1] = aveSensor(10);
+[e = *U + &U _Rranges * -> -> -> 1 `i `ui `ux -> -> # *U &U _Rranges `ui `ux ( _aveSensor (1 -> -> 10 `i `uc ]
+"207
+[; ;./functions.c: 207:     RRranges[1] = aveSensor(13);
+[e = *U + &U _RRranges * -> -> -> 1 `i `ui `ux -> -> # *U &U _RRranges `ui `ux ( _aveSensor (1 -> -> 13 `i `uc ]
+"208
+[; ;./functions.c: 208:     PORTAbits.RA1 = 1;
+[e = . . _PORTAbits 0 1 -> -> 1 `i `uc ]
+"209
+[; ;./functions.c: 209:     twoSecondDelay();
+[e ( _twoSecondDelay ..  ]
+"211
+[; ;./functions.c: 211:     PORTD = 0b11000001;
+[e = _PORTD -> -> 193 `i `uc ]
+"212
+[; ;./functions.c: 212:     LLranges[0] = aveSensor(12);
+[e = *U + &U _LLranges * -> -> -> 0 `i `ui `ux -> -> # *U &U _LLranges `ui `ux ( _aveSensor (1 -> -> 12 `i `uc ]
+"213
+[; ;./functions.c: 213:     Lranges[0] = aveSensor(8);
+[e = *U + &U _Lranges * -> -> -> 0 `i `ui `ux -> -> # *U &U _Lranges `ui `ux ( _aveSensor (1 -> -> 8 `i `uc ]
+"214
+[; ;./functions.c: 214:     Mranges[0] = aveSensor(9);
+[e = *U + &U _Mranges * -> -> -> 0 `i `ui `ux -> -> # *U &U _Mranges `ui `ux ( _aveSensor (1 -> -> 9 `i `uc ]
+"215
+[; ;./functions.c: 215:     Rranges[0] = aveSensor(10);
+[e = *U + &U _Rranges * -> -> -> 0 `i `ui `ux -> -> # *U &U _Rranges `ui `ux ( _aveSensor (1 -> -> 10 `i `uc ]
+"216
+[; ;./functions.c: 216:     RRranges[0] = aveSensor(13);
+[e = *U + &U _RRranges * -> -> -> 0 `i `ui `ux -> -> # *U &U _RRranges `ui `ux ( _aveSensor (1 -> -> 13 `i `uc ]
+"217
+[; ;./functions.c: 217:     PORTAbits.RA0 = 1;
+[e = . . _PORTAbits 0 0 -> -> 1 `i `uc ]
+"218
+[; ;./functions.c: 218:     twoSecondDelay();
+[e ( _twoSecondDelay ..  ]
+"220
+[; ;./functions.c: 220:     PORTD = 0b11001000;
+[e = _PORTD -> -> 200 `i `uc ]
+"221
+[; ;./functions.c: 221:     LLranges[4] = aveSensor(12);
+[e = *U + &U _LLranges * -> -> -> 4 `i `ui `ux -> -> # *U &U _LLranges `ui `ux ( _aveSensor (1 -> -> 12 `i `uc ]
+"222
+[; ;./functions.c: 222:     Lranges[4] = aveSensor(8);
+[e = *U + &U _Lranges * -> -> -> 4 `i `ui `ux -> -> # *U &U _Lranges `ui `ux ( _aveSensor (1 -> -> 8 `i `uc ]
+"223
+[; ;./functions.c: 223:     Mranges[4] = aveSensor(9);
+[e = *U + &U _Mranges * -> -> -> 4 `i `ui `ux -> -> # *U &U _Mranges `ui `ux ( _aveSensor (1 -> -> 9 `i `uc ]
+"224
+[; ;./functions.c: 224:     Rranges[4] = aveSensor(10);
+[e = *U + &U _Rranges * -> -> -> 4 `i `ui `ux -> -> # *U &U _Rranges `ui `ux ( _aveSensor (1 -> -> 10 `i `uc ]
+"225
+[; ;./functions.c: 225:     RRranges[4] = aveSensor(13);
+[e = *U + &U _RRranges * -> -> -> 4 `i `ui `ux -> -> # *U &U _RRranges `ui `ux ( _aveSensor (1 -> -> 13 `i `uc ]
+"226
+[; ;./functions.c: 226:     PORTAbits.RA4 = 1;
+[e = . . _PORTAbits 0 4 -> -> 1 `i `uc ]
+"227
+[; ;./functions.c: 227:     twoSecondDelay();
+[e ( _twoSecondDelay ..  ]
+"229
+[; ;./functions.c: 229:     return;
+[e $UE 880  ]
+"230
+[; ;./functions.c: 230: }
+[e :UE 880 ]
+}
+"232
+[; ;./functions.c: 232: void ranges(){
+[v _ranges `(v ~T0 @X0 1 ef ]
+{
+[e :U _ranges ]
+[f ]
+"233
+[; ;./functions.c: 233:     for (unsigned char a = 0; a < 4; a++){
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 4 `i 882  ]
+[e $U 883  ]
+[e :U 882 ]
+{
+"234
+[; ;./functions.c: 234:         LLranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+[e = *U + &U _LLranges * -> _a `ux -> -> # *U &U _LLranges `ui `ux -> / + -> *U + &U _LLranges * -> _a `ux -> -> # *U &U _LLranges `ui `ux `i -> *U + &U _LLranges * -> -> + -> _a `i -> 1 `i `ui `ux -> -> # *U &U _LLranges `ui `ux `i -> 2 `i `uc ]
+"235
+[; ;./functions.c: 235:         Lranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+[e = *U + &U _Lranges * -> _a `ux -> -> # *U &U _Lranges `ui `ux -> / + -> *U + &U _LLranges * -> _a `ux -> -> # *U &U _LLranges `ui `ux `i -> *U + &U _LLranges * -> -> + -> _a `i -> 1 `i `ui `ux -> -> # *U &U _LLranges `ui `ux `i -> 2 `i `uc ]
+"236
+[; ;./functions.c: 236:         Mranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+[e = *U + &U _Mranges * -> _a `ux -> -> # *U &U _Mranges `ui `ux -> / + -> *U + &U _LLranges * -> _a `ux -> -> # *U &U _LLranges `ui `ux `i -> *U + &U _LLranges * -> -> + -> _a `i -> 1 `i `ui `ux -> -> # *U &U _LLranges `ui `ux `i -> 2 `i `uc ]
+"237
+[; ;./functions.c: 237:         Rranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+[e = *U + &U _Rranges * -> _a `ux -> -> # *U &U _Rranges `ui `ux -> / + -> *U + &U _LLranges * -> _a `ux -> -> # *U &U _LLranges `ui `ux `i -> *U + &U _LLranges * -> -> + -> _a `i -> 1 `i `ui `ux -> -> # *U &U _LLranges `ui `ux `i -> 2 `i `uc ]
+"238
+[; ;./functions.c: 238:         RRranges[a] = (LLranges[a] + LLranges[a+1]) / 2;
+[e = *U + &U _RRranges * -> _a `ux -> -> # *U &U _RRranges `ui `ux -> / + -> *U + &U _LLranges * -> _a `ux -> -> # *U &U _LLranges `ui `ux `i -> *U + &U _LLranges * -> -> + -> _a `i -> 1 `i `ui `ux -> -> # *U &U _LLranges `ui `ux `i -> 2 `i `uc ]
+"239
+[; ;./functions.c: 239:     }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 4 `i 882  ]
+[e :U 883 ]
+}
+"240
+[; ;./functions.c: 240:     return;
+[e $UE 881  ]
+"241
+[; ;./functions.c: 241: }
+[e :UE 881 ]
+}
+"244
+[; ;./functions.c: 244: void twoSecondDelay(){
+[v _twoSecondDelay `(v ~T0 @X0 1 ef ]
+{
+[e :U _twoSecondDelay ]
+[f ]
+"245
+[; ;./functions.c: 245:     for (unsigned char a = 0; a < 255; a++){
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 255 `i 886  ]
+[e $U 887  ]
+[e :U 886 ]
+{
+"246
+[; ;./functions.c: 246:         for (unsigned char b = 0; b < 255; b++);
+{
+[v _b `uc ~T0 @X0 1 a ]
+[e = _b -> -> 0 `i `uc ]
+[e $ < -> _b `i -> 255 `i 889  ]
+[e $U 890  ]
+[e :U 889 ]
+[e ++ _b -> -> 1 `i `uc ]
+[e $ < -> _b `i -> 255 `i 889  ]
+[e :U 890 ]
+}
+"247
+[; ;./functions.c: 247:     }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 255 `i 886  ]
+[e :U 887 ]
+}
+"248
+[; ;./functions.c: 248: }
+[e :UE 885 ]
+}
+"250
+[; ;./functions.c: 250: void error()
+[v _error `(v ~T0 @X0 1 ef ]
+"251
+[; ;./functions.c: 251: {
+{
+[e :U _error ]
+[f ]
+[v F6015 `uc ~T0 @X0 -> 7 `i s ]
+[i F6015
+:U ..
+"252
+[; ;./functions.c: 252:     unsigned char message[] = "ERROR\n";
+-> 69 `c
+-> 82 `c
+-> 82 `c
+-> 79 `c
+-> 82 `c
+-> 10 `c
+-> 0 `c
+..
+]
+[v _message `uc ~T0 @X0 -> 7 `i a ]
+[e = _message F6015 ]
+"254
+[; ;./functions.c: 254:     for (unsigned char a = 0; a < 6; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 6 `i 893  ]
+[e $U 894  ]
+[e :U 893 ]
+"255
+[; ;./functions.c: 255:     {
+{
+"256
+[; ;./functions.c: 256:         trans(message[a]);
+[e ( _trans (1 *U + &U _message * -> _a `ux -> -> # *U &U _message `ui `ux ]
+"257
+[; ;./functions.c: 257:     }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 6 `i 893  ]
+[e :U 894 ]
+}
+"258
+[; ;./functions.c: 258: }
+[e :UE 892 ]
+}
+"260
+[; ;./functions.c: 260: void PRC()
+[v _PRC `(v ~T0 @X0 1 ef ]
+"261
+[; ;./functions.c: 261: {
+{
+[e :U _PRC ]
+[f ]
+"262
+[; ;./functions.c: 262:     PORTD = 0b11111001;
+[e = _PORTD -> -> 249 `i `uc ]
+[v F6019 `uc ~T0 @X0 -> 32 `i s ]
+[i F6019
+:U ..
+"263
+[; ;./functions.c: 263:     unsigned char message[] = "\nWhat color should sanic race?\n";
+-> 10 `c
+-> 87 `c
+-> 104 `c
+-> 97 `c
+-> 116 `c
+-> 32 `c
+-> 99 `c
+-> 111 `c
+-> 108 `c
+-> 111 `c
+-> 114 `c
+-> 32 `c
+-> 115 `c
+-> 104 `c
+-> 111 `c
+-> 117 `c
+-> 108 `c
+-> 100 `c
+-> 32 `c
+-> 115 `c
+-> 97 `c
+-> 110 `c
+-> 105 `c
+-> 99 `c
+-> 32 `c
+-> 114 `c
+-> 97 `c
+-> 99 `c
+-> 101 `c
+-> 63 `c
+-> 10 `c
+-> 0 `c
+..
+]
+[v _message `uc ~T0 @X0 -> 32 `i a ]
+[e = _message F6019 ]
+"265
+[; ;./functions.c: 265:     for (unsigned char a = 0; a < 31; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 31 `i 897  ]
+[e $U 898  ]
+[e :U 897 ]
+"266
+[; ;./functions.c: 266:     {
+{
+"267
+[; ;./functions.c: 267:         trans(message[a]);
+[e ( _trans (1 *U + &U _message * -> _a `ux -> -> # *U &U _message `ui `ux ]
+"268
+[; ;./functions.c: 268:     }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 31 `i 897  ]
+[e :U 898 ]
+}
+"270
+[; ;./functions.c: 270:     while (!PIR1bits.RC1IF)
+[e $U 900  ]
+[e :U 901 ]
+"271
+[; ;./functions.c: 271:         ;
+[e :U 900 ]
+"270
+[; ;./functions.c: 270:     while (!PIR1bits.RC1IF)
+[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 901  ]
+[e :U 902 ]
+"273
+[; ;./functions.c: 273:     switch (RCREG)
+[e $U 904  ]
+"274
+[; ;./functions.c: 274:     {
+{
+"275
+[; ;./functions.c: 275:     case 'B':
+[e :U 905 ]
+"276
+[; ;./functions.c: 276:         for (unsigned char a = 0; a < 8; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 906  ]
+[e $U 907  ]
+[e :U 906 ]
+"277
+[; ;./functions.c: 277:         {
+{
+"278
+[; ;./functions.c: 278:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"279
+[; ;./functions.c: 279:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 906  ]
+[e :U 907 ]
+}
+"281
+[; ;./functions.c: 281:         raceColor[3] = 1;
+[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"282
+[; ;./functions.c: 282:         break;
+[e $U 903  ]
+"283
+[; ;./functions.c: 283:     case 'G':
+[e :U 909 ]
+"284
+[; ;./functions.c: 284:         for (unsigned char a = 0; a < 8; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 910  ]
+[e $U 911  ]
+[e :U 910 ]
+"285
+[; ;./functions.c: 285:         {
+{
+"286
+[; ;./functions.c: 286:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"287
+[; ;./functions.c: 287:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 910  ]
+[e :U 911 ]
+}
+"289
+[; ;./functions.c: 289:         raceColor[1] = 1;
+[e = *U + &U _raceColor * -> -> -> 1 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"290
+[; ;./functions.c: 290:         break;
+[e $U 903  ]
+"291
+[; ;./functions.c: 291:     case 'R':
+[e :U 913 ]
+"292
+[; ;./functions.c: 292:         for (unsigned char a = 0; a < 8; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 914  ]
+[e $U 915  ]
+[e :U 914 ]
+"293
+[; ;./functions.c: 293:         {
+{
+"294
+[; ;./functions.c: 294:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"295
+[; ;./functions.c: 295:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 914  ]
+[e :U 915 ]
+}
+"297
+[; ;./functions.c: 297:         raceColor[2] = 1;
+[e = *U + &U _raceColor * -> -> -> 2 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"298
+[; ;./functions.c: 298:         break;
+[e $U 903  ]
+"299
+[; ;./functions.c: 299:     case 'n':
+[e :U 917 ]
+"300
+[; ;./functions.c: 300:         for (unsigned char a = 0; a < 8; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 918  ]
+[e $U 919  ]
+[e :U 918 ]
+"301
+[; ;./functions.c: 301:         {
+{
+"302
+[; ;./functions.c: 302:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"303
+[; ;./functions.c: 303:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 918  ]
+[e :U 919 ]
+}
+"305
+[; ;./functions.c: 305:         raceColor[4] = 1;
+[e = *U + &U _raceColor * -> -> -> 4 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"306
+[; ;./functions.c: 306:         break;
+[e $U 903  ]
+"308
+[; ;./functions.c: 308:     default:
+[e :U 921 ]
+"309
+[; ;./functions.c: 309:         error();
+[e ( _error ..  ]
+"310
+[; ;./functions.c: 310:         break;
+[e $U 903  ]
+"311
+[; ;./functions.c: 311:     }
+}
+[e $U 903  ]
+[e :U 904 ]
+[e [\ -> _RCREG `i , $ -> -> 66 `ui `i 905
+ , $ -> -> 71 `ui `i 909
+ , $ -> -> 82 `ui `i 913
+ , $ -> -> 110 `ui `i 917
+ 921 ]
+[e :U 903 ]
+[v F6026 `uc ~T0 @X0 -> 6 `i s ]
+[i F6026
+:U ..
+"313
+[; ;./functions.c: 313:     unsigned char message2[] = "\nSet\n";
+-> 10 `c
+-> 83 `c
+-> 101 `c
+-> 116 `c
+-> 10 `c
+-> 0 `c
+..
+]
+[v _message2 `uc ~T0 @X0 -> 6 `i a ]
+[e = _message2 F6026 ]
+"315
+[; ;./functions.c: 315:     for (unsigned char a = 0; a < 5; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 5 `i 922  ]
+[e $U 923  ]
+[e :U 922 ]
+"316
+[; ;./functions.c: 316:     {
+{
+"317
+[; ;./functions.c: 317:         trans(message2[a]);
+[e ( _trans (1 *U + &U _message2 * -> _a `ux -> -> # *U &U _message2 `ui `ux ]
+"318
+[; ;./functions.c: 318:     }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 5 `i 922  ]
+[e :U 923 ]
+}
+"320
+[; ;./functions.c: 320:     return;
+[e $UE 896  ]
+"321
+[; ;./functions.c: 321: }
+[e :UE 896 ]
+}
 [v $root$_main `(v ~T0 @X0 0 e ]
-"77 sanic.c
-[; ;sanic.c: 77: void main(void)
+"79 sanic.c
+[; ;sanic.c: 79: void main(void)
 [v _main `(v ~T0 @X0 1 ef ]
-"78
-[; ;sanic.c: 78: {
+"80
+[; ;sanic.c: 80: {
 {
 [e :U _main ]
 [f ]
-"94
-[; ;sanic.c: 94:     init();
-[e ( _init ..  ]
-"95
-[; ;sanic.c: 95:     setupADC();
-[e ( _setupADC ..  ]
 "96
-[; ;sanic.c: 96:     while(1){
-[e :U 882 ]
-{
+[; ;sanic.c: 96:     init();
+[e ( _init ..  ]
 "97
-[; ;sanic.c: 97:         PORTA = aveSensor(12);
-[e = _PORTA ( _aveSensor (1 -> -> 12 `i `uc ]
+[; ;sanic.c: 97:     RCE();
+[e ( _RCE ..  ]
 "98
-[; ;sanic.c: 98:         trans(PORTA);
-[e ( _trans (1 _PORTA ]
-"99
-[; ;sanic.c: 99:         trans('\n');
-[e ( _trans (1 -> -> 10 `ui `uc ]
-"100
-[; ;sanic.c: 100:     }
+[; ;sanic.c: 98:     while(1);
+[e :U 927 ]
+[e :U 926 ]
+[e $U 927  ]
+[e :U 928 ]
+"106
+[; ;sanic.c: 106: }
+[e :UE 925 ]
 }
-[e :U 881 ]
-[e $U 882  ]
-[e :U 883 ]
-"101
-[; ;sanic.c: 101: }
-[e :UE 880 ]
-}
-"103
-[; ;sanic.c: 103: void delay(){
+"108
+[; ;sanic.c: 108: void delay(){
 [v _delay `(v ~T0 @X0 1 ef ]
 {
 [e :U _delay ]
 [f ]
-"104
-[; ;sanic.c: 104:     for (unsigned int x = 0; x < 900; x++){
+"109
+[; ;sanic.c: 109:     for (unsigned int x = 0; x < 900; x++){
 {
 [v _x `ui ~T0 @X0 1 a ]
 [e = _x -> -> 0 `i `ui ]
-[e $ < _x -> -> 900 `i `ui 885  ]
-[e $U 886  ]
-[e :U 885 ]
+[e $ < _x -> -> 900 `i `ui 930  ]
+[e $U 931  ]
+[e :U 930 ]
 {
-"105
-[; ;sanic.c: 105:         for(unsigned char b =0 ; b < 100; b++);
+"110
+[; ;sanic.c: 110:         for(unsigned char b =0 ; b < 100; b++);
 {
 [v _b `uc ~T0 @X0 1 a ]
 [e = _b -> -> 0 `i `uc ]
-[e $ < -> _b `i -> 100 `i 888  ]
-[e $U 889  ]
-[e :U 888 ]
+[e $ < -> _b `i -> 100 `i 933  ]
+[e $U 934  ]
+[e :U 933 ]
 [e ++ _b -> -> 1 `i `uc ]
-[e $ < -> _b `i -> 100 `i 888  ]
-[e :U 889 ]
+[e $ < -> _b `i -> 100 `i 933  ]
+[e :U 934 ]
 }
-"106
-[; ;sanic.c: 106:     }
+"111
+[; ;sanic.c: 111:     }
 }
 [e ++ _x -> -> 1 `i `ui ]
-[e $ < _x -> -> 900 `i `ui 885  ]
-[e :U 886 ]
+[e $ < _x -> -> 900 `i `ui 930  ]
+[e :U 931 ]
 }
-"107
-[; ;sanic.c: 107:     return;
-[e $UE 884  ]
-"108
-[; ;sanic.c: 108: }
-[e :UE 884 ]
+"112
+[; ;sanic.c: 112:     return;
+[e $UE 929  ]
+"113
+[; ;sanic.c: 113: }
+[e :UE 929 ]
 }
-"110
-[; ;sanic.c: 110: void init(){
+"115
+[; ;sanic.c: 115: void init(){
 [v _init `(v ~T0 @X0 1 ef ]
 {
 [e :U _init ]
 [f ]
-"111
-[; ;sanic.c: 111:     setupOSC();
+"116
+[; ;sanic.c: 116:     raceColor[3] = 1;
+[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"117
+[; ;sanic.c: 117:     setupOSC();
 [e ( _setupOSC ..  ]
-"112
-[; ;sanic.c: 112:     clearPorts();
+"118
+[; ;sanic.c: 118:     clearPorts();
 [e ( _clearPorts ..  ]
-"113
-[; ;sanic.c: 113:     setupSerial();
+"119
+[; ;sanic.c: 119:     setupSerial();
 [e ( _setupSerial ..  ]
-"114
-[; ;sanic.c: 114: }
-[e :UE 891 ]
+"120
+[; ;sanic.c: 120: }
+[e :UE 936 ]
 }
+"122
+[; ;sanic.c: 122: void RCE(){
+[v _RCE `(v ~T0 @X0 1 ef ]
+{
+[e :U _RCE ]
+[f ]
+"123
+[; ;sanic.c: 123:     while(1){
+[e :U 939 ]
+{
+"124
+[; ;sanic.c: 124:         PORTD = 0b10100100;
+[e = _PORTD -> -> 164 `i `uc ]
+[v F6038 `uc ~T0 @X0 -> 13 `i s ]
+[i F6038
+:U ..
+"126
+[; ;sanic.c: 126:         unsigned char message[] = "Sanic races ";
+-> 83 `c
+-> 97 `c
+-> 110 `c
+-> 105 `c
+-> 99 `c
+-> 32 `c
+-> 114 `c
+-> 97 `c
+-> 99 `c
+-> 101 `c
+-> 115 `c
+-> 32 `c
+-> 0 `c
+..
+]
+[v _message `uc ~T0 @X0 -> 13 `i a ]
+[e = _message F6038 ]
+"128
+[; ;sanic.c: 128:         for (unsigned char a = 0; a < 12; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 12 `i 941  ]
+[e $U 942  ]
+[e :U 941 ]
+"129
+[; ;sanic.c: 129:         {
+{
+"130
+[; ;sanic.c: 130:             trans(message[a]);
+[e ( _trans (1 *U + &U _message * -> _a `ux -> -> # *U &U _message `ui `ux ]
+"131
+[; ;sanic.c: 131:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 12 `i 941  ]
+[e :U 942 ]
+}
+"133
+[; ;sanic.c: 133:         if (raceColor[3] == 1){
+[e $ ! == -> *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 944  ]
+{
+"134
+[; ;sanic.c: 134:             trans("B");
+[e ( _trans (1 -> :s 1C `uc ]
+"135
+[; ;sanic.c: 135:         }
+}
+[e $U 945  ]
+"136
+[; ;sanic.c: 136:         else if (raceColor[2] == 1){
+[e :U 944 ]
+[e $ ! == -> *U + &U _raceColor * -> -> -> 2 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 946  ]
+{
+"137
+[; ;sanic.c: 137:             trans("R");
+[e ( _trans (1 -> :s 2C `uc ]
+"138
+[; ;sanic.c: 138:         }
+}
+[e $U 947  ]
+"139
+[; ;sanic.c: 139:         else if (raceColor[1] == 1){
+[e :U 946 ]
+[e $ ! == -> *U + &U _raceColor * -> -> -> 1 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 948  ]
+{
+"140
+[; ;sanic.c: 140:             trans("G");
+[e ( _trans (1 -> :s 3C `uc ]
+"141
+[; ;sanic.c: 141:         }
+}
+[e $U 949  ]
+"142
+[; ;sanic.c: 142:         else {
+[e :U 948 ]
+{
+"143
+[; ;sanic.c: 143:             trans("n");
+[e ( _trans (1 -> :s 4C `uc ]
+"144
+[; ;sanic.c: 144:         }
+}
+[e :U 949 ]
+[e :U 947 ]
+[e :U 945 ]
+"145
+[; ;sanic.c: 145:         trans("\n");
+[e ( _trans (1 -> :s 5C `uc ]
+"148
+[; ;sanic.c: 148:         INTCONbits.GIE = 0;
+[e = . . _INTCONbits 1 7 -> -> 0 `i `uc ]
+"149
+[; ;sanic.c: 149:         INTCONbits.PEIE = 0;
+[e = . . _INTCONbits 1 6 -> -> 0 `i `uc ]
+"150
+[; ;sanic.c: 150:         unsigned char nCharsReceived = 0;
+[v _nCharsReceived `uc ~T0 @X0 1 a ]
+[e = _nCharsReceived -> -> 0 `i `uc ]
+"151
+[; ;sanic.c: 151:         unsigned char commandReceived[3];
+[v _commandReceived `uc ~T0 @X0 -> 3 `i a ]
+"153
+[; ;sanic.c: 153:         while(nCharsReceived < 3){
+[e $U 950  ]
+[e :U 951 ]
+{
+"154
+[; ;sanic.c: 154:             if (PIR1bits.RC1IF){
+[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 953  ]
+{
+"155
+[; ;sanic.c: 155:                 commandReceived[nCharsReceived] = RCREG;
+[e = *U + &U _commandReceived * -> _nCharsReceived `ux -> -> # *U &U _commandReceived `ui `ux _RCREG ]
+"156
+[; ;sanic.c: 156:                 nCharsReceived++;
+[e ++ _nCharsReceived -> -> 1 `i `uc ]
+"157
+[; ;sanic.c: 157:             }
+}
+[e :U 953 ]
+"158
+[; ;sanic.c: 158:         }
+}
+[e :U 950 ]
+"153
+[; ;sanic.c: 153:         while(nCharsReceived < 3){
+[e $ < -> _nCharsReceived `i -> 3 `i 951  ]
+[e :U 952 ]
+"161
+[; ;sanic.c: 161:         switch (commandReceived[0])
+[e $U 955  ]
+"162
+[; ;sanic.c: 162:         {
+{
+"163
+[; ;sanic.c: 163:         case 'R':
+[e :U 956 ]
+"165
+[; ;sanic.c: 165:             break;
+[e $U 954  ]
+"166
+[; ;sanic.c: 166:         case 'P':
+[e :U 957 ]
+"167
+[; ;sanic.c: 167:             PRC();
+[e ( _PRC ..  ]
+"168
+[; ;sanic.c: 168:             break;
+[e $U 954  ]
+"169
+[; ;sanic.c: 169:         case 'N':
+[e :U 958 ]
+"171
+[; ;sanic.c: 171:             break;
+[e $U 954  ]
+"172
+[; ;sanic.c: 172:         case 'Q':
+[e :U 959 ]
+"174
+[; ;sanic.c: 174:             break;
+[e $U 954  ]
+"175
+[; ;sanic.c: 175:         case 'C':
+[e :U 960 ]
+"177
+[; ;sanic.c: 177:             break;
+[e $U 954  ]
+"179
+[; ;sanic.c: 179:         default:
+[e :U 961 ]
+"180
+[; ;sanic.c: 180:             error();
+[e ( _error ..  ]
+"181
+[; ;sanic.c: 181:             break;
+[e $U 954  ]
+"182
+[; ;sanic.c: 182:         }
+}
+[e $U 954  ]
+[e :U 955 ]
+[e [\ -> *U + &U _commandReceived * -> -> -> 0 `i `ui `ux -> -> # *U &U _commandReceived `ui `ux `i , $ -> -> 82 `ui `i 956
+ , $ -> -> 80 `ui `i 957
+ , $ -> -> 78 `ui `i 958
+ , $ -> -> 81 `ui `i 959
+ , $ -> -> 67 `ui `i 960
+ 961 ]
+[e :U 954 ]
+"184
+[; ;sanic.c: 184:         for (unsigned char a = 0; a < 3; a++){
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 3 `i 962  ]
+[e $U 963  ]
+[e :U 962 ]
+{
+"185
+[; ;sanic.c: 185:             commandReceived[a] = 0;
+[e = *U + &U _commandReceived * -> _a `ux -> -> # *U &U _commandReceived `ui `ux -> -> 0 `i `uc ]
+"186
+[; ;sanic.c: 186:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 3 `i 962  ]
+[e :U 963 ]
+}
+"187
+[; ;sanic.c: 187:         nCharsReceived = 0;
+[e = _nCharsReceived -> -> 0 `i `uc ]
+"188
+[; ;sanic.c: 188:     }
+}
+[e :U 938 ]
+[e $U 939  ]
+[e :U 940 ]
+"189
+[; ;sanic.c: 189:     return;
+[e $UE 937  ]
+"190
+[; ;sanic.c: 190: }
+[e :UE 937 ]
+}
+[a 4C 110 0 ]
+[a 2C 82 0 ]
+[a 3C 71 0 ]
+[a 1C 66 0 ]
+[a 5C 10 0 ]

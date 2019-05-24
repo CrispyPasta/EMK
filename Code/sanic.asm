@@ -288,7 +288,7 @@ setup
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
  
 ;<editor-fold defaultstate="collapsed" desc="RCE">
-RCE	
+RCE:	
 	MOVLW	0x00
 	MOVWF	PORTA
 	MOVLW	b'10100100'			;hard coded transmission of RCE mode message

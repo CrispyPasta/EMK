@@ -7,18 +7,24 @@
 [v _setupSerial setupSerial `(v  1 e 1 0 ]
 "42
 [v _trans trans `(v  1 e 1 0 ]
-"49
-[v _setupADC setupADC `(v  1 e 1 0 ]
-"61
+"69
 [v _setADCChannel setADCChannel `(v  1 e 1 0 ]
-"99
-[v _readADC readADC `(uc  1 e 1 0 ]
 "107
+[v _readADC readADC `(uc  1 e 1 0 ]
+"115
 [v _aveSensor aveSensor `(uc  1 e 1 0 ]
-"135
+"143
 [v _clearPorts clearPorts `(v  1 e 1 0 ]
-"165
+"173
 [v _setupOSC setupOSC `(v  1 e 1 0 ]
+"244
+[v _twoSecondDelay twoSecondDelay `(v  1 e 1 0 ]
+"250
+[v _error error `(v  1 e 1 0 ]
+"260
+[v _PRC PRC `(v  1 e 1 0 ]
+"7 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\awdiv.c
+[v ___awdiv __awdiv `(i  1 e 2 0 ]
 "4 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\fleq.c
 [v ___fleq __fleq `(b  1 e 0 0 ]
 "62 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\float.c
@@ -45,11 +51,23 @@
 [v ___lmul __lmul `(ul  1 e 4 0 ]
 "91 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\Umul64.c
 [v ___omul __omul `(uo  1 e 8 0 ]
-"77 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
+"79 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
 [v _main main `(v  1 e 1 0 ]
-"110
+"115
 [v _init init `(v  1 e 1 0 ]
-"18 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+"122
+[v _RCE RCE `(v  1 e 1 0 ]
+"12 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+[v _LLranges LLranges `[5]uc  1 e 5 0 ]
+"13
+[v _Lranges Lranges `[5]uc  1 e 5 0 ]
+"14
+[v _Mranges Mranges `[5]uc  1 e 5 0 ]
+"15
+[v _Rranges Rranges `[5]uc  1 e 5 0 ]
+"16
+[v _RRranges RRranges `[5]uc  1 e 5 0 ]
+"18
 [v _raceColor raceColor `[9]uc  1 e 9 0 ]
 "52 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\include\pic18f45k22.h
 [v _ANSELA ANSELA `VEuc  1 e 1 @3896 ]
@@ -84,6 +102,74 @@
 [v _ANSELE ANSELE `VEuc  1 e 1 @3900 ]
 "6280
 [v _PORTA PORTA `VEuc  1 e 1 @3968 ]
+[s S441 . 1 `uc 1 RA0 1 0 :1:0 
+`uc 1 RA1 1 0 :1:1 
+`uc 1 RA2 1 0 :1:2 
+`uc 1 RA3 1 0 :1:3 
+`uc 1 RA4 1 0 :1:4 
+`uc 1 RA5 1 0 :1:5 
+`uc 1 RA6 1 0 :1:6 
+`uc 1 RA7 1 0 :1:7 
+]
+"6365
+[s S450 . 1 `uc 1 AN0 1 0 :1:0 
+`uc 1 AN1 1 0 :1:1 
+`uc 1 AN2 1 0 :1:2 
+`uc 1 AN3 1 0 :1:3 
+`uc 1 . 1 0 :1:4 
+`uc 1 AN4 1 0 :1:5 
+]
+[s S457 . 1 `uc 1 C12IN0M 1 0 :1:0 
+`uc 1 C12IN1M 1 0 :1:1 
+`uc 1 C2INP 1 0 :1:2 
+`uc 1 C1INP 1 0 :1:3 
+`uc 1 C1OUT 1 0 :1:4 
+`uc 1 C2OUT 1 0 :1:5 
+]
+[s S464 . 1 `uc 1 C12IN0N 1 0 :1:0 
+`uc 1 C12IN1N 1 0 :1:1 
+`uc 1 VREFM 1 0 :1:2 
+`uc 1 VREFP 1 0 :1:3 
+`uc 1 T0CKI 1 0 :1:4 
+`uc 1 SS 1 0 :1:5 
+]
+[s S471 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 NOT_SS 1 0 :1:5 
+]
+[s S474 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 VREFN 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 SRQ 1 0 :1:4 
+`uc 1 nSS 1 0 :1:5 
+]
+[s S480 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 CVREF 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 LVDIN 1 0 :1:5 
+]
+[s S485 . 1 `uc 1 . 1 0 :2:0 
+`uc 1 DACOUT 1 0 :1:2 
+`uc 1 . 1 0 :2:3 
+`uc 1 HLVDIN 1 0 :1:5 
+]
+[s S490 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 SS1 1 0 :1:5 
+]
+[s S493 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 NOT_SS1 1 0 :1:5 
+]
+[s S496 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 nSS1 1 0 :1:5 
+]
+[s S499 . 1 `uc 1 . 1 0 :5:0 
+`uc 1 SRNQ 1 0 :1:5 
+]
+[s S502 . 1 `uc 1 ULPWUIN 1 0 :1:0 
+`uc 1 . 1 0 :6:1 
+`uc 1 RJPU 1 0 :1:7 
+]
+[u S506 . 1 `S441 1 . 1 0 `S450 1 . 1 0 `S457 1 . 1 0 `S464 1 . 1 0 `S471 1 . 1 0 `S474 1 . 1 0 `S480 1 . 1 0 `S485 1 . 1 0 `S490 1 . 1 0 `S493 1 . 1 0 `S496 1 . 1 0 `S499 1 . 1 0 `S502 1 . 1 0 ]
+[v _PORTAbits PORTAbits `VES506  1 e 1 @3968 ]
 "6565
 [v _PORTB PORTB `VEuc  1 e 1 @3969 ]
 "6835
@@ -192,6 +278,8 @@
 [v _TXSTA1 TXSTA1 `VEuc  1 e 1 @4012 ]
 "11181
 [v _TXREG TXREG `VEuc  1 e 1 @4013 ]
+"11259
+[v _RCREG RCREG `VEuc  1 e 1 @4014 ]
 "11332
 [v _SPBRG1 SPBRG1 `VEuc  1 e 1 @4015 ]
 "11410
@@ -307,81 +395,114 @@
 [v _OSCCONbits OSCCONbits `VES423  1 e 1 @4051 ]
 "16596
 [v _FSR0 FSR0 `VEus  1 e 2 @4073 ]
-"77 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
+[s S599 . 1 `uc 1 RBIF 1 0 :1:0 
+`uc 1 INT0IF 1 0 :1:1 
+`uc 1 TMR0IF 1 0 :1:2 
+`uc 1 RBIE 1 0 :1:3 
+`uc 1 INT0IE 1 0 :1:4 
+`uc 1 TMR0IE 1 0 :1:5 
+`uc 1 PEIE_GIEL 1 0 :1:6 
+`uc 1 GIE_GIEH 1 0 :1:7 
+]
+"16924
+[s S608 . 1 `uc 1 . 1 0 :1:0 
+`uc 1 INT0F 1 0 :1:1 
+`uc 1 T0IF 1 0 :1:2 
+`uc 1 . 1 0 :1:3 
+`uc 1 INT0E 1 0 :1:4 
+`uc 1 T0IE 1 0 :1:5 
+`uc 1 PEIE 1 0 :1:6 
+`uc 1 GIE 1 0 :1:7 
+]
+[s S617 . 1 `uc 1 . 1 0 :6:0 
+`uc 1 GIEL 1 0 :1:6 
+`uc 1 GIEH 1 0 :1:7 
+]
+[u S621 . 1 `S599 1 . 1 0 `S608 1 . 1 0 `S617 1 . 1 0 ]
+[v _INTCONbits INTCONbits `VES621  1 e 1 @4082 ]
+"79 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
 [v _main main `(v  1 e 1 0 ]
 {
-"101
+"106
 } 0
-"42 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
-[v _trans trans `(v  1 e 1 0 ]
-{
-[v trans@s s `uc  1 a 1 wreg ]
-[v trans@s s `uc  1 a 1 wreg ]
-[v trans@s s `uc  1 a 1 0 ]
-"46
-} 0
-"49
-[v _setupADC setupADC `(v  1 e 1 0 ]
-{
-"57
-} 0
-"110 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
+"115
 [v _init init `(v  1 e 1 0 ]
 {
-"114
+"120
 } 0
 "22 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
 [v _setupSerial setupSerial `(v  1 e 1 0 ]
 {
 "40
 } 0
-"165
+"173
 [v _setupOSC setupOSC `(v  1 e 1 0 ]
 {
-"168
+"176
 } 0
-"135
+"143
 [v _clearPorts clearPorts `(v  1 e 1 0 ]
 {
-"162
+"170
 } 0
-"107
-[v _aveSensor aveSensor `(uc  1 e 1 0 ]
+"122 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
+[v _RCE RCE `(v  1 e 1 0 ]
 {
-[v aveSensor@s s `uc  1 a 1 wreg ]
-"111
-[v aveSensor@a a `uc  1 a 1 12 ]
-"109
-[v aveSensor@measurements measurements `ui  1 a 2 9 ]
-"115
-[v aveSensor@result result `uc  1 a 1 11 ]
-"107
-[v aveSensor@s s `uc  1 a 1 wreg ]
-[v aveSensor@s s `uc  1 a 1 8 ]
-"118
+"184
+[v RCE@a_829 a `uc  1 a 1 75 ]
+"128
+[v RCE@a a `uc  1 a 1 74 ]
+"126
+[v RCE@message message `[13]uc  1 a 13 57 ]
+"151
+[v RCE@commandReceived commandReceived `[3]uc  1 a 3 70 ]
+"150
+[v RCE@nCharsReceived nCharsReceived `uc  1 a 1 73 ]
+"124
+[v RCE@F6038 F6038 `[13]uc  1 s 13 F6038 ]
+"190
 } 0
-"61
-[v _setADCChannel setADCChannel `(v  1 e 1 0 ]
+"260 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+[v _PRC PRC `(v  1 e 1 0 ]
 {
-[v setADCChannel@channel channel `uc  1 a 1 wreg ]
-[v setADCChannel@channel channel `uc  1 a 1 wreg ]
-[v setADCChannel@channel channel `uc  1 a 1 2 ]
-"96
+"300
+[v PRC@a_792 a `uc  1 a 1 53 ]
+"292
+[v PRC@a_791 a `uc  1 a 1 52 ]
+"284
+[v PRC@a_790 a `uc  1 a 1 51 ]
+"276
+[v PRC@a_789 a `uc  1 a 1 50 ]
+"315
+[v PRC@a_796 a `uc  1 a 1 54 ]
+"265
+[v PRC@a a `uc  1 a 1 49 ]
+"263
+[v PRC@message message `[32]uc  1 a 32 11 ]
+"313
+[v PRC@message2 message2 `[6]uc  1 a 6 43 ]
+"262
+[v PRC@F6019 F6019 `[32]uc  1 s 32 F6019 ]
+"311
+[v PRC@F6026 F6026 `[6]uc  1 s 6 F6026 ]
+"321
 } 0
-"99
-[v _readADC readADC `(uc  1 e 1 0 ]
+"250
+[v _error error `(v  1 e 1 0 ]
 {
-"104
+"254
+[v error@a a `uc  1 a 1 8 ]
+"252
+[v error@message message `[7]uc  1 a 7 1 ]
+"251
+[v error@F6015 F6015 `[7]uc  1 s 7 F6015 ]
+"258
 } 0
-"7 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\lwdiv.c
-[v ___lwdiv __lwdiv `(ui  1 e 2 0 ]
+"42
+[v _trans trans `(v  1 e 1 0 ]
 {
-"10
-[v ___lwdiv@quotient quotient `ui  1 a 2 4 ]
-"11
-[v ___lwdiv@counter counter `uc  1 a 1 6 ]
-"7
-[v ___lwdiv@dividend dividend `ui  1 p 2 0 ]
-[v ___lwdiv@divisor divisor `ui  1 p 2 2 ]
-"30
+[v trans@s s `uc  1 a 1 wreg ]
+[v trans@s s `uc  1 a 1 wreg ]
+[v trans@s s `uc  1 a 1 0 ]
+"46
 } 0

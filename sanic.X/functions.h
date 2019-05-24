@@ -15,5 +15,7 @@ void setupOSC();
 void calibrate();
 void ranges();
 void twoSecondDelay();
+void error(void);
+void PRC();
 
 #endif

@@ -15,7 +15,7 @@ unsigned char Mranges[] = {130, 165, 175, 188, 255};
 unsigned char Rranges[] = {140, 170, 210, 175, 255};
 unsigned char RRranges[] = {140, 185, 195, 195, 255};
 unsigned char sensorVals[] = {255, 255, 255, 255, 255};
-unsigned char raceColor[] = "00000000";    //initialize as none for now
+unsigned char raceColor[] = "00001000";    //initialize as blue for now
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GLOBAL VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
@@ -46,6 +46,7 @@ void trans(unsigned char s){
 }
 
 //Does setup for ADC, default channel is AN12
+//However, AN12's pin will not be set up
 void setupADC(){
     ADCON2bits.ADCS = 0b100;        //Fosc/4
     ADCON1 = 0;                     //configure voltage reference 
@@ -180,6 +181,7 @@ void calibrate(){
     unsigned char sensors[5] = {12, 8, 9, 10, 13};
     PORTD = 0b10000000;
     
+    PORTD = 0b10000000;
     LLranges[blueBit] = aveSensor(12);
     Lranges[blueBit] = aveSensor(8);
     Mranges[blueBit] = aveSensor(9);
@@ -188,6 +190,7 @@ void calibrate(){
     PORTAbits.RA3 = 1;          //turn on the blue LED
     twoSecondDelay();
     
+    PORTD = 0b10001000;
     LLranges[redBit] = aveSensor(12);
     Lranges[redBit] = aveSensor(8);
     Mranges[redBit] = aveSensor(9);
@@ -196,22 +199,25 @@ void calibrate(){
     PORTAbits.RA2 = 1;          //turn on the red LED
     twoSecondDelay();
     
+    PORTD = 0b10000010;
     LLranges[greenBit] = aveSensor(12);
     Lranges[greenBit] = aveSensor(8);
     Mranges[greenBit] = aveSensor(9);
     Rranges[greenBit] = aveSensor(10);
     RRranges[greenBit] = aveSensor(13);
-    PORTAbits.RA0 = 1;          //turn on the green LED
+    PORTAbits.RA1 = 1;          //turn on the green LED
     twoSecondDelay();
     
+    PORTD = 0b11000001;
     LLranges[whiteBit] = aveSensor(12);
     Lranges[whiteBit] = aveSensor(8);
     Mranges[whiteBit] = aveSensor(9);
     Rranges[whiteBit] = aveSensor(10);
     RRranges[whiteBit] = aveSensor(13);
-    PORTAbits.RA4 = 1;          //turn on the white LED
+    PORTAbits.RA0 = 1;          //turn on the white LED
     twoSecondDelay();
     
+    PORTD = 0b11001000;
     LLranges[blackBit] = aveSensor(12);
     Lranges[blackBit] = aveSensor(8);
     Mranges[blackBit] = aveSensor(9);
@@ -239,4 +245,77 @@ void twoSecondDelay(){
     for (unsigned char a = 0; a < 255; a++){
         for (unsigned char b = 0; b < 255; b++);
     }
+}
+
+void error()
+{
+    unsigned char message[] = "ERROR\n";
+
+    for (unsigned char a = 0; a < 6; a++)
+    {
+        trans(message[a]);
+    }
+}
+
+void PRC()
+{
+    PORTD = 0b11111001;     //show on 7seg
+    unsigned char message[] = "\nWhat color should sanic race?\n";
+
+    for (unsigned char a = 0; a < 31; a++)
+    {
+        trans(message[a]);
+    }
+
+    while (!PIR1bits.RC1IF)
+        ;
+
+    switch (RCREG)
+    {
+    case 'B':
+        for (unsigned char a = 0; a < 8; a++)
+        {
+            raceColor[a] = 0;
+        }
+
+        raceColor[blueBit] = 1;
+        break;
+    case 'G':
+        for (unsigned char a = 0; a < 8; a++)
+        {
+            raceColor[a] = 0;
+        }
+
+        raceColor[greenBit] = 1;
+        break;
+    case 'R':
+        for (unsigned char a = 0; a < 8; a++)
+        {
+            raceColor[a] = 0;
+        }
+
+        raceColor[redBit] = 1;
+        break;
+    case 'n':
+        for (unsigned char a = 0; a < 8; a++)
+        {
+            raceColor[a] = 0;
+        }
+
+        raceColor[blackBit] = 1;
+        break;
+
+    default:
+        error();
+        break;
+    }
+
+    unsigned char message2[] = "\nSet\n";
+
+    for (unsigned char a = 0; a < 5; a++)
+    {
+        trans(message2[a]);
+    }
+
+    return;
 }
