@@ -954,6 +954,7 @@ navigate:
     BSF		INTCON,GIEL		; Enable peripheral interrupts
     BSF		INTCON,GIEH		; Enable global interrupts
     BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
+	BCF		PIR1,RC1IF 
 
     CALL    LeftMotorSetup
     CALL    RightMotorSetup
@@ -1201,11 +1202,13 @@ touchISR:
     CLRF    RCREG
     BCF	    PIR1,RC1IF
     BCF	    PIE1,RC1IE
+    MOVLB   0x0F
     BCF	    PORTC,2
     BCF	    PORTE,2
-    BSF	    TRISC,2	//disable output on pin
+    BSF	    TRISC,2	;disable output on pin
     BSF	    TRISE,2
-    CLRF    CCPR1L	//zero percent duty cycle 
+    MOVLB   0x00
+    CLRF    CCPR1L	;zero percent duty cycle 
     CLRF    CCPR5L
     GOTO    RCE
 ;</editor-fold>
