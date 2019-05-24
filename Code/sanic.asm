@@ -993,10 +993,20 @@ nav
     CALL    getRaceLinePosition
     CALL    determineDirection
     CALL    hunnitMilDelay
-    GOTO    nav
+    GOTO    checkStop
 	; GOTO	$
 	; navigate doesn't end, it must be interruted 
 ;</editor-fold>
+
+;<editor-fold defaultstate="collapsed" desc="checkStop">
+checkStop:
+	BTFSS	PIR1, RC1IF 
+	GOTO	nav 
+	MOVLW	A'S' 		
+	CPFSEQ	RCREG		;compare RCREG with 'S'
+	GOTO	nav
+	GOTO	RCE 
+;</editor-fold>	
 	
 ;</editor-fold>	
 
