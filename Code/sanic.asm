@@ -376,7 +376,7 @@ Pro1
 	MOVLW	A'V'
 	XORWF	INDF0,W
 	BTFSC	STATUS,Z
-	GOTO	getColor_M_demo3
+	GOTO	navigate
 	GOTO	err
 	
 Pro2
@@ -782,14 +782,14 @@ searchModeLights:
 	RETURN 
 ;</editor-fold>
 
-;<editor-fold defaultstate="collapsed" desc="Left motor control">
-LeftMotorControl macro dutyCycle, direction
+;<editor-fold defaultstate="collapsed" desc="Left motor setup>
+LeftMotorSetup:
     MOVLB   0x0f
     BSF	    PORTA, 7
     CLRF    CCP1CON
     MOVLW   .200
     MOVWF   PR2
-    MOVLW   dutyCycle
+    MOVLW   .100
     MOVWF   CCPR1L
     
     BCF	    TRISC,2      ;C2
@@ -802,25 +802,12 @@ LeftMotorControl macro dutyCycle, direction
     MOVLW   b'01111010'	     ;16 prescale, 16 postscale, timer off
     MOVWF   T2CON 
     CLRF    TMR2
-    BSF     PIE1, TMR2IE     ; enable interrupts from the timer
+    BCF     PIE1, TMR2IE     ; disable interrupts from the timer
     bsf     INTCON,PEIE      ; Enable peripheral interrupts
     bsf     INTCON,GIE       ; Enable global interrupts
     BSF	    T2CON, TMR2ON    ; Turn timer on
-    MOVLB   0x0
-	
-    BTFSC   direction, 0	  ; if 1, go forward
-    GOTO    leftMotorForward
-    GOTO    leftMotorBackward
-	
-    
-    ; BCF	    PORTC,4		;forward 
-    ; BSF	    PORTC,5
-    ; GOTO    $+8
 
-    ; BSF	    PORTC,4		;go backward
-    ; BCF	    PORTC,5
-    
-    endm
+    RETURN
 
 PWMISRL:
     BCF	    PIR5,TMR4IE
@@ -831,11 +818,11 @@ PWMISRL:
     ;</editor-fold>
 
 ;<editor-fold defaultstate="collapsed" desc="Right motor control">
-RightMotorControl macro dutyCycle, direction
+RightMotorSetup:
     CLRF    CCP5CON
     MOVLW   .200
     MOVWF   PR4
-    MOVLW   dutyCycle
+    MOVLW   .100
     MOVWF   CCPR5L
     
     BCF	    TRISE, 2         ;E2
@@ -849,25 +836,13 @@ RightMotorControl macro dutyCycle, direction
     MOVLW   b'01111010'	      ;16 prescale, 16 postscale, timer off
     MOVWF   T4CON 
     CLRF    TMR4
-    BSF     PIE5, TMR4IE      ; enable interrupts from the timer
+    BCF     PIE5, TMR4IE      ; disable interrupts from the timer
     bsf     INTCON, PEIE      ; Enable peripheral interrupts
     bsf     INTCON, GIE       ; Enable global interrupts
     BSF	    T4CON, TMR4ON     ; Turn timer on
     MOVLB   0x0
     
-    BTFSC   direction, 0	  ; if 1, go forward
-;    GOTO    $+6
-;    GOTO    $+10
-    GOTO    rightMotorForward
-    GOTO    rightMotorBackward
-;	
-;    BSF	    PORTE,0		;forwards 
-;    BCF	    PORTE,1
-;    GOTO    $+8
-;
-;    BCF	    PORTE,0		;go backward
-;    BSF	    PORTE,1
-    endm
+    RETURN
 
 PWMISRR:
     BCF	    PIR5,TMR4IF
@@ -877,81 +852,105 @@ PWMISRR:
     RETURN
 
 leftMotorForward:
-	; BSF		PORTC, 4
-	; BCF		PORTC, 5
+	BCF		PORTC, 0
+	BSF		PORTC, 1
 	return 
 
 leftMotorBackward:
-	; BCF		PORTC, 4
-	; BSF		PORTC, 5
+	BSF		PORTC, 0
+	BCF		PORTC, 1
 	return 
 
 rightMotorForward:
-	; BSF		PORTE, 1
-	; BCF		PORTE, 0
+	BSF		PORTE, 1
+	BCF		PORTE, 0
 	return 
 
 rightMotorBackward:
-	; BCF		PORTE, 1
-	; BSF		PORTE, 0
+	BCF		PORTE, 1
+	BSF		PORTE, 0
 	return 
     ;</editor-fold>
 
 ;<editor-fold defaultstate="collapsed" desc="Direction Controls">
-HardRight:
-    BSF	    PORTA, 5	;indicates right 
-    RightMotorControl	.20, 0x01
-    LeftMotorControl	.100,0x00
+HardRight:		;using -20:+60 ratio
+    ; BSF	    PORTA, 5	;indicates right 
+	; move value into left motor register 
+	CALL	rightMotorBackward		;;;;;;;;;;;;;;
+	MOVLW	.40
+	MOVWF	CCPR5L
+	; move value into right motor register 
+	CALL	leftMotorForward
+	MOVLW	.120
+	MOVWF	CCPR1L
     RETURN		;return to navigation 
 	
-HardLeft:
-    BSF	    PORTA, 3	;indicates left
-    RightMotorControl	.100,0x00
-    LeftMotorControl	.20, 0x01
+HardLeft:	;+60:-20
+	CALL	leftMotorBackward
+	MOVLW	.40
+	MOVWF	CCPR1L
+	; move value into right motor register 
+	CALL	rightMotorForward
+	MOVLW	.120
+	MOVWF	CCPR5L
     RETURN		;return to navigation 
 
-Right:
-    BSF	    PORTA, 5	;indicates right
-    RightMotorControl	.60, 0x01
-    LeftMotorControl	.100,0x00
+Right:	; +60:+20 ratio
+    CALL	rightMotorForward
+	MOVLW	.40
+	MOVWF	CCPR5L
+	; move value into right motor register 
+	CALL	leftMotorForward
+	MOVLW	.120
+	MOVWF	CCPR1L
     RETURN		;return to navigation 
 
-Left:
-    BSF	    PORTA, 3	;indicates left
-    RightMotorControl	.100,0x00
-    LeftMotorControl	.60, 0x01
+Left:	;use +20:+60 ratio
+	CALL	leftMotorForward
+	MOVLW	.40
+	MOVWF	CCPR1L
+	; move value into right motor register 
+	CALL	rightMotorForward
+	MOVLW	.120
+	MOVWF	CCPR5L
     RETURN		;return to navigation 
 
 Stop:
     MOVLW   0xFF
     MOVWF   PORTA		;turn off all leddies for stop
-;    RightMotorControl	.0,0x00		;turn motors off 
-;    LeftMotorControl	.0,0x00
+;    RightMotorSetup	.0,0x00		;turn motors off 
+;    LeftMotorSetup	.0,0x00
+	BCF		TRISC,2		;disable PWM output on pins
+	BCF		TRISE,2
     BCF	    PORTC,2
     BCF	    PORTE,2
     RETURN		;return to navigation 
 
 Straight:
 	CLRF	PORTA 
-    BSF	    PORTA, 4
-    ; LeftMotorControl	.100, 0x00
-    ; RightMotorControl	.100, 0x00	; g2g  f�st
+    ; BSF	    PORTA,4 	;indicate straight 
+	CALL    LeftMotorSetup
+	CALL	RightMotorSetup
+	CALL	leftMotorForward		;set motor control bits
+	CALL	rightMotorForward
 
-	BSF 	PORTE,2			;right motor on 
-	BSF 	PORTC,2			;left motor on 
+	; BSF 	PORTE,2			;right motor on 
+	; BSF 	PORTC,2			;left motor on 
 
-	BCF		PORTC, 4
-	BSF		PORTC, 5
+	; BCF		PORTC, 4
+	; BSF		PORTC, 5
 
-	BCF		PORTE, 0
-	BSF		PORTE, 1
+	; BCF		PORTE, 0
+	; BSF		PORTE, 1
 
     RETURN		;return to navigation  
     ;</editor-fold>
     
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
-    CALL    Straight			;initially go forward 
+    CALL    LeftMotorSetup
+    CALL    RightMotorSetup
+    CALL    HardRight			;initially go forward 
 	
     BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
@@ -972,11 +971,12 @@ navigate:
     MOVWF   PORTD
     
 nav    
-     CALL    getColor
-     CALL    getRaceLinePosition
-     CALL    determineDirection
-     CALL    hunnitMilDelay
-     GOTO    nav
+    CALL    getColor
+    CALL    getRaceLinePosition
+    CALL    determineDirection
+    CALL    hunnitMilDelay
+    GOTO    nav
+	; GOTO	$
 	; navigate doesn't end, it must be interruted 
 ;</editor-fold>
 	
@@ -1090,7 +1090,7 @@ transmitForPy
 	CPFSEQ	col
 	GOTO	C1
 	CLRF	raceColor
-	BSF	raceColor,redBit
+	BSF		raceColor,redBit
 
 	
 C1	MOVLW	A'B'
@@ -1190,7 +1190,7 @@ stop
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;<editor-fold defaultstate="collapsed" desc="touchISR">
-touchISR	
+touchISR:	
     CLRF    RCREG
     BCF	    PIR1,RCIF
     BCF	    PIE1,RC1IE
@@ -1804,8 +1804,8 @@ not_done
 
     ;<editor-fold defaultstate="collapsed" desc="1m Python Calibration">
 pyCal:
-	; LeftMotorControl	.0, .0
-	; RightMotorControl	.0, .0
+	; LeftMotorSetup	.0, .0
+	; RightMotorSetup	.0, .0
 	BCF 	PORTC,2
 	BCF 	PORTE,2
 
