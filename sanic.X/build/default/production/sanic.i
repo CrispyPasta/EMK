@@ -9871,6 +9871,7 @@ void PRC()
 {
     PORTD = 0b11111001;
     unsigned char message[] = "\nWhat color should sanic race?\n";
+    unsigned char message2[] = "\nSet\n";
 
     for (unsigned char a = 0; a < 31; a++)
     {
@@ -9889,30 +9890,47 @@ void PRC()
         }
 
         raceColor[3] = 1;
+
+        for (unsigned char a = 0; a < 5; a++)
+        {
+            trans(message2[a]);
+        }
         break;
     case 'G':
-        for (unsigned char a = 0; a < 8; a++)
-        {
+        for (unsigned char a = 0; a < 8; a++){
             raceColor[a] = 0;
         }
 
         raceColor[1] = 1;
+
+        for (unsigned char a = 0; a < 5; a++)
+        {
+            trans(message2[a]);
+        }
         break;
     case 'R':
-        for (unsigned char a = 0; a < 8; a++)
-        {
+        for (unsigned char a = 0; a < 8; a++){
             raceColor[a] = 0;
         }
 
         raceColor[2] = 1;
+
+        for (unsigned char a = 0; a < 5; a++)
+        {
+            trans(message2[a]);
+        }
         break;
     case 'n':
-        for (unsigned char a = 0; a < 8; a++)
-        {
+        for (unsigned char a = 0; a < 8; a++){
             raceColor[a] = 0;
         }
 
         raceColor[4] = 1;
+
+        for (unsigned char a = 0; a < 5; a++)
+        {
+            trans(message2[a]);
+        }
         break;
 
     default:
@@ -9920,12 +9938,7 @@ void PRC()
         break;
     }
 
-    unsigned char message2[] = "\nSet\n";
 
-    for (unsigned char a = 0; a < 5; a++)
-    {
-        trans(message2[a]);
-    }
 
     return;
 }
@@ -9970,26 +9983,26 @@ void RCE(){
     while(1){
         PORTD = 0b10100100;
 
-        unsigned char message[] = "Sanic races ";
+        unsigned char message[] = "\nSanic races ";
 
-        for (unsigned char a = 0; a < 12; a++)
+        for (unsigned char a = 0; a < 13; a++)
         {
             trans(message[a]);
         }
 
         if (raceColor[3] == 1){
-            trans("B");
+            trans('B');
         }
         else if (raceColor[2] == 1){
-            trans("R");
+            trans('R');
         }
         else if (raceColor[1] == 1){
-            trans("G");
+            trans('G');
         }
         else {
-            trans("n");
+            trans('n');
         }
-        trans("\n");
+        trans('\n');
 
 
         INTCONbits.GIE = 0;
