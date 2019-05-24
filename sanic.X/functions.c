@@ -303,8 +303,7 @@ void PRC()
         trans(message[a]);
     }
 
-    while (!PIR1bits.RC1IF)
-        ;
+    while (!PIR1bits.RC1IF);
 
     switch (RCREG)
     {

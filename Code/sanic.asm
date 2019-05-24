@@ -949,9 +949,9 @@ Straight:
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
 	;enable serial interrupts 
-	BSF		INTCON,GIEL		; Enable peripheral interrupts
-	bsf     INTCON,GIEH		; Enable global interrupts
-	BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
+    BSF	    INTCON,GIEL		; Enable peripheral interrupts
+    BSF     INTCON,GIEH		; Enable global interrupts
+    BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
 
     CALL    LeftMotorSetup
     CALL    RightMotorSetup
@@ -1199,8 +1199,8 @@ touchISR:
     CLRF    RCREG
     BCF	    PIR1,RCIF
     BCF	    PIE1,RC1IE
-	BCF		PORTC,2
-	BCF		PORTE,2
+    BCF	    PORTC,2
+    BCF	    PORTE,2
     GOTO    RCE
 ;</editor-fold>
 
