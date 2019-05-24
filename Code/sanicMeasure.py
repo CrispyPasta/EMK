@@ -25,7 +25,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM15' 
+    ser.port = 'COM6' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -38,7 +38,7 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [2]
+sensors = [0,1,2,3,4]
 def animate(i):
     global calibrationComplete
     global data
