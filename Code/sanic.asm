@@ -168,11 +168,15 @@ setup
     BSF	    INTCON,PEIE		; Enable peripheral interrupts
     BSF	    INTCON,RBIE		;enable PORTB pins interrupt enabled
     ;BSF	    INTCON,INT0IE
-    BCF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
-    BCF	    PIE1,TX1IE
-    BCF	    PIR1,RCIF
+    BCF	    PIR1,RC1IF
+    BCF	    PIR1,TX1IF
+    BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
+    BSF	    PIE1,TX1IE
+
     bsf     INTCON,GIE  ; Enable global interrupts
-    BSF	    IOCB,IOCB7
+    
+    
+;    BSF	    IOCB,IOCB7		; Soos tf doen dit hier?
   
     
     ;setup port for transmission
@@ -322,7 +326,7 @@ RCE:
 	bcf	PIR1,TXIF
 	bcf	PIE1,TXIE
 	BSF	PORTA,4
-	bcf	PIR1,5
+	bcf	PIR1,RC1IF
 	BCF	PORTA,4
 	GOTO	R1
 	
@@ -949,9 +953,9 @@ Straight:
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
 	;enable serial interrupts 
-    BSF	    INTCON,GIEL		; Enable peripheral interrupts
-    BSF     INTCON,GIEH		; Enable global interrupts
-    BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
+    BSF		INTCON,GIEL		; Enable peripheral interrupts
+    bsf		INTCON,GIEH		; Enable global interrupts
+    BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
 
     CALL    LeftMotorSetup
     CALL    RightMotorSetup
@@ -1197,7 +1201,7 @@ stop
 ;<editor-fold defaultstate="collapsed" desc="touchISR">
 touchISR:	
     CLRF    RCREG
-    BCF	    PIR1,RCIF
+    BCF	    PIR1,RC1IF
     BCF	    PIE1,RC1IE
     BCF	    PORTC,2
     BCF	    PORTE,2
@@ -2002,9 +2006,9 @@ Go_on2_100
     
     ;<editor-fold defaultstate="collapsed" desc="333 ms Delay loop">
 threeMilDelay: ;(actually now 333ms)
-    BSF	    INTCON,GIEL		; Enable peripheral interrupts
-    bsf     INTCON,GIEH		; Enable global interrupts
-    BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
+;    BSF	    INTCON,GIEL		; Enable peripheral interrupts
+;    bsf     INTCON,GIEH		; Enable global interrupts
+;    BSF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
     movlw   .3
     movwf   delay3
 Go_on0_333
