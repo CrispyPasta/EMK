@@ -14,7 +14,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM11' 
+    ser.port = 'COM13' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -27,8 +27,8 @@ def setupSerial(baud):
     
 
 #\OwO/
-sensors = [2]
-ranges  = [2]
+sensors = [0,1,2,3,4]
+ranges  = []
 #LL L M R RR
 calValues = [[], [], [], [], []]
 def animate(i):

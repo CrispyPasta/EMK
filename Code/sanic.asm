@@ -553,26 +553,26 @@ getColor_L:
 	
 getColor_M:	
 	MOVF    MwhiteValue,w
-    CPFSGT  MsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
-    BSF	    McolorSensed,whiteBit
-    BTFSC   McolorSensed,whiteBit
-    BSF	    PORTA, whiteBit			; return if white sensed
-    BTFSC   McolorSensed, whiteBit
-    Return 
+	CPFSGT  MsensorVal         ; if LLsensorVal is > LLwhiteValue, it's not white
+	BSF	McolorSensed,whiteBit
+	BTFSC   McolorSensed,whiteBit
+	BSF	PORTA, whiteBit			; return if white sensed
+	BTFSC   McolorSensed, whiteBit
+	Return 
 
 	MOVF    MgreenValue,w
 	CPFSGT  MsensorVal         
 	BSF     McolorSensed,greenBit     ; if it's smaller than the max for green, it's could be green
 	BTFSC	McolorSensed,greenBit
-	BSF		PORTA, greenBit
-    BTFSC	McolorSensed,greenBit
+	BSF	PORTA, greenBit
+	BTFSC	McolorSensed,greenBit
 	Return			    ; return if green sensed
 
 
 	MOVF    MredValue,w
 	CPFSGT  MsensorVal         
 	BSF     McolorSensed,redBit    
-	BSF		PORTA, redBit
+	BSF	PORTA, redBit
 	BTFSC	McolorSensed,redBit
 	Return			    ; return if red sensed
 	
@@ -657,7 +657,7 @@ getColor_RR:
 
 ;<editor-fold defaultstate="collapsed" desc="testBlack">
 testBlack:
-	MOVLW	.240
+	MOVLW	.100
 
 	CPFSGT	LLsensorVal		  
 	RETURN
@@ -734,13 +734,6 @@ getRaceLinePosition:
 ;<editor-fold defaultstate="collapsed" desc="Determine Direction">
 
 determineDirection:
-	BTFSC   McolorSensed, greenBit     ; M senses green (these three are for the LED 
-	BSF     PORTA,greenBit
-	BTFSC   McolorSensed, blueBit      ; M senses blue   ...that indicates the color 
-	BSF     PORTA,blueBit
-	BTFSC   McolorSensed, redBit       ; M senses red    ...sensed by sensor M)
-	BSF     PORTA,0
-
 	CALL	testBlack	
 	CPFSEQ	blackFlag		; check if black was detected on all sensors
 	GOTO	$+8				; skip over "GOTO Stop", to "MOVLW 0x0"
@@ -825,7 +818,7 @@ PWMISRL:
     CLRF    TMR2
     BSF	    PIR5,TMR4IE
     RETURN
-    ;</editor-fold>
+;</editor-fold>
 
 ;<editor-fold defaultstate="collapsed" desc="Right motor control">
 RightMotorSetup:
@@ -941,6 +934,10 @@ Straight:
 	CALL	RightMotorSetup
 	CALL	leftMotorForward		;set motor control bits
 	CALL	rightMotorForward
+	MOVLW	.140
+	MOVWF	CCPR1L
+	MOVLW	.120
+	MOVWF	CCPR5L
 
 	; BSF 	PORTE,2			;right motor on 
 	; BSF 	PORTC,2			;left motor on 
@@ -2117,7 +2114,7 @@ getColor_M_demo3:
     BTFSC   McolorSensed, blueBit
     GOTO    getColor_M_demo3
     
-	MOVF    MredValue,w
+    MOVF    MredValue,w
     CPFSGT  MsensorVal         
     BSF     McolorSensed,redBit 
     BTFSC   McolorSensed,redBit
