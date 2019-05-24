@@ -1203,10 +1203,10 @@ touchISR:
     CLRF    RCREG
     BCF	    PIR1,RC1IF
     BCF	    PIE1,RC1IE
-    BCF	    PORTC,2
-    BCF	    PORTE,2
-    BSF	    TRISC,2	//disable output on pin
-    BSF	    TRISE,2
+    BCF	    PORTC,  2
+    BCF	    PORTE,  2
+    BSF	    TRISC,  2	//disable output on pin
+    BSF	    TRISE,  2
     CLRF    CCPR1L	//zero percent duty cycle 
     CLRF    CCPR5L
     GOTO    RCE
