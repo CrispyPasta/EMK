@@ -961,10 +961,10 @@ navigate:
 
     CALL	tenmsDelay
     
-    BCF		PIR1,RC1IF    
-    BSF		INTCON,GIEL		; Enable peripheral interrupts
-    BSF		INTCON,GIEH		; Enable global interrupts
-    BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
+    ; BCF		PIR1,RC1IF    
+    ; BSF		INTCON,GIEL		; Enable peripheral interrupts
+    ; BSF		INTCON,GIEH		; Enable global interrupts
+    ; BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
 
     CALL    LeftMotorSetup
     CALL    RightMotorSetup
