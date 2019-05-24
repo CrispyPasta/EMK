@@ -948,9 +948,14 @@ Straight:
     
 ;<editor-fold defaultstate="collapsed" desc="Navigation">
 navigate:
+	;enable serial interrupts 
+	BSF		INTCON,GIEL		; Enable peripheral interrupts
+	bsf     INTCON,GIEH		; Enable global interrupts
+	BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
+
     CALL    LeftMotorSetup
     CALL    RightMotorSetup
-    CALL    HardRight			;initially go forward 
+    CALL    Right			;initially go forward 
 	
     BTFSC   raceColor,whiteBit		;check white
     MOVLW   b'10101011'
@@ -1180,9 +1185,9 @@ stop
 	call	trans
 	MOVLW   A'\n'
 	call	trans
-	BSF	INTCON,GIEL		; Enable peripheral interrupts
+	BSF		INTCON,GIEL		; Enable peripheral interrupts
 	bsf     INTCON,GIEH		; Enable global interrupts
-	BSF	PIE1,RC1IE		; Set RCIE Interrupt Enable
+	BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
 	GOTO	navigate
 
 ;</editor-fold>	
