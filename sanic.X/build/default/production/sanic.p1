@@ -2058,189 +2058,11 @@ Version 4.0 HI-TECH Software Intermediate Code
 ]
 [v _message `uc ~T0 @X0 -> 32 `i a ]
 [e = _message F6019 ]
-"265
-[; ;./functions.c: 265:     for (unsigned char a = 0; a < 31; a++)
-{
-[v _a `uc ~T0 @X0 1 a ]
-[e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 31 `i 897  ]
-[e $U 898  ]
-[e :U 897 ]
-"266
-[; ;./functions.c: 266:     {
-{
-"267
-[; ;./functions.c: 267:         trans(message[a]);
-[e ( _trans (1 *U + &U _message * -> _a `ux -> -> # *U &U _message `ui `ux ]
-"268
-[; ;./functions.c: 268:     }
-}
-[e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 31 `i 897  ]
-[e :U 898 ]
-}
-"270
-[; ;./functions.c: 270:     while (!PIR1bits.RC1IF)
-[e $U 900  ]
-[e :U 901 ]
-"271
-[; ;./functions.c: 271:         ;
-[e :U 900 ]
-"270
-[; ;./functions.c: 270:     while (!PIR1bits.RC1IF)
-[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 901  ]
-[e :U 902 ]
-"273
-[; ;./functions.c: 273:     switch (RCREG)
-[e $U 904  ]
-"274
-[; ;./functions.c: 274:     {
-{
-"275
-[; ;./functions.c: 275:     case 'B':
-[e :U 905 ]
-"276
-[; ;./functions.c: 276:         for (unsigned char a = 0; a < 8; a++)
-{
-[v _a `uc ~T0 @X0 1 a ]
-[e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 8 `i 906  ]
-[e $U 907  ]
-[e :U 906 ]
-"277
-[; ;./functions.c: 277:         {
-{
-"278
-[; ;./functions.c: 278:             raceColor[a] = 0;
-[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
-"279
-[; ;./functions.c: 279:         }
-}
-[e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 8 `i 906  ]
-[e :U 907 ]
-}
-"281
-[; ;./functions.c: 281:         raceColor[3] = 1;
-[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
-"282
-[; ;./functions.c: 282:         break;
-[e $U 903  ]
-"283
-[; ;./functions.c: 283:     case 'G':
-[e :U 909 ]
-"284
-[; ;./functions.c: 284:         for (unsigned char a = 0; a < 8; a++)
-{
-[v _a `uc ~T0 @X0 1 a ]
-[e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 8 `i 910  ]
-[e $U 911  ]
-[e :U 910 ]
-"285
-[; ;./functions.c: 285:         {
-{
-"286
-[; ;./functions.c: 286:             raceColor[a] = 0;
-[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
-"287
-[; ;./functions.c: 287:         }
-}
-[e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 8 `i 910  ]
-[e :U 911 ]
-}
-"289
-[; ;./functions.c: 289:         raceColor[1] = 1;
-[e = *U + &U _raceColor * -> -> -> 1 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
-"290
-[; ;./functions.c: 290:         break;
-[e $U 903  ]
-"291
-[; ;./functions.c: 291:     case 'R':
-[e :U 913 ]
-"292
-[; ;./functions.c: 292:         for (unsigned char a = 0; a < 8; a++)
-{
-[v _a `uc ~T0 @X0 1 a ]
-[e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 8 `i 914  ]
-[e $U 915  ]
-[e :U 914 ]
-"293
-[; ;./functions.c: 293:         {
-{
-"294
-[; ;./functions.c: 294:             raceColor[a] = 0;
-[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
-"295
-[; ;./functions.c: 295:         }
-}
-[e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 8 `i 914  ]
-[e :U 915 ]
-}
-"297
-[; ;./functions.c: 297:         raceColor[2] = 1;
-[e = *U + &U _raceColor * -> -> -> 2 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
-"298
-[; ;./functions.c: 298:         break;
-[e $U 903  ]
-"299
-[; ;./functions.c: 299:     case 'n':
-[e :U 917 ]
-"300
-[; ;./functions.c: 300:         for (unsigned char a = 0; a < 8; a++)
-{
-[v _a `uc ~T0 @X0 1 a ]
-[e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 8 `i 918  ]
-[e $U 919  ]
-[e :U 918 ]
-"301
-[; ;./functions.c: 301:         {
-{
-"302
-[; ;./functions.c: 302:             raceColor[a] = 0;
-[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
-"303
-[; ;./functions.c: 303:         }
-}
-[e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 8 `i 918  ]
-[e :U 919 ]
-}
-"305
-[; ;./functions.c: 305:         raceColor[4] = 1;
-[e = *U + &U _raceColor * -> -> -> 4 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
-"306
-[; ;./functions.c: 306:         break;
-[e $U 903  ]
-"308
-[; ;./functions.c: 308:     default:
-[e :U 921 ]
-"309
-[; ;./functions.c: 309:         error();
-[e ( _error ..  ]
-"310
-[; ;./functions.c: 310:         break;
-[e $U 903  ]
-"311
-[; ;./functions.c: 311:     }
-}
-[e $U 903  ]
-[e :U 904 ]
-[e [\ -> _RCREG `i , $ -> -> 66 `ui `i 905
- , $ -> -> 71 `ui `i 909
- , $ -> -> 82 `ui `i 913
- , $ -> -> 110 `ui `i 917
- 921 ]
-[e :U 903 ]
-[v F6026 `uc ~T0 @X0 -> 6 `i s ]
-[i F6026
+[v F6021 `uc ~T0 @X0 -> 6 `i s ]
+[i F6021
 :U ..
-"313
-[; ;./functions.c: 313:     unsigned char message2[] = "\nSet\n";
+"264
+[; ;./functions.c: 264:     unsigned char message2[] = "\nSet\n";
 -> 10 `c
 -> 83 `c
 -> 101 `c
@@ -2250,33 +2072,268 @@ Version 4.0 HI-TECH Software Intermediate Code
 ..
 ]
 [v _message2 `uc ~T0 @X0 -> 6 `i a ]
-[e = _message2 F6026 ]
-"315
-[; ;./functions.c: 315:     for (unsigned char a = 0; a < 5; a++)
+[e = _message2 F6021 ]
+"266
+[; ;./functions.c: 266:     for (unsigned char a = 0; a < 31; a++)
 {
 [v _a `uc ~T0 @X0 1 a ]
 [e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 5 `i 922  ]
-[e $U 923  ]
-[e :U 922 ]
-"316
-[; ;./functions.c: 316:     {
+[e $ < -> _a `i -> 31 `i 897  ]
+[e $U 898  ]
+[e :U 897 ]
+"267
+[; ;./functions.c: 267:     {
 {
-"317
-[; ;./functions.c: 317:         trans(message2[a]);
-[e ( _trans (1 *U + &U _message2 * -> _a `ux -> -> # *U &U _message2 `ui `ux ]
-"318
-[; ;./functions.c: 318:     }
+"268
+[; ;./functions.c: 268:         trans(message[a]);
+[e ( _trans (1 *U + &U _message * -> _a `ux -> -> # *U &U _message `ui `ux ]
+"269
+[; ;./functions.c: 269:     }
 }
 [e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 5 `i 922  ]
-[e :U 923 ]
+[e $ < -> _a `i -> 31 `i 897  ]
+[e :U 898 ]
 }
+"271
+[; ;./functions.c: 271:     while (!PIR1bits.RC1IF)
+[e $U 900  ]
+[e :U 901 ]
+"272
+[; ;./functions.c: 272:         ;
+[e :U 900 ]
+"271
+[; ;./functions.c: 271:     while (!PIR1bits.RC1IF)
+[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 901  ]
+[e :U 902 ]
+"274
+[; ;./functions.c: 274:     switch (RCREG)
+[e $U 904  ]
+"275
+[; ;./functions.c: 275:     {
+{
+"276
+[; ;./functions.c: 276:     case 'B':
+[e :U 905 ]
+"277
+[; ;./functions.c: 277:         for (unsigned char a = 0; a < 8; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 906  ]
+[e $U 907  ]
+[e :U 906 ]
+"278
+[; ;./functions.c: 278:         {
+{
+"279
+[; ;./functions.c: 279:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"280
+[; ;./functions.c: 280:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 906  ]
+[e :U 907 ]
+}
+"282
+[; ;./functions.c: 282:         raceColor[3] = 1;
+[e = *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"284
+[; ;./functions.c: 284:         for (unsigned char a = 0; a < 5; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 5 `i 909  ]
+[e $U 910  ]
+[e :U 909 ]
+"285
+[; ;./functions.c: 285:         {
+{
+"286
+[; ;./functions.c: 286:             trans(message2[a]);
+[e ( _trans (1 *U + &U _message2 * -> _a `ux -> -> # *U &U _message2 `ui `ux ]
+"287
+[; ;./functions.c: 287:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 5 `i 909  ]
+[e :U 910 ]
+}
+"288
+[; ;./functions.c: 288:         break;
+[e $U 903  ]
+"289
+[; ;./functions.c: 289:     case 'G':
+[e :U 912 ]
+"290
+[; ;./functions.c: 290:         for (unsigned char a = 0; a < 8; a++){
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 913  ]
+[e $U 914  ]
+[e :U 913 ]
+{
+"291
+[; ;./functions.c: 291:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"292
+[; ;./functions.c: 292:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 913  ]
+[e :U 914 ]
+}
+"294
+[; ;./functions.c: 294:         raceColor[1] = 1;
+[e = *U + &U _raceColor * -> -> -> 1 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"296
+[; ;./functions.c: 296:         for (unsigned char a = 0; a < 5; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 5 `i 916  ]
+[e $U 917  ]
+[e :U 916 ]
+"297
+[; ;./functions.c: 297:         {
+{
+"298
+[; ;./functions.c: 298:             trans(message2[a]);
+[e ( _trans (1 *U + &U _message2 * -> _a `ux -> -> # *U &U _message2 `ui `ux ]
+"299
+[; ;./functions.c: 299:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 5 `i 916  ]
+[e :U 917 ]
+}
+"300
+[; ;./functions.c: 300:         break;
+[e $U 903  ]
+"301
+[; ;./functions.c: 301:     case 'R':
+[e :U 919 ]
+"302
+[; ;./functions.c: 302:         for (unsigned char a = 0; a < 8; a++){
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 920  ]
+[e $U 921  ]
+[e :U 920 ]
+{
+"303
+[; ;./functions.c: 303:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"304
+[; ;./functions.c: 304:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 920  ]
+[e :U 921 ]
+}
+"306
+[; ;./functions.c: 306:         raceColor[2] = 1;
+[e = *U + &U _raceColor * -> -> -> 2 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
+"308
+[; ;./functions.c: 308:         for (unsigned char a = 0; a < 5; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 5 `i 923  ]
+[e $U 924  ]
+[e :U 923 ]
+"309
+[; ;./functions.c: 309:         {
+{
+"310
+[; ;./functions.c: 310:             trans(message2[a]);
+[e ( _trans (1 *U + &U _message2 * -> _a `ux -> -> # *U &U _message2 `ui `ux ]
+"311
+[; ;./functions.c: 311:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 5 `i 923  ]
+[e :U 924 ]
+}
+"312
+[; ;./functions.c: 312:         break;
+[e $U 903  ]
+"313
+[; ;./functions.c: 313:     case 'n':
+[e :U 926 ]
+"314
+[; ;./functions.c: 314:         for (unsigned char a = 0; a < 8; a++){
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 8 `i 927  ]
+[e $U 928  ]
+[e :U 927 ]
+{
+"315
+[; ;./functions.c: 315:             raceColor[a] = 0;
+[e = *U + &U _raceColor * -> _a `ux -> -> # *U &U _raceColor `ui `ux -> -> 0 `i `uc ]
+"316
+[; ;./functions.c: 316:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 8 `i 927  ]
+[e :U 928 ]
+}
+"318
+[; ;./functions.c: 318:         raceColor[4] = 1;
+[e = *U + &U _raceColor * -> -> -> 4 `i `ui `ux -> -> # *U &U _raceColor `ui `ux -> -> 1 `i `uc ]
 "320
-[; ;./functions.c: 320:     return;
-[e $UE 896  ]
+[; ;./functions.c: 320:         for (unsigned char a = 0; a < 5; a++)
+{
+[v _a `uc ~T0 @X0 1 a ]
+[e = _a -> -> 0 `i `uc ]
+[e $ < -> _a `i -> 5 `i 930  ]
+[e $U 931  ]
+[e :U 930 ]
 "321
-[; ;./functions.c: 321: }
+[; ;./functions.c: 321:         {
+{
+"322
+[; ;./functions.c: 322:             trans(message2[a]);
+[e ( _trans (1 *U + &U _message2 * -> _a `ux -> -> # *U &U _message2 `ui `ux ]
+"323
+[; ;./functions.c: 323:         }
+}
+[e ++ _a -> -> 1 `i `uc ]
+[e $ < -> _a `i -> 5 `i 930  ]
+[e :U 931 ]
+}
+"324
+[; ;./functions.c: 324:         break;
+[e $U 903  ]
+"326
+[; ;./functions.c: 326:     default:
+[e :U 933 ]
+"327
+[; ;./functions.c: 327:         error();
+[e ( _error ..  ]
+"328
+[; ;./functions.c: 328:         break;
+[e $U 903  ]
+"329
+[; ;./functions.c: 329:     }
+}
+[e $U 903  ]
+[e :U 904 ]
+[e [\ -> _RCREG `i , $ -> -> 66 `ui `i 905
+ , $ -> -> 71 `ui `i 912
+ , $ -> -> 82 `ui `i 919
+ , $ -> -> 110 `ui `i 926
+ 933 ]
+[e :U 903 ]
+"333
+[; ;./functions.c: 333:     return;
+[e $UE 896  ]
+"334
+[; ;./functions.c: 334: }
 [e :UE 896 ]
 }
 [v $root$_main `(v ~T0 @X0 0 e ]
@@ -2296,13 +2353,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _RCE ..  ]
 "98
 [; ;sanic.c: 98:     while(1);
-[e :U 927 ]
-[e :U 926 ]
-[e $U 927  ]
-[e :U 928 ]
+[e :U 936 ]
+[e :U 935 ]
+[e $U 936  ]
+[e :U 937 ]
 "106
 [; ;sanic.c: 106: }
-[e :UE 925 ]
+[e :UE 934 ]
 }
 "108
 [; ;sanic.c: 108: void delay(){
@@ -2315,35 +2372,35 @@ Version 4.0 HI-TECH Software Intermediate Code
 {
 [v _x `ui ~T0 @X0 1 a ]
 [e = _x -> -> 0 `i `ui ]
-[e $ < _x -> -> 900 `i `ui 930  ]
-[e $U 931  ]
-[e :U 930 ]
+[e $ < _x -> -> 900 `i `ui 939  ]
+[e $U 940  ]
+[e :U 939 ]
 {
 "110
 [; ;sanic.c: 110:         for(unsigned char b =0 ; b < 100; b++);
 {
 [v _b `uc ~T0 @X0 1 a ]
 [e = _b -> -> 0 `i `uc ]
-[e $ < -> _b `i -> 100 `i 933  ]
-[e $U 934  ]
-[e :U 933 ]
+[e $ < -> _b `i -> 100 `i 942  ]
+[e $U 943  ]
+[e :U 942 ]
 [e ++ _b -> -> 1 `i `uc ]
-[e $ < -> _b `i -> 100 `i 933  ]
-[e :U 934 ]
+[e $ < -> _b `i -> 100 `i 942  ]
+[e :U 943 ]
 }
 "111
 [; ;sanic.c: 111:     }
 }
 [e ++ _x -> -> 1 `i `ui ]
-[e $ < _x -> -> 900 `i `ui 930  ]
-[e :U 931 ]
+[e $ < _x -> -> 900 `i `ui 939  ]
+[e :U 940 ]
 }
 "112
 [; ;sanic.c: 112:     return;
-[e $UE 929  ]
+[e $UE 938  ]
 "113
 [; ;sanic.c: 113: }
-[e :UE 929 ]
+[e :UE 938 ]
 }
 "115
 [; ;sanic.c: 115: void init(){
@@ -2365,7 +2422,7 @@ Version 4.0 HI-TECH Software Intermediate Code
 [e ( _setupSerial ..  ]
 "120
 [; ;sanic.c: 120: }
-[e :UE 936 ]
+[e :UE 945 ]
 }
 "122
 [; ;sanic.c: 122: void RCE(){
@@ -2375,16 +2432,17 @@ Version 4.0 HI-TECH Software Intermediate Code
 [f ]
 "123
 [; ;sanic.c: 123:     while(1){
-[e :U 939 ]
+[e :U 948 ]
 {
 "124
 [; ;sanic.c: 124:         PORTD = 0b10100100;
 [e = _PORTD -> -> 164 `i `uc ]
-[v F6038 `uc ~T0 @X0 -> 13 `i s ]
-[i F6038
+[v F6041 `uc ~T0 @X0 -> 14 `i s ]
+[i F6041
 :U ..
 "126
-[; ;sanic.c: 126:         unsigned char message[] = "Sanic races ";
+[; ;sanic.c: 126:         unsigned char message[] = "\nSanic races ";
+-> 10 `c
 -> 83 `c
 -> 97 `c
 -> 110 `c
@@ -2400,16 +2458,16 @@ Version 4.0 HI-TECH Software Intermediate Code
 -> 0 `c
 ..
 ]
-[v _message `uc ~T0 @X0 -> 13 `i a ]
-[e = _message F6038 ]
+[v _message `uc ~T0 @X0 -> 14 `i a ]
+[e = _message F6041 ]
 "128
-[; ;sanic.c: 128:         for (unsigned char a = 0; a < 12; a++)
+[; ;sanic.c: 128:         for (unsigned char a = 0; a < 13; a++)
 {
 [v _a `uc ~T0 @X0 1 a ]
 [e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 12 `i 941  ]
-[e $U 942  ]
-[e :U 941 ]
+[e $ < -> _a `i -> 13 `i 950  ]
+[e $U 951  ]
+[e :U 950 ]
 "129
 [; ;sanic.c: 129:         {
 {
@@ -2420,60 +2478,60 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;sanic.c: 131:         }
 }
 [e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 12 `i 941  ]
-[e :U 942 ]
+[e $ < -> _a `i -> 13 `i 950  ]
+[e :U 951 ]
 }
 "133
 [; ;sanic.c: 133:         if (raceColor[3] == 1){
-[e $ ! == -> *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 944  ]
+[e $ ! == -> *U + &U _raceColor * -> -> -> 3 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 953  ]
 {
 "134
-[; ;sanic.c: 134:             trans("B");
-[e ( _trans (1 -> :s 1C `uc ]
+[; ;sanic.c: 134:             trans('B');
+[e ( _trans (1 -> -> 66 `ui `uc ]
 "135
 [; ;sanic.c: 135:         }
 }
-[e $U 945  ]
+[e $U 954  ]
 "136
 [; ;sanic.c: 136:         else if (raceColor[2] == 1){
-[e :U 944 ]
-[e $ ! == -> *U + &U _raceColor * -> -> -> 2 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 946  ]
+[e :U 953 ]
+[e $ ! == -> *U + &U _raceColor * -> -> -> 2 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 955  ]
 {
 "137
-[; ;sanic.c: 137:             trans("R");
-[e ( _trans (1 -> :s 2C `uc ]
+[; ;sanic.c: 137:             trans('R');
+[e ( _trans (1 -> -> 82 `ui `uc ]
 "138
 [; ;sanic.c: 138:         }
 }
-[e $U 947  ]
+[e $U 956  ]
 "139
 [; ;sanic.c: 139:         else if (raceColor[1] == 1){
-[e :U 946 ]
-[e $ ! == -> *U + &U _raceColor * -> -> -> 1 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 948  ]
+[e :U 955 ]
+[e $ ! == -> *U + &U _raceColor * -> -> -> 1 `i `ui `ux -> -> # *U &U _raceColor `ui `ux `i -> 1 `i 957  ]
 {
 "140
-[; ;sanic.c: 140:             trans("G");
-[e ( _trans (1 -> :s 3C `uc ]
+[; ;sanic.c: 140:             trans('G');
+[e ( _trans (1 -> -> 71 `ui `uc ]
 "141
 [; ;sanic.c: 141:         }
 }
-[e $U 949  ]
+[e $U 958  ]
 "142
 [; ;sanic.c: 142:         else {
-[e :U 948 ]
+[e :U 957 ]
 {
 "143
-[; ;sanic.c: 143:             trans("n");
-[e ( _trans (1 -> :s 4C `uc ]
+[; ;sanic.c: 143:             trans('n');
+[e ( _trans (1 -> -> 110 `ui `uc ]
 "144
 [; ;sanic.c: 144:         }
 }
-[e :U 949 ]
-[e :U 947 ]
-[e :U 945 ]
+[e :U 958 ]
+[e :U 956 ]
+[e :U 954 ]
 "145
-[; ;sanic.c: 145:         trans("\n");
-[e ( _trans (1 -> :s 5C `uc ]
+[; ;sanic.c: 145:         trans('\n');
+[e ( _trans (1 -> -> 10 `ui `uc ]
 "148
 [; ;sanic.c: 148:         INTCONbits.GIE = 0;
 [e = . . _INTCONbits 1 7 -> -> 0 `i `uc ]
@@ -2489,12 +2547,12 @@ Version 4.0 HI-TECH Software Intermediate Code
 [v _commandReceived `uc ~T0 @X0 -> 3 `i a ]
 "153
 [; ;sanic.c: 153:         while(nCharsReceived < 3){
-[e $U 950  ]
-[e :U 951 ]
+[e $U 959  ]
+[e :U 960 ]
 {
 "154
 [; ;sanic.c: 154:             if (PIR1bits.RC1IF){
-[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 953  ]
+[e $ ! != -> . . _PIR1bits 0 5 `i -> 0 `i 962  ]
 {
 "155
 [; ;sanic.c: 155:                 commandReceived[nCharsReceived] = RCREG;
@@ -2505,83 +2563,83 @@ Version 4.0 HI-TECH Software Intermediate Code
 "157
 [; ;sanic.c: 157:             }
 }
-[e :U 953 ]
+[e :U 962 ]
 "158
 [; ;sanic.c: 158:         }
 }
-[e :U 950 ]
+[e :U 959 ]
 "153
 [; ;sanic.c: 153:         while(nCharsReceived < 3){
-[e $ < -> _nCharsReceived `i -> 3 `i 951  ]
-[e :U 952 ]
+[e $ < -> _nCharsReceived `i -> 3 `i 960  ]
+[e :U 961 ]
 "161
 [; ;sanic.c: 161:         switch (commandReceived[0])
-[e $U 955  ]
+[e $U 964  ]
 "162
 [; ;sanic.c: 162:         {
 {
 "163
 [; ;sanic.c: 163:         case 'R':
-[e :U 956 ]
+[e :U 965 ]
 "165
 [; ;sanic.c: 165:             break;
-[e $U 954  ]
+[e $U 963  ]
 "166
 [; ;sanic.c: 166:         case 'P':
-[e :U 957 ]
+[e :U 966 ]
 "167
 [; ;sanic.c: 167:             PRC();
 [e ( _PRC ..  ]
 "168
 [; ;sanic.c: 168:             break;
-[e $U 954  ]
+[e $U 963  ]
 "169
 [; ;sanic.c: 169:         case 'N':
-[e :U 958 ]
+[e :U 967 ]
 "171
 [; ;sanic.c: 171:             break;
-[e $U 954  ]
+[e $U 963  ]
 "172
 [; ;sanic.c: 172:         case 'Q':
-[e :U 959 ]
+[e :U 968 ]
 "174
 [; ;sanic.c: 174:             break;
-[e $U 954  ]
+[e $U 963  ]
 "175
 [; ;sanic.c: 175:         case 'C':
-[e :U 960 ]
+[e :U 969 ]
 "177
 [; ;sanic.c: 177:             break;
-[e $U 954  ]
+[e $U 963  ]
 "179
 [; ;sanic.c: 179:         default:
-[e :U 961 ]
+[e :U 970 ]
 "180
 [; ;sanic.c: 180:             error();
 [e ( _error ..  ]
 "181
 [; ;sanic.c: 181:             break;
-[e $U 954  ]
+[e $U 963  ]
 "182
 [; ;sanic.c: 182:         }
 }
-[e $U 954  ]
-[e :U 955 ]
-[e [\ -> *U + &U _commandReceived * -> -> -> 0 `i `ui `ux -> -> # *U &U _commandReceived `ui `ux `i , $ -> -> 82 `ui `i 956
- , $ -> -> 80 `ui `i 957
- , $ -> -> 78 `ui `i 958
- , $ -> -> 81 `ui `i 959
- , $ -> -> 67 `ui `i 960
- 961 ]
-[e :U 954 ]
+[e $U 963  ]
+[e :U 964 ]
+[e [\ -> *U + &U _commandReceived * -> -> -> 0 `i `ui `ux -> -> # *U &U _commandReceived `ui `ux `i , $ -> -> 82 `ui `i 965
+ , $ -> -> 80 `ui `i 966
+ , $ -> -> 78 `ui `i 967
+ , $ -> -> 81 `ui `i 968
+ , $ -> -> 67 `ui `i 969
+ 970 ]
+[e :U 963 ]
 "184
 [; ;sanic.c: 184:         for (unsigned char a = 0; a < 3; a++){
 {
 [v _a `uc ~T0 @X0 1 a ]
 [e = _a -> -> 0 `i `uc ]
-[e $ < -> _a `i -> 3 `i 962  ]
-[e $U 963  ]
-[e :U 962 ]
+[e $ < -> _a `i -> 3 `i 971  ]
+[e $U 972  ]
+[e :U 971 ]
 {
 "185
 [; ;sanic.c: 185:             commandReceived[a] = 0;
@@ -2590,8 +2648,8 @@ Version 4.0 HI-TECH Software Intermediate Code
 [; ;sanic.c: 186:         }
 }
 [e ++ _a -> -> 1 `i `uc ]
-[e $ < -> _a `i -> 3 `i 962  ]
-[e :U 963 ]
+[e $ < -> _a `i -> 3 `i 971  ]
+[e :U 972 ]
 }
 "187
 [; ;sanic.c: 187:         nCharsReceived = 0;
@@ -2599,18 +2657,13 @@ Version 4.0 HI-TECH Software Intermediate Code
 "188
 [; ;sanic.c: 188:     }
 }
-[e :U 938 ]
-[e $U 939  ]
-[e :U 940 ]
+[e :U 947 ]
+[e $U 948  ]
+[e :U 949 ]
 "189
 [; ;sanic.c: 189:     return;
-[e $UE 937  ]
+[e $UE 946  ]
 "190
 [; ;sanic.c: 190: }
-[e :UE 937 ]
+[e :UE 946 ]
 }
-[a 4C 110 0 ]
-[a 2C 82 0 ]
-[a 3C 71 0 ]
-[a 1C 66 0 ]
-[a 5C 10 0 ]

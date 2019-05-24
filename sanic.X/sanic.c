@@ -123,26 +123,26 @@ void RCE(){
     while(1){
         PORTD = 0b10100100; //show in 7seg
         
-        unsigned char message[] = "Sanic races ";
+        unsigned char message[] = "\nSanic races ";
 
-        for (unsigned char a = 0; a < 12; a++)
+        for (unsigned char a = 0; a < 13; a++)
         {
             trans(message[a]);
         }
 
         if (raceColor[blueBit] == 1){
-            trans("B");
+            trans('B');
         }
         else if (raceColor[redBit] == 1){
-            trans("R");  
+            trans('R');  
         }
         else if (raceColor[greenBit] == 1){
-            trans("G");
+            trans('G');
         }
         else {
-            trans("n");
+            trans('n');
         }
-        trans("\n");
+        trans('\n');
         
 
         INTCONbits.GIE = 0;     //disable global interrupts

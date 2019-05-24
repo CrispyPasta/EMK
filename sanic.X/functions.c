@@ -125,15 +125,50 @@ unsigned char aveSensor(unsigned char s){
     return result;
 }
 
-void setupPWMLeft(unsigned char dutyCycle, unsigned char direction){
+void setupPWMLeft(){
+    CCP1CON = 0;            //clear
+    PR2 = 200;
+    CCPR1L = 200;           //init as 100%
+
+    TRISCbits.RC2 = 0;      //enable PWM output 
+
+    CCPTMRS0 = 0;           //select timer 2, default
+    CCP1CON = 0b00001100;
+    T2CON = 0b011111010;    //16 prescale, 16 postscale, timer off
+    TMR2 = 0;               //clear timer
+    PIE1bits.TMR1IE = 0;    //disable timer interrupts
+    INTCONbits.PEIE = 1;
+    INTCONbits.GIE = 1;
+    T2CONbits.TMR2ON = 1;   //turn timer on
     return;
 }
 
-void setupPWMRight(unsigned char dutyCycle, unsigned char direction){
+void setupPWMRight(){
+    CCP5CON = 0;            //clear
+    PR4 = 200;
+    CCPR5L = 200;           //init as 100%
+
+    TRISEbits.RE2 = 0;      //enable PWM output
+
+    CCPTMRS1 = 0b00000100;  //select timer 2, default
+    CCP1CON = 0b00001100;
+    T2CON = 0b011111010;    //16 prescale, 16 postscale, timer off
+    TMR2 = 0;               //clear timer
+    PIE5bits.TMR4IE = 0;    //disable timer interrupts
+    INTCONbits.PEIE = 1;
+    INTCONbits.GIE = 1;
+    T4CONbits.TMR4ON = 1;   //turn timer on
     return;
 }
 
-void setupTimer2(unsigned char PR2Value){
+//call to wait for the desired delay up to 63ms
+void setupTimer6(unsigned char delayInMs){
+    PR6 = 4 * delayInMs;
+    T6CON = 0b11111111;     //16 pre, 16 post, timer on
+
+    while(!PIR5bits.TMR6IF);
+    PIR5bits.TMR6IF = 0;    //clear the flag 
+    T6CON = 0;
     return;
 }
 
@@ -261,6 +296,7 @@ void PRC()
 {
     PORTD = 0b11111001;     //show on 7seg
     unsigned char message[] = "\nWhat color should sanic race?\n";
+    unsigned char message2[] = "\nSet";
 
     for (unsigned char a = 0; a < 31; a++)
     {
@@ -279,30 +315,47 @@ void PRC()
         }
 
         raceColor[blueBit] = 1;
+
+        for (unsigned char a = 0; a < 4; a++)
+        {
+            trans(message2[a]);
+        }
         break;
     case 'G':
-        for (unsigned char a = 0; a < 8; a++)
-        {
+        for (unsigned char a = 0; a < 8; a++){
             raceColor[a] = 0;
         }
 
         raceColor[greenBit] = 1;
+
+        for (unsigned char a = 0; a < 4; a++)
+        {
+            trans(message2[a]);
+        }
         break;
     case 'R':
-        for (unsigned char a = 0; a < 8; a++)
-        {
+        for (unsigned char a = 0; a < 8; a++){
             raceColor[a] = 0;
         }
 
         raceColor[redBit] = 1;
+
+        for (unsigned char a = 0; a < 4; a++)
+        {
+            trans(message2[a]);
+        }
         break;
     case 'n':
-        for (unsigned char a = 0; a < 8; a++)
-        {
+        for (unsigned char a = 0; a < 8; a++){
             raceColor[a] = 0;
         }
 
         raceColor[blackBit] = 1;
+
+        for (unsigned char a = 0; a < 4; a++)
+        {
+            trans(message2[a]);
+        }
         break;
 
     default:
@@ -310,12 +363,7 @@ void PRC()
         break;
     }
 
-    unsigned char message2[] = "\nSet\n";
-
-    for (unsigned char a = 0; a < 5; a++)
-    {
-        trans(message2[a]);
-    }
+    
 
     return;
 }
