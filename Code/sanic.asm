@@ -206,7 +206,7 @@ setup
     MOVWF   LLwhiteValue
     MOVLW   .130
     MOVWF   LwhiteValue
-    MOVLW   .160
+    MOVLW   .50
     MOVWF   MwhiteValue
     MOVLW   .140
     MOVWF   RwhiteValue
@@ -217,7 +217,7 @@ setup
     MOVWF   LLgreenValue
     MOVLW   .178
     MOVWF   LgreenValue
-    MOVLW   .205
+    MOVLW   .120
     MOVWF   MgreenValue
     MOVLW   .170
     MOVWF   RgreenValue
@@ -228,7 +228,7 @@ setup
     MOVWF   LLblueValue
     MOVLW   .188
     MOVWF   LblueValue
-    MOVLW   .220
+    MOVLW   .140
     MOVWF   MblueValue
     MOVLW   .200
     MOVWF   RblueValue
@@ -239,7 +239,7 @@ setup
     MOVWF   LLredValue
     MOVLW   .180
     MOVWF   LredValue
-    MOVLW   .240
+    MOVLW   .135
     MOVWF   MredValue
     MOVLW   .210
     MOVWF   RredValue
@@ -248,9 +248,13 @@ setup
 
     MOVLW   .255
     MOVWF   LLblackValue
+    MOVLW   .255
     MOVWF   LblackValue
+    MOVLW   .255
     MOVWF   MblackValue
+    MOVLW   .255
     MOVWF   RblackValue
+    MOVLW   .255
     MOVWF   RRblackValue    ;move hardcoded voltage values into their registers
 
     MOVLW   .250             ;set hardcoded values for sensor outputs (for testing)
