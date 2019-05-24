@@ -922,10 +922,8 @@ Left:	;use +20:+60 ratio
 Stop:
     MOVLW   0xFF
     MOVWF   PORTA		;turn off all leddies for stop
-;    RightMotorSetup	.0,0x00		;turn motors off 
-;    LeftMotorSetup	.0,0x00
-	BCF		TRISC,2		;disable PWM output on pins
-	BCF		TRISE,2
+	BSF		TRISC,2		;disable PWM output on pins
+	BSF		TRISE,2
     BCF	    PORTC,2
     BCF	    PORTE,2
     RETURN		;return to navigation 
@@ -954,7 +952,7 @@ Straight:
 navigate:
 	;enable serial interrupts 
     BSF		INTCON,GIEL		; Enable peripheral interrupts
-    bsf		INTCON,GIEH		; Enable global interrupts
+    BSF		INTCON,GIEH		; Enable global interrupts
     BSF		PIE1,RC1IE		; Set RCIE Interrupt Enable
 
     CALL    LeftMotorSetup
