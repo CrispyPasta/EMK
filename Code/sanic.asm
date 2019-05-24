@@ -168,11 +168,14 @@ setup
     BSF	    INTCON,PEIE		; Enable peripheral interrupts
     BSF	    INTCON,RBIE		;enable PORTB pins interrupt enabled
     ;BSF	    INTCON,INT0IE
+    BCF	    PIR1,RCIF
     BCF	    PIE1,RC1IE		; Set RCIE Interrupt Enable
     BCF	    PIE1,TX1IE
-    BCF	    PIR1,RCIF
+
     bsf     INTCON,GIE  ; Enable global interrupts
-    BSF	    IOCB,IOCB7
+    
+    
+;    BSF	    IOCB,IOCB7		; Soos tf doen dit hier?
   
     
     ;setup port for transmission
@@ -322,7 +325,7 @@ RCE:
 	bcf	PIR1,TXIF
 	bcf	PIE1,TXIE
 	BSF	PORTA,4
-	bcf	PIR1,5
+	bcf	PIR1,RC1IF
 	BCF	PORTA,4
 	GOTO	R1
 	
