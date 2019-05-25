@@ -117,6 +117,7 @@ void init(){
     setupOSC();
     clearPorts();
     setupSerial();
+    setupADC();
 }
 
 void RCE(){
@@ -170,10 +171,10 @@ void RCE(){
             //go to navigation 
             break;
         case 'Q':
-            //go to python serial mode  
+            pyCal(); 
             break;
         case 'C':
-            //go to calibration mode  
+            testCalibrate();  
             break;
         
         default:

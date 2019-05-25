@@ -1,21 +1,35 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+//###############SETUP FUNCTIONS##################
+void setupPWMLeft();
+void setupPWMRight();
+void clearPorts(void);
+void setupOSC();
 void setupSerial();
-void trans(unsigned char s);
 void setupADC();
+//###############SETUP FUNCTIONS##################
+
+//###############STATE FUNCTIONS##################
+void calibrate(void);
+void PRC(void);
+void pyCal(void);
+void testCalibrate(void);
+//###############STATE FUNCTIONS##################
+
+//##############UTILITY FUNCTIONS#################
+void trans(unsigned char s);
 void setADCChannel(unsigned char channel);
 unsigned char readADC();
 unsigned char aveSensor(unsigned char s);
-void setupPWMLeft();
-void setupPWMRight();
-void setupTimer2(unsigned char PR2Value);
-void clearPorts(void);
-void setupOSC();
-void calibrate();
 void ranges();
-void twoSecondDelay();
-void error(void);
-void PRC();
+void error();
+//##############UTILITY FUNCTIONS#################
+
+//###############DELAY FUNCTIONS##################
+void oneSecDelay(void);
+void msDelay(unsigned char delayInMs);
+void timer6Setup(unsigned char delayInMs);
+//###############DELAY FUNCTIONS##################
 
 #endif
