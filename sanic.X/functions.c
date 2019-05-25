@@ -418,12 +418,15 @@ void pyCal()
 }
 
 void navigate(){
-    displayRaceColor();
+    displayRaceColor();         //this should remain constant
+
     while(1){                   //repeat until some stop condition
         setupADC();             //call just in case 
         readAllSensors();
         classifyColors();
         displayColorDetected(2);
+
+
 
         if (PIR1bits.RC1IF)     //stop condition
         {
@@ -443,6 +446,9 @@ void navigate(){
 
 
 //###############UTILITY FUNCTIONS##################
+void determineDirection(){
+    return;
+}
 
 //Returns '0xAA' if all sensors are reading black 
 unsigned char testBlack(){

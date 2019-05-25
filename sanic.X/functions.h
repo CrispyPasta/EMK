@@ -18,6 +18,7 @@ void navigate();
 //###############STATE FUNCTIONS##################
 
 //##############UTILITY FUNCTIONS#################
+void determineDirection();
 unsigned char testBlack();
 void classifyColors();
 void displayColorDetected(unsigned char sensor);
