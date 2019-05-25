@@ -14,10 +14,16 @@ void setupADC();
 void calibrate(void);
 void PRC(void);
 void pyCal(void);
-void testCalibrate(void);
+void navigate();
 //###############STATE FUNCTIONS##################
 
 //##############UTILITY FUNCTIONS#################
+unsigned char testBlack();
+void classifyColors();
+void displayColorDetected(unsigned char sensor);
+void stopMotors();
+void displayRaceColor();
+void readAllSensors();
 void trans(unsigned char s);
 void setADCChannel(unsigned char channel);
 unsigned char readADC();

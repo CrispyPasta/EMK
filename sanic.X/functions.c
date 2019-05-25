@@ -12,11 +12,12 @@ unsigned char col = 'B';
 unsigned char LLranges[] = {140, 168, 185, 185, 255};
 unsigned char Lranges[] = {130, 178, 180, 188, 255};
 unsigned char Mranges[] = {130, 165, 175, 188, 255};
-unsigned char Rranges[] = {140, 170, 210, 175, 255};
+unsigned char Rranges[] = {140, 170, 175, 210, 255};
 unsigned char RRranges[] = {140, 185, 195, 195, 255};
-unsigned char sensorVals[] = {255, 255, 255, 255, 255};
+unsigned char sensorVals[] = {120, 170, 170, 190, 250};
 unsigned char raceColor[] = "00001000"; //initialize as blue for now
 unsigned char sensorChannels[] = {12, 10, 8, 9, 13, 15};
+unsigned char colorsDetected[] = {0, 0, 0, 0, 0};
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GLOBAL VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //###############SETUP FUNCTIONS##################
 void setupPWMLeft()
@@ -141,72 +142,179 @@ void calibrate()
 {
     PORTA = 0;
     unsigned char sensors[5] = {12, 8, 9, 10, 13};
+    unsigned char temp = 0;
 
     PORTD = 0b11000001;
-    LLranges[whiteBit] = aveSensor(12);
-    Lranges[whiteBit] = aveSensor(8);
-    Mranges[whiteBit] = aveSensor(9);
-    Rranges[whiteBit] = aveSensor(10);
-    RRranges[whiteBit] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[whiteBit])
+        {
+            LLranges[whiteBit] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[whiteBit])
+        {
+            Lranges[whiteBit] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[whiteBit])
+        {
+            Mranges[whiteBit] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[whiteBit])
+        {
+            Rranges[whiteBit] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[whiteBit])
+        {
+            RRranges[whiteBit] = temp;
+        }
+    }
     PORTAbits.RA0 = 1; //turn on the white LED
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b10000010;
-    LLranges[greenBit] = aveSensor(12);
-    Lranges[greenBit] = aveSensor(8);
-    Mranges[greenBit] = aveSensor(9);
-    Rranges[greenBit] = aveSensor(10);
-    RRranges[greenBit] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[greenBit])
+        {
+            LLranges[greenBit] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[greenBit])
+        {
+            Lranges[greenBit] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[greenBit])
+        {
+            Mranges[greenBit] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[greenBit])
+        {
+            Rranges[greenBit] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[greenBit])
+        {
+            RRranges[greenBit] = temp;
+        }
+    }
     PORTAbits.RA1 = 1; //turn on the green LED
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b10001000;
-    LLranges[redBit] = aveSensor(12);
-    Lranges[redBit] = aveSensor(8);
-    Mranges[redBit] = aveSensor(9);
-    Rranges[redBit] = aveSensor(10);
-    RRranges[redBit] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[redBit])
+        {
+            LLranges[redBit] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[redBit])
+        {
+            Lranges[redBit] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[redBit])
+        {
+            Mranges[redBit] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[redBit])
+        {
+            Rranges[redBit] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[redBit])
+        {
+            RRranges[redBit] = temp;
+        }
+    }
     PORTAbits.RA2 = 1; //turn on the red LED
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b10000000;
-    LLranges[blueBit] = aveSensor(12);
-    Lranges[blueBit] = aveSensor(8);
-    Mranges[blueBit] = aveSensor(9);
-    Rranges[blueBit] = aveSensor(10);
-    RRranges[blueBit] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[blueBit])
+        {
+            LLranges[blueBit] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[blueBit])
+        {
+            Lranges[blueBit] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[blueBit])
+        {
+            Mranges[blueBit] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[blueBit])
+        {
+            Rranges[blueBit] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[blueBit])
+        {
+            RRranges[blueBit] = temp;
+        }
+    }
     PORTAbits.RA3 = 1; //turn on the blue LED
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b11001000;
-    LLranges[blackBit] = aveSensor(12);
-    Lranges[blackBit] = aveSensor(8);
-    Mranges[blackBit] = aveSensor(9);
-    Rranges[blackBit] = aveSensor(10);
-    RRranges[blackBit] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[blackBit])
+        {
+            LLranges[blackBit] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[blackBit])
+        {
+            Lranges[blackBit] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[blackBit])
+        {
+            Mranges[blackBit] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[blackBit])
+        {
+            Rranges[blackBit] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[blackBit])
+        {
+            RRranges[blackBit] = temp;
+        }
+    }
     PORTAbits.RA4 = 1; //turn on the black LED
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTA = 0;      //clear the port when done 
-    return;
-}
-
-void testCalibrate(){
-    unsigned char temp = 0;
-
-    for (unsigned char samples = 0; samples < 250; samples++){
-        temp = aveSensor(12);
-        if (temp >= LLranges[whiteBit]){
-            LLranges[whiteBit] = temp;
-        }
-    }
-
-    PORTAbits.RA7 = 1;
     return;
 }
 
@@ -223,11 +331,9 @@ void PRC()
             trans(message[a]);
         }
 
-        while (!PIR1bits.RC1IF)
-            ;
+        while (!PIR1bits.RC1IF);
 
-        switch (RCREG)
-        {
+        switch (RCREG){
         case 'B':
             for (unsigned char a = 0; a < 8; a++)
             {
@@ -303,19 +409,180 @@ void pyCal()
         if (PIR1bits.RC1IF)
         {
             PIR1bits.RC1IF = 0; //clear the flag
-            if (RCREG == 'S')
+            if (RCREG == 'S' || RCREG == 's')
             {
                 return;
             }
         }
     }
 }
+
+void navigate(){
+    displayRaceColor();
+    while(1){                   //repeat until some stop condition
+        setupADC();             //call just in case 
+        readAllSensors();
+        classifyColors();
+        displayColorDetected(2);
+
+        if (PIR1bits.RC1IF)     //stop condition
+        {
+            PIR1bits.RC1IF = 0; //clear the flag
+            if (RCREG == 'S' || RCREG == 's')
+            {
+                stopMotors();
+                return;
+            }
+        }   //end if RC1IF
+    }//end while
+}
+
 //###############STATE FUNCTIONS##################
 
 
 
 
 //###############UTILITY FUNCTIONS##################
+
+//Returns '0xAA' if all sensors are reading black 
+unsigned char testBlack(){
+    if (sensorVals[0] < LLranges[3]){       //check if higher than blue
+        return 0x0;
+    }
+    if (sensorVals[1] < Lranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[2] < Mranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[3] < Rranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[4] < RRranges[3]){
+        return 0x0;
+    }
+    return 0xAA;        //this means there's black everywhere 
+}
+
+//fills the colorsDetected array 
+//W = white, R = red, G = green, B = blue, n = black
+void classifyColors(){
+    unsigned char* sensorRanges[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
+
+    for (unsigned char a = 0; a < 5; a++){
+        if (sensorVals[a] < sensorRanges[a][0]){
+            colorsDetected[a] = 'W';
+        }
+        else if (sensorVals[a] < sensorRanges[a][1]){
+            colorsDetected[a] = 'G';
+        }
+        else if (sensorVals[a] < sensorRanges[a][2]){
+            colorsDetected[a] = 'R';
+        }
+        else if (sensorVals[a] < sensorRanges[a][3]){
+            colorsDetected[a] = 'B';
+        }
+        else{
+            colorsDetected[a] = 'n';        //black
+        }
+    }
+    return;
+}
+
+//lights up an LED indicating the color detected by a sensor
+//sensor = 0, 1, 2, 3, 4 = LL, L, M, R, RR
+void displayColorDetected(unsigned char sensor){
+    switch (colorsDetected[sensor])
+    {
+    case 'W':
+        PORTAbits.RA0 = 1;      //white
+        PORTAbits.RA1 = 0;      //green
+        PORTAbits.RA2 = 0;      //red
+        PORTAbits.RA3 = 0;      //blue
+        PORTAbits.RA4 = 0;      //black
+        break;
+    case 'G':
+        PORTAbits.RA0 = 0;      //white
+        PORTAbits.RA1 = 1;      //green
+        PORTAbits.RA2 = 0;      //red
+        PORTAbits.RA3 = 0;      //blue
+        PORTAbits.RA4 = 0;      //black
+        break;
+    case 'R':
+        PORTAbits.RA0 = 0;      //white
+        PORTAbits.RA1 = 0;      //green
+        PORTAbits.RA2 = 1;      //red
+        PORTAbits.RA3 = 0;      //blue
+        PORTAbits.RA4 = 0;      //black
+        break;
+    case 'B':
+        PORTAbits.RA0 = 0;      //white
+        PORTAbits.RA1 = 0;      //green
+        PORTAbits.RA2 = 0;      //red
+        PORTAbits.RA3 = 1;      //blue
+        PORTAbits.RA4 = 0;      //black
+        break;
+    case 'n':
+        PORTAbits.RA0 = 0;      //white
+        PORTAbits.RA1 = 0;      //green
+        PORTAbits.RA2 = 0;      //red
+        PORTAbits.RA3 = 0;      //blue
+        PORTAbits.RA4 = 1;      //black
+        break;
+    
+    default:        //something is wrong, no valid code found
+        PORTAbits.RA0 = 1; //white
+        PORTAbits.RA1 = 1; //green
+        PORTAbits.RA2 = 1; //red
+        PORTAbits.RA3 = 1; //blue
+        PORTAbits.RA4 = 1; //black
+        break;
+    }
+    return;
+}
+
+//Sets PWM TRIS bits
+//Clears motor control output pins
+//Clears PORTA
+void stopMotors(){
+    PORTCbits.RC0 = 0;      //same output on both pins
+    PORTCbits.RC1 = 0;
+    TRISCbits.TRISC2 = 1;   //disable output on pin
+    PORTEbits.RE0 = 0;      //same output on both pins
+    PORTEbits.RE1 = 0;
+    TRISEbits.TRISE2 = 1;   //disable output on pin
+    PORTA = 0;
+    return;
+}
+
+//displays the racing color on the 7seg
+void displayRaceColor(){
+    if (raceColor[whiteBit]){
+        PORTD = 0b10111111;     //turn on the middle thingie
+    } 
+    else if (raceColor[greenBit]){
+        PORTD = 0b10000010;
+    }
+    else if (raceColor[redBit]){
+        PORTD = 0b10001000;
+    }
+    else if (raceColor[blueBit]){
+        PORTD = 0b10000000;
+    }
+    else if (raceColor[blackBit]){
+        PORTD = 0b11001000;
+    }
+    return;
+}
+
+//reads sensor values into the sensorVals array
+void readAllSensors(){
+    for (unsigned a  = 0; a < 5; a++){
+        sensorVals[a] = aveSensor(sensorChannels[a]);
+    }
+    return;
+}
+
 void trans(unsigned char s)
 {
     while (!PIR1bits.TX1IF)
@@ -419,12 +686,14 @@ void error()
     {
         trans(message[a]);
     }
+
+    RCREG = 0;  //clear RCREG
 }
 //###############UTILITY FUNCTIONS##################
 
 
 
-//###############DELAY FUNCTIONS##################
+//################DELAY FUNCTIONS###################
 void oneSecDelay()
 {
     for (unsigned char a = 0; a < 15; a++)

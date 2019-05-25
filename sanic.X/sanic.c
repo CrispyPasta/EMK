@@ -72,7 +72,6 @@
 #include "functions.c"
 
 void init(void);
-void delay(void);
 void RCE(void);
 
 
@@ -103,13 +102,6 @@ void main(void)
     //     trans('\n');
     // }
 
-}
-
-void delay(){
-    for (unsigned int x = 0; x < 900; x++){
-        for(unsigned char b =0 ; b < 100; b++);
-    }
-    return;
 }
 
 void init(){
@@ -168,13 +160,13 @@ void RCE(){
             PRC();
             break;
         case 'N':
-            //go to navigation 
+            navigate();
             break;
         case 'Q':
             pyCal(); 
             break;
         case 'C':
-            testCalibrate();  
+            calibrate();  
             break;
         
         default:

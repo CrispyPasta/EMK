@@ -9611,10 +9611,16 @@ void setupADC();
 void calibrate(void);
 void PRC(void);
 void pyCal(void);
-void testCalibrate(void);
+void navigate();
 
 
 
+unsigned char testBlack();
+void classifyColors();
+void displayColorDetected(unsigned char sensor);
+void stopMotors();
+void displayRaceColor();
+void readAllSensors();
 void trans(unsigned char s);
 void setADCChannel(unsigned char channel);
 unsigned char readADC();
@@ -9644,11 +9650,12 @@ unsigned char col = 'B';
 unsigned char LLranges[] = {140, 168, 185, 185, 255};
 unsigned char Lranges[] = {130, 178, 180, 188, 255};
 unsigned char Mranges[] = {130, 165, 175, 188, 255};
-unsigned char Rranges[] = {140, 170, 210, 175, 255};
+unsigned char Rranges[] = {140, 170, 175, 210, 255};
 unsigned char RRranges[] = {140, 185, 195, 195, 255};
-unsigned char sensorVals[] = {255, 255, 255, 255, 255};
+unsigned char sensorVals[] = {120, 170, 170, 190, 250};
 unsigned char raceColor[] = "00001000";
 unsigned char sensorChannels[] = {12, 10, 8, 9, 13, 15};
+unsigned char colorsDetected[] = {0, 0, 0, 0, 0};
 
 
 void setupPWMLeft()
@@ -9761,77 +9768,184 @@ void setupADC()
     ADCON0bits.ADON = 1;
     return;
 }
-# 140 "./functions.c"
+# 141 "./functions.c"
 void calibrate()
 {
     PORTA = 0;
     unsigned char sensors[5] = {12, 8, 9, 10, 13};
+    unsigned char temp = 0;
 
     PORTD = 0b11000001;
-    LLranges[0] = aveSensor(12);
-    Lranges[0] = aveSensor(8);
-    Mranges[0] = aveSensor(9);
-    Rranges[0] = aveSensor(10);
-    RRranges[0] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[0])
+        {
+            LLranges[0] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[0])
+        {
+            Lranges[0] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[0])
+        {
+            Mranges[0] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[0])
+        {
+            Rranges[0] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[0])
+        {
+            RRranges[0] = temp;
+        }
+    }
     PORTAbits.RA0 = 1;
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b10000010;
-    LLranges[1] = aveSensor(12);
-    Lranges[1] = aveSensor(8);
-    Mranges[1] = aveSensor(9);
-    Rranges[1] = aveSensor(10);
-    RRranges[1] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[1])
+        {
+            LLranges[1] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[1])
+        {
+            Lranges[1] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[1])
+        {
+            Mranges[1] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[1])
+        {
+            Rranges[1] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[1])
+        {
+            RRranges[1] = temp;
+        }
+    }
     PORTAbits.RA1 = 1;
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b10001000;
-    LLranges[2] = aveSensor(12);
-    Lranges[2] = aveSensor(8);
-    Mranges[2] = aveSensor(9);
-    Rranges[2] = aveSensor(10);
-    RRranges[2] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[2])
+        {
+            LLranges[2] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[2])
+        {
+            Lranges[2] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[2])
+        {
+            Mranges[2] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[2])
+        {
+            Rranges[2] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[2])
+        {
+            RRranges[2] = temp;
+        }
+    }
     PORTAbits.RA2 = 1;
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b10000000;
-    LLranges[3] = aveSensor(12);
-    Lranges[3] = aveSensor(8);
-    Mranges[3] = aveSensor(9);
-    Rranges[3] = aveSensor(10);
-    RRranges[3] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[3])
+        {
+            LLranges[3] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[3])
+        {
+            Lranges[3] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[3])
+        {
+            Mranges[3] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[3])
+        {
+            Rranges[3] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[3])
+        {
+            RRranges[3] = temp;
+        }
+    }
     PORTAbits.RA3 = 1;
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTD = 0b11001000;
-    LLranges[4] = aveSensor(12);
-    Lranges[4] = aveSensor(8);
-    Mranges[4] = aveSensor(9);
-    Rranges[4] = aveSensor(10);
-    RRranges[4] = aveSensor(13);
+    for (unsigned char samples = 0; samples < 250; samples++)
+    {
+        temp = aveSensor(12);
+        if (temp >= LLranges[4])
+        {
+            LLranges[4] = temp;
+        }
+        temp = aveSensor(10);
+        if (temp >= Lranges[4])
+        {
+            Lranges[4] = temp;
+        }
+        temp = aveSensor(8);
+        if (temp >= LLranges[4])
+        {
+            Mranges[4] = temp;
+        }
+        temp = aveSensor(9);
+        if (temp >= LLranges[4])
+        {
+            Rranges[4] = temp;
+        }
+        temp = aveSensor(13);
+        if (temp >= LLranges[4])
+        {
+            RRranges[4] = temp;
+        }
+    }
     PORTAbits.RA4 = 1;
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
 
     PORTA = 0;
-    return;
-}
-
-void testCalibrate(){
-    unsigned char temp = 0;
-
-    for (unsigned char samples = 0; samples < 250; samples++){
-        temp = aveSensor(12);
-        if (temp >= LLranges[0]){
-            LLranges[0] = temp;
-        }
-    }
-
-    PORTAbits.RA7 = 1;
     return;
 }
 
@@ -9848,11 +9962,9 @@ void PRC()
             trans(message[a]);
         }
 
-        while (!PIR1bits.RC1IF)
-            ;
+        while (!PIR1bits.RC1IF);
 
-        switch (RCREG)
-        {
+        switch (RCREG){
         case 'B':
             for (unsigned char a = 0; a < 8; a++)
             {
@@ -9928,7 +10040,7 @@ void pyCal()
         if (PIR1bits.RC1IF)
         {
             PIR1bits.RC1IF = 0;
-            if (RCREG == 'S')
+            if (RCREG == 'S' || RCREG == 's')
             {
                 return;
             }
@@ -9936,10 +10048,163 @@ void pyCal()
     }
 }
 
+void navigate(){
+    displayRaceColor();
+    while(1){
+        setupADC();
+        readAllSensors();
+        classifyColors();
+        displayColorDetected(2);
+
+        if (PIR1bits.RC1IF)
+        {
+            PIR1bits.RC1IF = 0;
+            if (RCREG == 'S' || RCREG == 's')
+            {
+                stopMotors();
+                return;
+            }
+        }
+    }
+}
+# 448 "./functions.c"
+unsigned char testBlack(){
+    if (sensorVals[0] < LLranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[1] < Lranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[2] < Mranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[3] < Rranges[3]){
+        return 0x0;
+    }
+    if (sensorVals[4] < RRranges[3]){
+        return 0x0;
+    }
+    return 0xAA;
+}
+
+
+
+void classifyColors(){
+    unsigned char* sensorRanges[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
+
+    for (unsigned char a = 0; a < 5; a++){
+        if (sensorVals[a] < sensorRanges[a][0]){
+            colorsDetected[a] = 'W';
+        }
+        else if (sensorVals[a] < sensorRanges[a][1]){
+            colorsDetected[a] = 'G';
+        }
+        else if (sensorVals[a] < sensorRanges[a][2]){
+            colorsDetected[a] = 'R';
+        }
+        else if (sensorVals[a] < sensorRanges[a][3]){
+            colorsDetected[a] = 'B';
+        }
+        else{
+            colorsDetected[a] = 'n';
+        }
+    }
+    return;
+}
+
+
+
+void displayColorDetected(unsigned char sensor){
+    switch (colorsDetected[sensor])
+    {
+    case 'W':
+        PORTAbits.RA0 = 1;
+        PORTAbits.RA1 = 0;
+        PORTAbits.RA2 = 0;
+        PORTAbits.RA3 = 0;
+        PORTAbits.RA4 = 0;
+        break;
+    case 'G':
+        PORTAbits.RA0 = 0;
+        PORTAbits.RA1 = 1;
+        PORTAbits.RA2 = 0;
+        PORTAbits.RA3 = 0;
+        PORTAbits.RA4 = 0;
+        break;
+    case 'R':
+        PORTAbits.RA0 = 0;
+        PORTAbits.RA1 = 0;
+        PORTAbits.RA2 = 1;
+        PORTAbits.RA3 = 0;
+        PORTAbits.RA4 = 0;
+        break;
+    case 'B':
+        PORTAbits.RA0 = 0;
+        PORTAbits.RA1 = 0;
+        PORTAbits.RA2 = 0;
+        PORTAbits.RA3 = 1;
+        PORTAbits.RA4 = 0;
+        break;
+    case 'n':
+        PORTAbits.RA0 = 0;
+        PORTAbits.RA1 = 0;
+        PORTAbits.RA2 = 0;
+        PORTAbits.RA3 = 0;
+        PORTAbits.RA4 = 1;
+        break;
+
+    default:
+        PORTAbits.RA0 = 1;
+        PORTAbits.RA1 = 1;
+        PORTAbits.RA2 = 1;
+        PORTAbits.RA3 = 1;
+        PORTAbits.RA4 = 1;
+        break;
+    }
+    return;
+}
 
 
 
 
+void stopMotors(){
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 0;
+    TRISCbits.TRISC2 = 1;
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 0;
+    TRISEbits.TRISE2 = 1;
+    PORTA = 0;
+    return;
+}
+
+
+void displayRaceColor(){
+    if (raceColor[0]){
+        PORTD = 0b10111111;
+    }
+    else if (raceColor[1]){
+        PORTD = 0b10000010;
+    }
+    else if (raceColor[2]){
+        PORTD = 0b10001000;
+    }
+    else if (raceColor[3]){
+        PORTD = 0b10000000;
+    }
+    else if (raceColor[4]){
+        PORTD = 0b11001000;
+    }
+    return;
+}
+
+
+void readAllSensors(){
+    for (unsigned a = 0; a < 5; a++){
+        sensorVals[a] = aveSensor(sensorChannels[a]);
+    }
+    return;
+}
 
 void trans(unsigned char s)
 {
@@ -9948,7 +10213,7 @@ void trans(unsigned char s)
     TXREG = s;
     return;
 }
-# 335 "./functions.c"
+# 602 "./functions.c"
 void setADCChannel(unsigned char channel)
 {
     ADCON0bits.CHS = channel;
@@ -10036,6 +10301,8 @@ void error()
     {
         trans(message[a]);
     }
+
+    RCREG = 0;
 }
 
 
@@ -10077,13 +10344,12 @@ void timer6Setup(unsigned char delayInMs)
 
 
 void init(void);
-void delay(void);
 void RCE(void);
 
 
 void main(void)
 {
-# 96 "sanic.c"
+# 95 "sanic.c"
     init();
     RCE();
     while(1);
@@ -10094,13 +10360,6 @@ void main(void)
 
 
 
-}
-
-void delay(){
-    for (unsigned int x = 0; x < 900; x++){
-        for(unsigned char b =0 ; b < 100; b++);
-    }
-    return;
 }
 
 void init(){
@@ -10159,13 +10418,13 @@ void RCE(){
             PRC();
             break;
         case 'N':
-
+            navigate();
             break;
         case 'Q':
             pyCal();
             break;
         case 'C':
-            testCalibrate();
+            calibrate();
             break;
 
         default:
