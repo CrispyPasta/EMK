@@ -33,8 +33,6 @@ void setupPWMLeft()
     T2CON = 0b011111010; //16 prescale, 16 postscale, timer off
     TMR2 = 0;            //clear timer
     PIE1bits.TMR1IE = 0; //disable timer interrupts
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE = 1;
     T2CONbits.TMR2ON = 1; //turn timer on
     return;
 }
@@ -47,13 +45,11 @@ void setupPWMRight()
 
     TRISEbits.RE2 = 0; //enable PWM output
 
-    CCPTMRS1 = 0b00000100; //select timer 2, default
-    CCP1CON = 0b00001100;
-    T2CON = 0b011111010; //16 prescale, 16 postscale, timer off
-    TMR2 = 0;            //clear timer
+    CCPTMRS1 = 0b00000100; //select timer 4
+    CCP5CON = 0b00001100;
+    T4CON = 0b011111010; //16 prescale, 16 postscale, timer off
+    TMR4 = 0;            //clear timer
     PIE5bits.TMR4IE = 0; //disable timer interrupts
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE = 1;
     T4CONbits.TMR4ON = 1; //turn timer on
     return;
 }
@@ -177,6 +173,9 @@ void calibrate()
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
 
     PORTD = 0b10000010;
     for (unsigned char samples = 0; samples < 250; samples++)
@@ -208,6 +207,9 @@ void calibrate()
         }
     }
     PORTAbits.RA1 = 1; //turn on the green LED
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
@@ -245,6 +247,9 @@ void calibrate()
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
 
     PORTD = 0b10000000;
     for (unsigned char samples = 0; samples < 250; samples++)
@@ -276,6 +281,9 @@ void calibrate()
         }
     }
     PORTAbits.RA3 = 1; //turn on the blue LED
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
@@ -396,6 +404,7 @@ void PRC()
 void pyCal()
 {
     setupADC();
+    PORTD = 0b00001100;
     unsigned char done = 0;
     while (1)
     {
@@ -419,7 +428,8 @@ void pyCal()
 
 void navigate(){
     displayRaceColor();         //this should remain constant
-
+    setupPWMLeft();
+    setupPWMRight();
     while(1){                   //repeat until some stop condition
         setupADC();             //call just in case 
         readAllSensors();
@@ -446,7 +456,43 @@ void navigate(){
 
 
 //###############UTILITY FUNCTIONS##################
+void straight(){
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 200;       //max speed 
+    CCPR5L = 200;
+}
+
 void determineDirection(){
+    //check of race color detected by enige sensor
+    //as nie, kyk na relative voltage levels
+    unsigned char rc = 0;
+    if (raceColor[whiteBit])
+    {
+        rc = 'W';
+    }
+    else if (raceColor[greenBit])
+    {
+        rc = 'G';
+    }
+    else if (raceColor[redBit])
+    {
+        rc = 'R';
+    }
+    else if (raceColor[blueBit])
+    {
+        rc = 'B';
+    }
+    else if (raceColor[blackBit])
+    {
+        rc = 'n';
+    }   //ek weet hierdie is super dom, maar ek wil nie oorskakel van die goed wat reeds werk nie
+
+
     return;
 }
 

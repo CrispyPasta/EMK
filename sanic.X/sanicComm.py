@@ -14,7 +14,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM10' 
+    ser.port = 'COM13' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -98,7 +98,7 @@ def animate(i):
 def pythonCalibration():
     global calibrationComplete
     if calibrationComplete == False:
-        ani = animation.FuncAnimation(fig, animate, interval = 250)
+        ani = animation.FuncAnimation(fig, animate, interval = 260)
         if calibrationComplete == True:
             plt.close()
             return

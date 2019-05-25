@@ -9615,6 +9615,7 @@ void navigate();
 
 
 
+void determineDirection();
 unsigned char testBlack();
 void classifyColors();
 void displayColorDetected(unsigned char sensor);
@@ -9671,8 +9672,6 @@ void setupPWMLeft()
     T2CON = 0b011111010;
     TMR2 = 0;
     PIE1bits.TMR1IE = 0;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE = 1;
     T2CONbits.TMR2ON = 1;
     return;
 }
@@ -9686,12 +9685,10 @@ void setupPWMRight()
     TRISEbits.RE2 = 0;
 
     CCPTMRS1 = 0b00000100;
-    CCP1CON = 0b00001100;
-    T2CON = 0b011111010;
-    TMR2 = 0;
+    CCP5CON = 0b00001100;
+    T4CON = 0b011111010;
+    TMR4 = 0;
     PIE5bits.TMR4IE = 0;
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE = 1;
     T4CONbits.TMR4ON = 1;
     return;
 }
@@ -9768,7 +9765,7 @@ void setupADC()
     ADCON0bits.ADON = 1;
     return;
 }
-# 141 "./functions.c"
+# 137 "./functions.c"
 void calibrate()
 {
     PORTA = 0;
@@ -9808,6 +9805,9 @@ void calibrate()
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
 
     PORTD = 0b10000010;
     for (unsigned char samples = 0; samples < 250; samples++)
@@ -9839,6 +9839,9 @@ void calibrate()
         }
     }
     PORTAbits.RA1 = 1;
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
@@ -9876,6 +9879,9 @@ void calibrate()
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
 
     PORTD = 0b10000000;
     for (unsigned char samples = 0; samples < 250; samples++)
@@ -9907,6 +9913,9 @@ void calibrate()
         }
     }
     PORTAbits.RA3 = 1;
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
     oneSecDelay();
@@ -10027,6 +10036,7 @@ void PRC()
 void pyCal()
 {
     setupADC();
+    PORTD = 0b00001100;
     unsigned char done = 0;
     while (1)
     {
@@ -10050,11 +10060,15 @@ void pyCal()
 
 void navigate(){
     displayRaceColor();
+    setupPWMLeft();
+    setupPWMRight();
     while(1){
         setupADC();
         readAllSensors();
         classifyColors();
         displayColorDetected(2);
+
+
 
         if (PIR1bits.RC1IF)
         {
@@ -10067,7 +10081,54 @@ void navigate(){
         }
     }
 }
-# 448 "./functions.c"
+
+
+
+
+
+
+
+void straight(){
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 200;
+    CCPR5L = 200;
+}
+
+void determineDirection(){
+
+
+    unsigned char rc = 0;
+    if (raceColor[0])
+    {
+        rc = 'W';
+    }
+    else if (raceColor[1])
+    {
+        rc = 'G';
+    }
+    else if (raceColor[2])
+    {
+        rc = 'R';
+    }
+    else if (raceColor[3])
+    {
+        rc = 'B';
+    }
+    else if (raceColor[4])
+    {
+        rc = 'n';
+    }
+
+
+    return;
+}
+
+
 unsigned char testBlack(){
     if (sensorVals[0] < LLranges[3]){
         return 0x0;
@@ -10213,7 +10274,7 @@ void trans(unsigned char s)
     TXREG = s;
     return;
 }
-# 602 "./functions.c"
+# 654 "./functions.c"
 void setADCChannel(unsigned char channel)
 {
     ADCON0bits.CHS = channel;

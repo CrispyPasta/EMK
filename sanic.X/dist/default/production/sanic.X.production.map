@@ -5,7 +5,7 @@ Linker command line:
 -W-3 --edf=C:\Program Files (x86)\Microchip\xc8\v2.05\pic\dat\en_msgs.txt \
   -cs -h+dist/default/production\sanic.X.production.sym \
   --cmf=dist/default/production\sanic.X.production.cmf -z -Q18F45K22 \
-  -oC:\Users\Armandt\AppData\Local\Temp\sh3g.2 --defsym=__MPLAB_BUILD=1 \
+  -oC:\Users\Armandt\AppData\Local\Temp\s8ps.2 --defsym=__MPLAB_BUILD=1 \
   -Mdist/default/production/sanic.X.production.map -E1 -ver=XC8 \
   --acfsm=1493 -ASTACK=0D6h-05FFh -pstack=STACK -ACODE=00h-07FFFh \
   -ACONST=00h-07FFFh -ASMALLCONST=0600h-06FFhx122 \
@@ -22,7 +22,7 @@ Linker command line:
   -pfarbss=FARRAM,fardata=FARRAM,nvFARRAM=FARRAM \
   -pintsave_regs=BIGRAM,bigbss=BIGRAM,bigdata=BIGRAM -pbss=RAM \
   -pidata=CODE,irdata=CODE,ibigdata=CODE,ifardata=CODE -prparam=COMRAM \
-  C:\Users\Armandt\AppData\Local\Temp\sh3g.o \
+  C:\Users\Armandt\AppData\Local\Temp\s8ps.o \
   dist/default/production\sanic.X.production.o 
 
 Object code version is 3.11
@@ -35,79 +35,83 @@ Call graph: (short form)
 
 
                 Name                               Link     Load   Length Selector   Space Scale
-C:\Users\Armandt\AppData\Local\Temp\sh3g.o
+C:\Users\Armandt\AppData\Local\Temp\s8ps.o
                 init                                  0        0        4        0       0
                 idloc                            200000   200000        8   200000       0
                 config                           300000   300000        E   300000       0
 dist/default/production\sanic.X.production.o
-                text25                             6FDE     6FDE        C     37EF       0
-                text24                             70AC     70AC       36     3856       0
-                text23                             78AC     78AC      184     3C56       0
-                text22                             6FC0     6FC0        A     37E0       0
-                text21                             7374     7374       84     39BA       0
-                text20                             715C     715C       46     38AE       0
-                text19                             7CAE     7CAE      352     3E57       0
-                text18                             7480     7480       BA     3A40       0
-                text17                             776C     776C      140     3BB6       0
-                text16                             729C     729C       66     394E       0
-                text15                             6FFC     6FFC       14     37FE       0
-                text14                             7A30     7A30      27E     3D18       0
-                text13                             7638     7638      134     3B1C       0
-                text12                             73F8     73F8       88     39FC       0
-                text11                             711E     711E       3E     388F       0
-                text10                             70E2     70E2       3C     3871       0
-                text9                              7028     7028       22     3814       0
-                text8                              6FEA     6FEA       12     37F5       0
-                text7                              707A     707A       32     383D       0
-                text6                              71A2     71A2       4A     38D1       0
-                text5                              753A     753A       FE     3A9D       0
-                text4                              7242     7242       5A     3921       0
-                text3                              6FCA     6FCA        A     37E5       0
-                text2                              704A     704A       30     3825       0
-                text1                              7010     7010       18     3808       0
-                text0                              6FD4     6FD4        A     37EA       0
+                text27                             6F56     6F56        C     37AB       0
+                text26                             703E     703E       36     381F       0
+                text25                             787C     787C      184     3C3E       0
+                text24                             6F38     6F38        A     379C       0
+                text23                             7344     7344       84     39A2       0
+                text22                             7128     7128       46     3894       0
+                text21                             7CAE     7CAE      352     3E57       0
+                text20                             7450     7450       BA     3A28       0
+                text19                             773C     773C      140     3B9E       0
+                text18                             726C     726C       66     3936       0
+                text17                             6F74     6F74       14     37BA       0
+                text16                             7A00     7A00      2AE     3D00       0
+                text15                             7608     7608      134     3B04       0
+                text14                             73C8     73C8       88     39E4       0
+                text13                             70EA     70EA       3E     3875       0
+                text12                             70AE     70AE       3C     3857       0
+                text11                             6FA0     6FA0       22     37D0       0
+                text10                             6FC2     6FC2       26     37E1       0
+                text9                              6FE8     6FE8       26     37F4       0
+                text8                              6F62     6F62       12     37B1       0
+                text7                              7074     7074       3A     383A       0
+                text6                              716E     716E       4E     38B7       0
+                text5                              750A     750A       FE     3A85       0
+                text4                              7212     7212       5A     3909       0
+                text3                              6F42     6F42        A     37A1       0
+                text2                              700E     700E       30     3807       0
+                text1                              6F88     6F88       18     37C4       0
+                text0                              6F4C     6F4C        A     37A6       0
                 cstackCOMRAM                          1        1       54        1       1
                 dataBANK0                            60       60       71       60       1
                 bssBANK0                             D1       D1        5       60       1
                 dataCOMRAM                           55       55        7        1       1
-                cinit                              71EC     71EC       56     38F6       0
-                idataBANK0                         7303     7303       71     7303       0
-                idataCOMRAM                        6FB9     6FB9        7     6FB9       0
+                cinit                              71BC     71BC       56     38DE       0
+                idataBANK0                         72D3     72D3       71     72D3       0
+                idataCOMRAM                        6F31     6F31        7     6F31       0
 
 TOTAL           Name                               Link     Load   Length     Space
         CLASS   STACK          
 
         CLASS   CODE           
                 init                                  0        0        4         0
-                text25                             6FDE     6FDE        C         0
-                text24                             70AC     70AC       36         0
-                text23                             78AC     78AC      184         0
-                text22                             6FC0     6FC0        A         0
-                text21                             7374     7374       84         0
-                text20                             715C     715C       46         0
-                text19                             7CAE     7CAE      352         0
-                text18                             7480     7480       BA         0
-                text17                             776C     776C      140         0
-                text16                             729C     729C       66         0
-                text15                             6FFC     6FFC       14         0
-                text14                             7A30     7A30      27E         0
-                text13                             7638     7638      134         0
-                text12                             73F8     73F8       88         0
-                text11                             711E     711E       3E         0
-                text10                             70E2     70E2       3C         0
-                text9                              7028     7028       22         0
-                text8                              6FEA     6FEA       12         0
-                text7                              707A     707A       32         0
-                text6                              71A2     71A2       4A         0
-                text5                              753A     753A       FE         0
-                text4                              7242     7242       5A         0
-                text3                              6FCA     6FCA        A         0
-                text2                              704A     704A       30         0
-                text1                              7010     7010       18         0
-                text0                              6FD4     6FD4        A         0
-                cinit                              71EC     71EC       56         0
-                idataBANK0                         7303     7303       71         0
-                idataCOMRAM                        6FB9     6FB9        7         0
+                text27                             6F56     6F56        C         0
+                text26                             703E     703E       36         0
+                text25                             787C     787C      184         0
+                text24                             6F38     6F38        A         0
+                text23                             7344     7344       84         0
+                text22                             7128     7128       46         0
+                text21                             7CAE     7CAE      352         0
+                text20                             7450     7450       BA         0
+                text19                             773C     773C      140         0
+                text18                             726C     726C       66         0
+                text17                             6F74     6F74       14         0
+                text16                             7A00     7A00      2AE         0
+                text15                             7608     7608      134         0
+                text14                             73C8     73C8       88         0
+                text13                             70EA     70EA       3E         0
+                text12                             70AE     70AE       3C         0
+                text11                             6FA0     6FA0       22         0
+                text10                             6FC2     6FC2       26         0
+                text9                              6FE8     6FE8       26         0
+                text8                              6F62     6F62       12         0
+                text7                              7074     7074       3A         0
+                text6                              716E     716E       4E         0
+                text5                              750A     750A       FE         0
+                text4                              7212     7212       5A         0
+                text3                              6F42     6F42        A         0
+                text2                              700E     700E       30         0
+                text1                              6F88     6F88       18         0
+                text0                              6F4C     6F4C        A         0
+                cinit                              71BC     71BC       56         0
+                idataBANK0                         72D3     72D3       71         0
+                idataCOMRAM                        6F31     6F31        7         0
 
         CLASS   CONST          
 
@@ -158,35 +162,37 @@ SEGMENTS        Name                           Load    Length   Top    Selector 
                 reset_vec                      000000  000004  000004         0       0  CODE    
                 cstackCOMRAM                   000001  00005B  00005C         1       1  COMRAM  
                 dataBANK0                      000060  000076  0000D6        60       1  BANK0   
-                idataCOMRAM                    006FB9  000007  006FC0      6FB9       0  CODE    
-                text22                         006FC0  00000A  006FCA      37E0       0  CODE    
-                text3                          006FCA  00000A  006FD4      37E5       0  CODE    
-                text0                          006FD4  00000A  006FDE      37EA       0  CODE    
-                text25                         006FDE  00000C  006FEA      37EF       0  CODE    
-                text8                          006FEA  000012  006FFC      37F5       0  CODE    
-                text15                         006FFC  000014  007010      37FE       0  CODE    
-                text1                          007010  000018  007028      3808       0  CODE    
-                text9                          007028  000022  00704A      3814       0  CODE    
-                text2                          00704A  000030  00707A      3825       0  CODE    
-                text7                          00707A  000032  0070AC      383D       0  CODE    
-                text24                         0070AC  000036  0070E2      3856       0  CODE    
-                text10                         0070E2  00003C  00711E      3871       0  CODE    
-                text11                         00711E  00003E  00715C      388F       0  CODE    
-                text20                         00715C  000046  0071A2      38AE       0  CODE    
-                text6                          0071A2  00004A  0071EC      38D1       0  CODE    
-                cinit                          0071EC  000056  007242      38F6       0  CODE    
-                text4                          007242  00005A  00729C      3921       0  CODE    
-                text16                         00729C  000066  007302      394E       0  CODE    
-                idataBANK0                     007303  000071  007374      7303       0  CODE    
-                text21                         007374  000084  0073F8      39BA       0  CODE    
-                text12                         0073F8  000088  007480      39FC       0  CODE    
-                text18                         007480  0000BA  00753A      3A40       0  CODE    
-                text5                          00753A  0000FE  007638      3A9D       0  CODE    
-                text13                         007638  000134  00776C      3B1C       0  CODE    
-                text17                         00776C  000140  0078AC      3BB6       0  CODE    
-                text23                         0078AC  000184  007A30      3C56       0  CODE    
-                text14                         007A30  00027E  007CAE      3D18       0  CODE    
-                text19                         007CAE  000352  008000      3E57       0  CODE    
+                idataCOMRAM                    006F31  000007  006F38      6F31       0  CODE    
+                text24                         006F38  00000A  006F42      379C       0  CODE    
+                text3                          006F42  00000A  006F4C      37A1       0  CODE    
+                text0                          006F4C  00000A  006F56      37A6       0  CODE    
+                text27                         006F56  00000C  006F62      37AB       0  CODE    
+                text8                          006F62  000012  006F74      37B1       0  CODE    
+                text17                         006F74  000014  006F88      37BA       0  CODE    
+                text1                          006F88  000018  006FA0      37C4       0  CODE    
+                text11                         006FA0  000022  006FC2      37D0       0  CODE    
+                text10                         006FC2  000026  006FE8      37E1       0  CODE    
+                text9                          006FE8  000026  00700E      37F4       0  CODE    
+                text2                          00700E  000030  00703E      3807       0  CODE    
+                text26                         00703E  000036  007074      381F       0  CODE    
+                text7                          007074  00003A  0070AE      383A       0  CODE    
+                text12                         0070AE  00003C  0070EA      3857       0  CODE    
+                text13                         0070EA  00003E  007128      3875       0  CODE    
+                text22                         007128  000046  00716E      3894       0  CODE    
+                text6                          00716E  00004E  0071BC      38B7       0  CODE    
+                cinit                          0071BC  000056  007212      38DE       0  CODE    
+                text4                          007212  00005A  00726C      3909       0  CODE    
+                text18                         00726C  000066  0072D2      3936       0  CODE    
+                idataBANK0                     0072D3  000071  007344      72D3       0  CODE    
+                text23                         007344  000084  0073C8      39A2       0  CODE    
+                text14                         0073C8  000088  007450      39E4       0  CODE    
+                text20                         007450  0000BA  00750A      3A28       0  CODE    
+                text5                          00750A  0000FE  007608      3A85       0  CODE    
+                text15                         007608  000134  00773C      3B04       0  CODE    
+                text19                         00773C  000140  00787C      3B9E       0  CODE    
+                text25                         00787C  000184  007A00      3C3E       0  CODE    
+                text16                         007A00  0002AE  007CAE      3D00       0  CODE    
+                text21                         007CAE  000352  008000      3E57       0  CODE    
                 idloc                          200000  000008  200008    200000       0  IDLOC   
                 config                         300000  00000E  30000E    300000       0  CONFIG  
 
@@ -202,18 +208,18 @@ UNUSED ADDRESS RANGES
         BANK5            000500-0005FF              100
         BIGRAM           00005C-00005F                4
                          0000D6-0005FF              52A
-        CODE             000004-006FB8             6FB5
-                         007302-007302                1
+        CODE             000004-006F30             6F2D
+                         0072D2-0072D2                1
         COMRAM           00005C-00005F                4
-        CONST            000004-006FB8             6FB5
-                         007302-007302                1
+        CONST            000004-006F30             6F2D
+                         0072D2-0072D2                1
         EEDATA           F00000-F000FF              100
-        MEDIUMCONST      000600-006FB8             69B9
-                         007302-007302                1
+        MEDIUMCONST      000600-006F30             6931
+                         0072D2-0072D2                1
         RAM              0000D6-0005FF              100
         SFR              000F38-000FFF               28
-        SMALLCONST       000600-006FB8              100
-                         007302-007302                1
+        SMALLCONST       000600-006F30              100
+                         0072D2-0072D2                1
         STACK            0000D6-0005FF              52A
 
                                   Symbol Table
@@ -221,22 +227,22 @@ UNUSED ADDRESS RANGES
 ?___flmul                      cstackCOMRAM 00000F
 ?___fltol                      cstackCOMRAM 000028
 ?___xxtofl                     cstackCOMRAM 000001
-PRC@F6009                      dataBANK0    000060
-PRC@F6011                      dataBANK0    0000AE
+PRC@F6010                      dataBANK0    000060
+PRC@F6012                      dataBANK0    0000AE
 PRC@a                          cstackCOMRAM 000031
-PRC@a_1114                     cstackCOMRAM 000032
-PRC@a_1115                     cstackCOMRAM 000033
-PRC@a_1116                     cstackCOMRAM 000034
-PRC@a_1117                     cstackCOMRAM 000035
-PRC@a_1118                     cstackCOMRAM 000036
-PRC@a_1119                     cstackCOMRAM 000037
-PRC@a_1120                     cstackCOMRAM 000038
-PRC@a_1121                     cstackCOMRAM 000039
+PRC@a_1108                     cstackCOMRAM 000032
+PRC@a_1109                     cstackCOMRAM 000033
+PRC@a_1110                     cstackCOMRAM 000034
+PRC@a_1111                     cstackCOMRAM 000035
+PRC@a_1112                     cstackCOMRAM 000036
+PRC@a_1113                     cstackCOMRAM 000037
+PRC@a_1114                     cstackCOMRAM 000038
+PRC@a_1115                     cstackCOMRAM 000039
 PRC@message                    cstackCOMRAM 00000C
 PRC@message2                   cstackCOMRAM 00002C
-RCE@F6064                      dataBANK0    000080
+RCE@F6068                      dataBANK0    000080
 RCE@a                          cstackCOMRAM 000053
-RCE@a_1237                     cstackCOMRAM 000054
+RCE@a_1244                     cstackCOMRAM 000054
 RCE@commandReceived            cstackCOMRAM 00004F
 RCE@message                    cstackCOMRAM 000041
 RCE@nCharsReceived             cstackCOMRAM 000052
@@ -284,8 +290,8 @@ _PORTEbits                     (abs)        000F84
 _PR2                           (abs)        000FBB
 _PR4                           (abs)        000F52
 _PR6                           (abs)        000F4B
-_PRC                           text23       0078AC
-_RCE                           text5        00753A
+_PRC                           text25       00787C
+_RCE                           text5        00750A
 _RCREG                         (abs)        000FAE
 _RCSTA1                        (abs)        000FAB
 _RRranges                      dataBANK0    0000BD
@@ -294,9 +300,11 @@ _SPBRG1                        (abs)        000FAF
 _SPBRGH1                       (abs)        000FB0
 _T2CON                         (abs)        000FBA
 _T2CONbits                     (abs)        000FBA
+_T4CON                         (abs)        000F51
 _T4CONbits                     (abs)        000F51
 _T6CON                         (abs)        000F4A
 _TMR2                          (abs)        000FBC
+_TMR4                          (abs)        000F53
 _TMR6                          (abs)        000F4C
 _TRISA                         (abs)        000F92
 _TRISB                         (abs)        000F93
@@ -426,6 +434,8 @@ __Htext22                      text22       000000
 __Htext23                      text23       000000
 __Htext24                      text24       000000
 __Htext25                      text25       000000
+__Htext26                      text26       000000
+__Htext27                      text27       000000
 __Htext3                       text3        000000
 __Htext4                       text4        000000
 __Htext5                       text5        000000
@@ -513,6 +523,8 @@ __Ltext22                      text22       000000
 __Ltext23                      text23       000000
 __Ltext24                      text24       000000
 __Ltext25                      text25       000000
+__Ltext26                      text26       000000
+__Ltext27                      text27       000000
 __Ltext3                       text3        000000
 __Ltext4                       text4        000000
 __Ltext5                       text5        000000
@@ -523,7 +535,7 @@ __Ltext9                       text9        000000
 __S0                           (abs)        30000E
 __S1                           (abs)        0000D6
 __S2                           (abs)        000000
-___flmul                       text19       007CAE
+___flmul                       text21       007CAE
 ___flmul@a                     cstackCOMRAM 000013
 ___flmul@aexp                  cstackCOMRAM 000020
 ___flmul@b                     cstackCOMRAM 00000F
@@ -532,7 +544,7 @@ ___flmul@grs                   cstackCOMRAM 00001C
 ___flmul@prod                  cstackCOMRAM 000022
 ___flmul@sign                  cstackCOMRAM 00001B
 ___flmul@temp                  cstackCOMRAM 000026
-___fltol                       text18       007480
+___fltol                       text20       007450
 ___fltol@exp1                  cstackCOMRAM 000031
 ___fltol@f1                    cstackCOMRAM 000028
 ___fltol@sign1                 cstackCOMRAM 000030
@@ -541,75 +553,79 @@ ___intlo_sp                    stack        000000
 ___param_bank                  (abs)        000000
 ___rparam_used                 (abs)        000001
 ___sp                          stack        000000
-___xxtofl                      text17       00776C
+___xxtofl                      text19       00773C
 ___xxtofl@arg                  cstackCOMRAM 00000B
 ___xxtofl@exp                  cstackCOMRAM 00000A
 ___xxtofl@sign                 cstackCOMRAM 000009
 ___xxtofl@val                  cstackCOMRAM 000001
 __accesstop                    (abs)        000060
 __activetblptr                 (abs)        000002
-__end_of_PRC                   text23       007A30
-__end_of_RCE                   text5        007638
-__end_of___flmul               text19       008000
-__end_of___fltol               text18       00753A
-__end_of___xxtofl              text17       0078AC
-__end_of__initialization       cinit        007238
-__end_of_aveSensor             text20       0071A2
-__end_of_calibrate             text14       007CAE
-__end_of_classifyColors        text13       00776C
-__end_of_clearPorts            text4        00729C
-__end_of_displayColorDetected  text12       007480
-__end_of_displayRaceColor      text11       00715C
-__end_of_error                 text24       0070E2
-__end_of_init                  text1        007028
-__end_of_main                  text0        006FDE
-__end_of_msDelay               text16       007302
-__end_of_navigate              text7        0070AC
-__end_of_oneSecDelay           text15       007010
-__end_of_pyCal                 text6        0071EC
-__end_of_readADC               text22       006FCA
-__end_of_readAllSensors        text10       00711E
-__end_of_setADCChannel         text21       0073F8
-__end_of_setupADC              text9        00704A
-__end_of_setupOSC              text3        006FD4
-__end_of_setupSerial           text2        00707A
-__end_of_stopMotors            text8        006FFC
-__end_of_trans                 text25       006FEA
-__initialization               cinit        0071EC
+__end_of_PRC                   text25       007A00
+__end_of_RCE                   text5        007608
+__end_of___flmul               text21       008000
+__end_of___fltol               text20       00750A
+__end_of___xxtofl              text19       00787C
+__end_of__initialization       cinit        007208
+__end_of_aveSensor             text22       00716E
+__end_of_calibrate             text16       007CAE
+__end_of_classifyColors        text15       00773C
+__end_of_clearPorts            text4        00726C
+__end_of_displayColorDetected  text14       007450
+__end_of_displayRaceColor      text13       007128
+__end_of_error                 text26       007074
+__end_of_init                  text1        006FA0
+__end_of_main                  text0        006F56
+__end_of_msDelay               text18       0072D2
+__end_of_navigate              text7        0070AE
+__end_of_oneSecDelay           text17       006F88
+__end_of_pyCal                 text6        0071BC
+__end_of_readADC               text24       006F42
+__end_of_readAllSensors        text12       0070EA
+__end_of_setADCChannel         text23       0073C8
+__end_of_setupADC              text11       006FC2
+__end_of_setupOSC              text3        006F4C
+__end_of_setupPWMLeft          text10       006FE8
+__end_of_setupPWMRight         text9        00700E
+__end_of_setupSerial           text2        00703E
+__end_of_stopMotors            text8        006F74
+__end_of_trans                 text27       006F62
+__initialization               cinit        0071BC
 __mediumconst                  mediumconst  000000
 __pbssBANK0                    bssBANK0     0000D1
-__pcinit                       cinit        0071EC
+__pcinit                       cinit        0071BC
 __pcstackCOMRAM                cstackCOMRAM 000001
 __pdataBANK0                   dataBANK0    000060
 __pdataCOMRAM                  dataCOMRAM   000055
-__pidataBANK0                  idataBANK0   007303
-__pidataCOMRAM                 idataCOMRAM  006FB9
-__ptext0                       text0        006FD4
-__ptext1                       text1        007010
-__ptext10                      text10       0070E2
-__ptext11                      text11       00711E
-__ptext12                      text12       0073F8
-__ptext13                      text13       007638
-__ptext14                      text14       007A30
-__ptext15                      text15       006FFC
-__ptext16                      text16       00729C
-__ptext17                      text17       00776C
-__ptext18                      text18       007480
-__ptext19                      text19       007CAE
-__ptext2                       text2        00704A
-__ptext20                      text20       00715C
-__ptext21                      text21       007374
-__ptext22                      text22       006FC0
-__ptext23                      text23       0078AC
-__ptext24                      text24       0070AC
-__ptext25                      text25       006FDE
-__ptext3                       text3        006FCA
-__ptext4                       text4        007242
-__ptext5                       text5        00753A
-__ptext6                       text6        0071A2
-__ptext7                       text7        00707A
-__ptext8                       text8        006FEA
-__ptext9                       text9        007028
+__pidataBANK0                  idataBANK0   0072D3
+__pidataCOMRAM                 idataCOMRAM  006F31
+__ptext0                       text0        006F4C
+__ptext1                       text1        006F88
+__ptext10                      text10       006FC2
+__ptext11                      text11       006FA0
+__ptext12                      text12       0070AE
+__ptext13                      text13       0070EA
+__ptext14                      text14       0073C8
+__ptext15                      text15       007608
+__ptext16                      text16       007A00
+__ptext17                      text17       006F74
+__ptext18                      text18       00726C
+__ptext19                      text19       00773C
+__ptext2                       text2        00700E
+__ptext20                      text20       007450
+__ptext21                      text21       007CAE
+__ptext22                      text22       007128
+__ptext23                      text23       007344
+__ptext24                      text24       006F38
+__ptext25                      text25       00787C
+__ptext26                      text26       00703E
+__ptext27                      text27       006F56
+__ptext3                       text3        006F42
+__ptext4                       text4        007212
+__ptext5                       text5        00750A
+__ptext6                       text6        00716E
+__ptext7                       text7        007074
+__ptext8                       text8        006F62
+__ptext9                       text9        006FE8
 __ramtop                       ramtop       000600
 __size_of_PRC                  (abs)        000000
 __size_of_RCE                  (abs)        000000
@@ -634,55 +650,59 @@ __size_of_readAllSensors       (abs)        000000
 __size_of_setADCChannel        (abs)        000000
 __size_of_setupADC             (abs)        000000
 __size_of_setupOSC             (abs)        000000
+__size_of_setupPWMLeft         (abs)        000000
+__size_of_setupPWMRight        (abs)        000000
 __size_of_setupSerial          (abs)        000000
 __size_of_stopMotors           (abs)        000000
 __size_of_trans                (abs)        000000
 __smallconst                   smallconst   000000
-_aveSensor                     text20       00715C
-_calibrate                     text14       007A30
-_classifyColors                text13       007638
-_clearPorts                    text4        007242
+_aveSensor                     text22       007128
+_calibrate                     text16       007A00
+_classifyColors                text15       007608
+_clearPorts                    text4        007212
 _col                           dataCOMRAM   000055
 _colorsDetected                bssBANK0     0000D1
-_displayColorDetected          text12       0073F8
-_displayRaceColor              text11       00711E
-_error                         text24       0070AC
-_init                          text1        007010
-_main                          text0        006FD4
-_msDelay                       text16       00729C
-_navigate                      text7        00707A
-_oneSecDelay                   text15       006FFC
-_pyCal                         text6        0071A2
+_displayColorDetected          text14       0073C8
+_displayRaceColor              text13       0070EA
+_error                         text26       00703E
+_init                          text1        006F88
+_main                          text0        006F4C
+_msDelay                       text18       00726C
+_navigate                      text7        007074
+_oneSecDelay                   text17       006F74
+_pyCal                         text6        00716E
 _raceColor                     dataBANK0    000098
-_readADC                       text22       006FC0
-_readAllSensors                text10       0070E2
+_readADC                       text24       006F38
+_readAllSensors                text12       0070AE
 _sensorChannels                dataBANK0    0000A8
 _sensorVals                    dataBANK0    0000B8
-_setADCChannel                 text21       007374
-_setupADC                      text9        007028
-_setupOSC                      text3        006FCA
-_setupSerial                   text2        00704A
+_setADCChannel                 text23       007344
+_setupADC                      text11       006FA0
+_setupOSC                      text3        006F42
+_setupPWMLeft                  text10       006FC2
+_setupPWMRight                 text9        006FE8
+_setupSerial                   text2        00700E
 _size                          dataCOMRAM   000056
-_stopMotors                    text8        006FEA
-_trans                         text25       006FDE
+_stopMotors                    text8        006F62
+_trans                         text27       006F56
 aveSensor@a                    cstackCOMRAM 00000A
 aveSensor@measurements         cstackCOMRAM 000007
 aveSensor@result               cstackCOMRAM 000009
 aveSensor@s                    cstackCOMRAM 000006
-calibrate@F6000                dataBANK0    0000B3
+calibrate@F6001                dataBANK0    0000B3
 calibrate@samples              cstackCOMRAM 000039
-calibrate@samples_1097         cstackCOMRAM 00003A
-calibrate@samples_1098         cstackCOMRAM 00003B
-calibrate@samples_1099         cstackCOMRAM 00003C
-calibrate@samples_1100         cstackCOMRAM 00003D
+calibrate@samples_1091         cstackCOMRAM 00003A
+calibrate@samples_1092         cstackCOMRAM 00003B
+calibrate@samples_1093         cstackCOMRAM 00003C
+calibrate@samples_1094         cstackCOMRAM 00003D
 calibrate@sensors              cstackCOMRAM 000034
 calibrate@temp                 cstackCOMRAM 00003E
-classifyColors@F6028           dataBANK0    00008E
+classifyColors@F6032           dataBANK0    00008E
 classifyColors@a               cstackCOMRAM 00000F
 classifyColors@sensorRanges    cstackCOMRAM 000005
 displayColorDetected@sensor    cstackCOMRAM 000003
-end_of_initialization          cinit        007238
-error@F6050                    dataBANK0    0000A1
+end_of_initialization          cinit        007208
+error@F6054                    dataBANK0    0000A1
 error@a                        cstackCOMRAM 000009
 error@message                  cstackCOMRAM 000002
 intlevel0                      text         000000
@@ -697,7 +717,7 @@ setADCChannel@channel          cstackCOMRAM 000003
 stackhi                        (abs)        0005FF
 stacklo                        (abs)        0000D6
 start                          init         000000
-start_initialization           cinit        0071EC
+start_initialization           cinit        0071BC
 trans@s                        cstackCOMRAM 000001
 
 
@@ -768,7 +788,7 @@ Total ram usage:        0 bytes
 
  *************** function _setupSerial *****************
  Defined at:
-		line 100 in file "./functions.c"
+		line 96 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -797,7 +817,7 @@ Total ram usage:        0 bytes
 
  *************** function _setupOSC *****************
  Defined at:
-		line 94 in file "./functions.c"
+		line 90 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -826,7 +846,7 @@ Total ram usage:        0 bytes
 
  *************** function _clearPorts *****************
  Defined at:
-		line 63 in file "./functions.c"
+		line 59 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -894,7 +914,7 @@ Total ram usage:       22 bytes
 
  *************** function _pyCal *****************
  Defined at:
-		line 396 in file "./functions.c"
+		line 404 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -928,7 +948,7 @@ Total ram usage:        2 bytes
 
  *************** function _navigate *****************
  Defined at:
-		line 420 in file "./functions.c"
+		line 429 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -955,6 +975,8 @@ Total ram usage:        0 bytes
 		_displayRaceColor
 		_readAllSensors
 		_setupADC
+		_setupPWMLeft
+		_setupPWMRight
 		_stopMotors
  This function is called by:
 		_RCE
@@ -963,7 +985,65 @@ Total ram usage:        0 bytes
 
  *************** function _stopMotors *****************
  Defined at:
-		line 547 in file "./functions.c"
+		line 599 in file "./functions.c"
+ Parameters:    Size  Location     Type
+		None
+ Auto vars:     Size  Location     Type
+		None
+ Return value:  Size  Location     Type
+                  1    wreg      void 
+ Registers used:
+		wreg, status,2
+ Tracked objects:
+		On entry : 
+		On exit  : 
+		Unchanged: 
+ Data sizes:     COMRAM   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5
+      Params:         0       0       0       0       0       0       0
+      Locals:         0       0       0       0       0       0       0
+      Temps:          0       0       0       0       0       0       0
+      Totals:         0       0       0       0       0       0       0
+Total ram usage:        0 bytes
+ Hardware stack levels used:    1
+ This function calls:
+		Nothing
+ This function is called by:
+		_navigate
+ This function uses a non-reentrant model
+
+
+ *************** function _setupPWMRight *****************
+ Defined at:
+		line 40 in file "./functions.c"
+ Parameters:    Size  Location     Type
+		None
+ Auto vars:     Size  Location     Type
+		None
+ Return value:  Size  Location     Type
+                  1    wreg      void 
+ Registers used:
+		wreg, status,2
+ Tracked objects:
+		On entry : 
+		On exit  : 
+		Unchanged: 
+ Data sizes:     COMRAM   BANK0   BANK1   BANK2   BANK3   BANK4   BANK5
+      Params:         0       0       0       0       0       0       0
+      Locals:         0       0       0       0       0       0       0
+      Temps:          0       0       0       0       0       0       0
+      Totals:         0       0       0       0       0       0       0
+Total ram usage:        0 bytes
+ Hardware stack levels used:    1
+ This function calls:
+		Nothing
+ This function is called by:
+		_navigate
+ This function uses a non-reentrant model
+
+
+ *************** function _setupPWMLeft *****************
+ Defined at:
+		line 23 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -992,7 +1072,7 @@ Total ram usage:        0 bytes
 
  *************** function _setupADC *****************
  Defined at:
-		line 123 in file "./functions.c"
+		line 119 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1023,7 +1103,7 @@ Total ram usage:        0 bytes
 
  *************** function _readAllSensors *****************
  Defined at:
-		line 579 in file "./functions.c"
+		line 631 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1053,7 +1133,7 @@ Total ram usage:        2 bytes
 
  *************** function _displayRaceColor *****************
  Defined at:
-		line 559 in file "./functions.c"
+		line 611 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1082,7 +1162,7 @@ Total ram usage:        0 bytes
 
  *************** function _displayColorDetected *****************
  Defined at:
-		line 494 in file "./functions.c"
+		line 546 in file "./functions.c"
  Parameters:    Size  Location     Type
   sensor          1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -1111,7 +1191,7 @@ Total ram usage:        3 bytes
 
  *************** function _classifyColors *****************
  Defined at:
-		line 469 in file "./functions.c"
+		line 521 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1143,7 +1223,7 @@ Total ram usage:       15 bytes
 
  *************** function _calibrate *****************
  Defined at:
-		line 141 in file "./functions.c"
+		line 137 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1180,7 +1260,7 @@ Total ram usage:       11 bytes
 
  *************** function _oneSecDelay *****************
  Defined at:
-		line 697 in file "./functions.c"
+		line 749 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1210,7 +1290,7 @@ Total ram usage:        1 bytes
 
  *************** function _msDelay *****************
  Defined at:
-		line 707 in file "./functions.c"
+		line 759 in file "./functions.c"
  Parameters:    Size  Location     Type
   delayInMs       1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -1343,7 +1423,7 @@ Total ram usage:       25 bytes
 
  *************** function _aveSensor *****************
  Defined at:
-		line 653 in file "./functions.c"
+		line 705 in file "./functions.c"
  Parameters:    Size  Location     Type
   s               1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -1379,7 +1459,7 @@ Total ram usage:        7 bytes
 
  *************** function _setADCChannel *****************
  Defined at:
-		line 602 in file "./functions.c"
+		line 654 in file "./functions.c"
  Parameters:    Size  Location     Type
   channel         1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -1408,7 +1488,7 @@ Total ram usage:        3 bytes
 
  *************** function _readADC *****************
  Defined at:
-		line 643 in file "./functions.c"
+		line 695 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1437,7 +1517,7 @@ Total ram usage:        0 bytes
 
  *************** function _PRC *****************
  Defined at:
-		line 321 in file "./functions.c"
+		line 329 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1478,7 +1558,7 @@ Total ram usage:       48 bytes
 
  *************** function _error *****************
  Defined at:
-		line 681 in file "./functions.c"
+		line 733 in file "./functions.c"
  Parameters:    Size  Location     Type
 		None
  Auto vars:     Size  Location     Type
@@ -1510,7 +1590,7 @@ Total ram usage:        8 bytes
 
  *************** function _trans *****************
  Defined at:
-		line 586 in file "./functions.c"
+		line 638 in file "./functions.c"
  Parameters:    Size  Location     Type
   s               1    wreg     unsigned char 
  Auto vars:     Size  Location     Type
@@ -1545,45 +1625,47 @@ MODULE INFORMATION
 
 Module		Function		Class		Link	Load	Size
 sanic.c
-		_init          		CODE           	7010	0000	25
-		_main          		CODE           	6FD4	0000	11
-		_RCE           		CODE           	753A	0000	255
+		_init          		CODE           	6F88	0000	25
+		_main          		CODE           	6F4C	0000	11
+		_RCE           		CODE           	750A	0000	255
 
 sanic.c estimated size: 291
 
 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\xxtofl.c
-		___xxtofl      		CODE           	776C	0000	321
+		___xxtofl      		CODE           	773C	0000	321
 
 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\xxtofl.c estimated size: 321
 
 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\fltol.c
-		___fltol       		CODE           	7480	0000	187
+		___fltol       		CODE           	7450	0000	187
 
 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\fltol.c estimated size: 187
 
 ./functions.c
-		_setADCChannel 		CODE           	7374	0000	133
-		_setupOSC      		CODE           	6FCA	0000	11
-		_readAllSensors		CODE           	70E2	0000	61
-		_trans         		CODE           	6FDE	0000	13
-		_navigate      		CODE           	707A	0000	51
-		_displayRaceColor		CODE           	711E	0000	63
-		_oneSecDelay   		CODE           	6FFC	0000	21
-		_stopMotors    		CODE           	6FEA	0000	19
-		_aveSensor     		CODE           	715C	0000	71
-		_msDelay       		CODE           	729C	0000	103
-		_PRC           		CODE           	78AC	0000	389
-		_clearPorts    		CODE           	7242	0000	91
-		_error         		CODE           	70AC	0000	55
-		_pyCal         		CODE           	71A2	0000	75
-		_calibrate     		CODE           	7A30	0000	639
-		_displayColorDetected		CODE           	73F8	0000	137
-		_setupSerial   		CODE           	704A	0000	49
-		_classifyColors		CODE           	7638	0000	309
-		_readADC       		CODE           	6FC0	0000	11
-		_setupADC      		CODE           	7028	0000	35
+		_setADCChannel 		CODE           	7344	0000	133
+		_setupOSC      		CODE           	6F42	0000	11
+		_readAllSensors		CODE           	70AE	0000	61
+		_trans         		CODE           	6F56	0000	13
+		_setupPWMLeft  		CODE           	6FC2	0000	39
+		_setupPWMRight 		CODE           	6FE8	0000	39
+		_navigate      		CODE           	7074	0000	59
+		_displayRaceColor		CODE           	70EA	0000	63
+		_oneSecDelay   		CODE           	6F74	0000	21
+		_stopMotors    		CODE           	6F62	0000	19
+		_aveSensor     		CODE           	7128	0000	71
+		_msDelay       		CODE           	726C	0000	103
+		_PRC           		CODE           	787C	0000	389
+		_clearPorts    		CODE           	7212	0000	91
+		_error         		CODE           	703E	0000	55
+		_pyCal         		CODE           	716E	0000	79
+		_calibrate     		CODE           	7A00	0000	687
+		_displayColorDetected		CODE           	73C8	0000	137
+		_setupSerial   		CODE           	700E	0000	49
+		_classifyColors		CODE           	7608	0000	309
+		_readADC       		CODE           	6F38	0000	11
+		_setupADC      		CODE           	6FA0	0000	35
 
-./functions.c estimated size: 2336
+./functions.c estimated size: 2474
 
 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\sprcmul.c
 		___flmul       		CODE           	7CAE	0000	851
@@ -1591,7 +1673,7 @@ C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\sprcmul.c
 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\sprcmul.c estimated size: 851
 
 shared
-		__initialization		CODE           	71EC	0000	77
+		__initialization		CODE           	71BC	0000	77
 
 shared estimated size: 77
 
