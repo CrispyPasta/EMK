@@ -16,6 +16,7 @@ void PRC(void);
 void pyCal(void);
 void navigate();
 void capTouch();
+void searchMode();
 //###############STATE FUNCTIONS##################
 
 //##############UTILITY FUNCTIONS#################
@@ -25,6 +26,8 @@ void hardLeft();
 void right();
 void hardRight();
 void reverse();
+void turn45p(); //turn 45 degrees positive (anticlockwise)
+void turn45n(); //turn 45 degrees negative (clockwise)
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();
@@ -44,6 +47,7 @@ void error();
 void oneSecDelay(void);
 void msDelay(unsigned char delayInMs);
 void timer6Setup(unsigned char delayInMs);
+void timer1setup();
 //###############DELAY FUNCTIONS##################
 
 #endif

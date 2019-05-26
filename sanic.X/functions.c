@@ -23,14 +23,14 @@ unsigned char colorsDetected[] = {0, 0, 0, 0, 0};
 void setupPWMLeft()
 {
     CCP1CON = 0; //clear
-    PR2 = 200;
-    CCPR1L = 200; //init as 100%
+    PR2 = 255;
+    CCPR1L = 255; //init as 100%
 
     TRISCbits.RC2 = 0; //enable PWM output
 
     CCPTMRS0 = 0; //select timer 2, default
     CCP1CON = 0b00001100;
-    T2CON = 0b011111010; //16 prescale, 16 postscale, timer off
+    T2CON = 0b00000000; //1 prescale, 1 postscale, timer off
     TMR2 = 0;            //clear timer
     PIE1bits.TMR1IE = 0; //disable timer interrupts
     T2CONbits.TMR2ON = 1; //turn timer on
@@ -40,14 +40,14 @@ void setupPWMLeft()
 void setupPWMRight()
 {
     CCP5CON = 0; //clear
-    PR4 = 200;
-    CCPR5L = 200; //init as 100%
+    PR4 = 255;
+    CCPR5L = 255; //init as 100%
 
     TRISEbits.RE2 = 0; //enable PWM output
 
     CCPTMRS1 = 0b00000100; //select timer 4
     CCP5CON = 0b00001100;
-    T4CON = 0b011111010; //16 prescale, 16 postscale, timer off
+    T4CON = 0b00000000; //1 prescale, 1 postscale, timer off
     TMR4 = 0;            //clear timer
     PIE5bits.TMR4IE = 0; //disable timer interrupts
     T4CONbits.TMR4ON = 1; //turn timer on
@@ -484,6 +484,14 @@ void capTouch(){
     }
     return;
 }
+
+void searchMode(){
+    timer1setup();
+    while(!PIR1bits.TMR1IF){
+        //do the things 
+    }
+    return;
+}
 //###############STATE FUNCTIONS##################
 
 
@@ -580,6 +588,41 @@ void reverse(){
     CCPR5L = 100;
     return;
 }
+
+void turn45p(){
+    PORTAbits.RA5 = 1;  //indicate search
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 1;
+
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 100;
+    CCPR5L = 100;
+
+    msDelay(50);
+    return;
+}
+
+void turn45n(){
+    PORTAbits.RA5 = 1;  //indicate search
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 1;
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
+
+    CCPR1L = 100;
+    CCPR5L = 100;
+    return;
+}
+
 
 void determineDirection(){
     //check of race color detected by enige sensor
@@ -906,4 +949,19 @@ void timer6Setup(unsigned char delayInMs)
     PR6 = 3.90625 * delayInMs;
     T6CON = 0xFF; //16 pre, 16 post, timer on
     return;
+}
+
+void timer1setup(){
+    T1CON = 0b00110010;         //8 prescaler, timer off 
+    INTCONbits.PEIE = 1;
+    INTCONbits.GIE = 1;
+    PIE1bits.TMR1IE = 1;        //enable timer interrupt
+    PIR1bits.TMR1IF = 0;        //clear at the beginning
+    TMR1 = 0;                   //clear the timer
+    T1CONbits.TMR1ON = 1;       //turn on the timer 
+    return;
+}
+
+void stopTimer1(){
+    PIE1bits.TMR1IE = 0;
 }

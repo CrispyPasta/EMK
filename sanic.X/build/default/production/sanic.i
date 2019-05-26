@@ -9434,6 +9434,21 @@ extern volatile __bit nWRITE2 __attribute__((address(0x7B6A)));
 
 
 
+#pragma interrupt sanic_ISR
+void sanic_ISR(void){
+    return;
+}
+#pragma code
+
+#pragma code high_vector = 0x0008
+void interrup_vector(){
+    if (PIR1bits.TMR1IF == 1){
+        sanic_ISR;
+    }
+}
+#pragma code
+
+
 
 # 1 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 1 3
 # 18 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 3
@@ -9592,7 +9607,7 @@ extern __attribute__((nonreentrant)) void _delaywdt(unsigned long);
 #pragma intrinsic(_delay3)
 extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 32 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 2 3
-# 70 "sanic.c" 2
+# 85 "sanic.c" 2
 
 # 1 "./functions.h" 1
 
@@ -9613,13 +9628,18 @@ void PRC(void);
 void pyCal(void);
 void navigate();
 void capTouch();
+void searchMode();
 
 
 
 void straight();
 void left();
+void hardLeft();
 void right();
+void hardRight();
 void reverse();
+void turn45p();
+void turn45n();
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();
@@ -9639,7 +9659,8 @@ void error();
 void oneSecDelay(void);
 void msDelay(unsigned char delayInMs);
 void timer6Setup(unsigned char delayInMs);
-# 71 "sanic.c" 2
+void timer1setup();
+# 86 "sanic.c" 2
 
 # 1 "./functions.c" 1
 
@@ -9667,14 +9688,14 @@ unsigned char colorsDetected[] = {0, 0, 0, 0, 0};
 void setupPWMLeft()
 {
     CCP1CON = 0;
-    PR2 = 200;
-    CCPR1L = 200;
+    PR2 = 255;
+    CCPR1L = 255;
 
     TRISCbits.RC2 = 0;
 
     CCPTMRS0 = 0;
     CCP1CON = 0b00001100;
-    T2CON = 0b011111010;
+    T2CON = 0b00000000;
     TMR2 = 0;
     PIE1bits.TMR1IE = 0;
     T2CONbits.TMR2ON = 1;
@@ -9684,14 +9705,14 @@ void setupPWMLeft()
 void setupPWMRight()
 {
     CCP5CON = 0;
-    PR4 = 200;
-    CCPR5L = 200;
+    PR4 = 255;
+    CCPR5L = 255;
 
     TRISEbits.RE2 = 0;
 
     CCPTMRS1 = 0b00000100;
     CCP5CON = 0b00001100;
-    T4CON = 0b011111010;
+    T4CON = 0b00000000;
     TMR4 = 0;
     PIE5bits.TMR4IE = 0;
     T4CONbits.TMR4ON = 1;
@@ -10110,10 +10131,10 @@ void capTouch(){
         touch1 = aveSensor(15);
         msDelay(5);
         touch2 = aveSensor(15);
-        trans(touch1);
-        trans(touch2);
 
-        if (abs(touch2 - touch1) > 0x0F){
+
+
+        if (abs(touch2 - touch1) > 10){
             return;
         } else {
             touch1 = touch2 = 0;
@@ -10122,12 +10143,20 @@ void capTouch(){
     return;
 }
 
+void searchMode(){
+
+}
+
 
 
 
 
 
 void straight(){
+    PORTAbits.RA5 = 1;
+    PORTAbits.RA6 = 0;
+    PORTAbits.RA7 = 0;
+
     PORTCbits.RC0 = 0;
     PORTCbits.RC1 = 1;
 
@@ -10139,6 +10168,10 @@ void straight(){
 }
 
 void left(){
+    PORTAbits.RA5 = 0;
+    PORTAbits.RA6 = 0;
+    PORTAbits.RA7 = 1;
+
     PORTCbits.RC0 = 0;
     PORTCbits.RC1 = 1;
 
@@ -10150,7 +10183,27 @@ void left(){
     return;
 }
 
+void hardLeft(){
+    PORTAbits.RA5 = 0;
+    PORTAbits.RA6 = 0;
+    PORTAbits.RA7 = 1;
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 0;
+    CCPR5L = 100;
+    return;
+}
+
 void right(){
+    PORTAbits.RA5 = 0;
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 0;
+
     PORTCbits.RC0 = 0;
     PORTCbits.RC1 = 1;
 
@@ -10159,6 +10212,22 @@ void right(){
 
     CCPR1L = 100;
     CCPR5L = 50;
+    return;
+}
+
+void hardRight(){
+    PORTAbits.RA5 = 0;
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 0;
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 100;
+    CCPR5L = 0;
     return;
 }
 
@@ -10173,6 +10242,41 @@ void reverse(){
     CCPR5L = 100;
     return;
 }
+
+void turn45p(){
+    PORTAbits.RA5 = 1;
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 1;
+
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 100;
+    CCPR5L = 100;
+
+    msDelay(50);
+    return;
+}
+
+void turn45n(){
+    PORTAbits.RA5 = 1;
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 1;
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
+
+    CCPR1L = 100;
+    CCPR5L = 100;
+    return;
+}
+
 
 void determineDirection(){
 
@@ -10199,7 +10303,23 @@ void determineDirection(){
         rc = 'n';
     }
 
+    if (colorsDetected[2] == rc){
+        straight();
 
+        return;
+    }
+    else if (colorsDetected[1] == rc){
+        left();
+    }
+    else if (colorsDetected[3] == rc){
+        right();
+    }
+    else if (colorsDetected[0] == rc){
+        hardLeft();
+    }
+    else if (colorsDetected[4] == rc){
+        hardRight();
+    }
     return;
 }
 
@@ -10349,7 +10469,7 @@ void trans(unsigned char s)
     TXREG = s;
     return;
 }
-# 724 "./functions.c"
+# 823 "./functions.c"
 void setADCChannel(unsigned char channel)
 {
     ADCON0bits.CHS = channel;
@@ -10476,7 +10596,18 @@ void timer6Setup(unsigned char delayInMs)
     T6CON = 0xFF;
     return;
 }
-# 72 "sanic.c" 2
+
+void timer1setup(){
+    T1CON = 0b00110010;
+    INTCONbits.PEIE = 1;
+    INTCONbits.GIE = 1;
+    PIE1bits.TMR1IE = 1;
+    PIR1bits.TMR1IF = 0;
+    TMR1 = 0;
+    T1CONbits.TMR1ON = 1;
+    return;
+}
+# 87 "sanic.c" 2
 
 
 void init(void);
@@ -10485,7 +10616,7 @@ void RCE(void);
 
 void main(void)
 {
-# 95 "sanic.c"
+# 110 "sanic.c"
     init();
     RCE();
     while(1);
