@@ -136,15 +136,20 @@ void setupADC()
 //order is white, green, red, blue, black
 void calibrate()
 {
+    unsigned char *rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
+    for (unsigned char a = 0; a < 5; a++)
+    {
+        for (unsigned char b = 0; b < 5; b++)
+        {
+            rangeArray[a][b] = 0;   //reset all voltage ranges 
+        }
+    }
+
     PORTA = 0;
     unsigned char sensors[5] = {12, 8, 9, 10, 13};
     unsigned char temp = 0;
 
     PORTD = 0b11000001;
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
@@ -160,17 +165,17 @@ void calibrate()
             Lranges[whiteBit] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= LLranges[whiteBit])
+        if (temp >= Mranges[whiteBit])
         {
             Mranges[whiteBit] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= LLranges[whiteBit])
+        if (temp >= Rranges[whiteBit])
         {
             Rranges[whiteBit] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= LLranges[whiteBit])
+        if (temp >= RRranges[whiteBit])
         {
             RRranges[whiteBit] = temp;
         }
@@ -197,17 +202,17 @@ void calibrate()
             Lranges[greenBit] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= LLranges[greenBit])
+        if (temp >= Mranges[greenBit])
         {
             Mranges[greenBit] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= LLranges[greenBit])
+        if (temp >= Rranges[greenBit])
         {
             Rranges[greenBit] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= LLranges[greenBit])
+        if (temp >= RRranges[greenBit])
         {
             RRranges[greenBit] = temp;
         }
@@ -234,17 +239,17 @@ void calibrate()
             Lranges[redBit] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= LLranges[redBit])
+        if (temp >= Mranges[redBit])
         {
             Mranges[redBit] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= LLranges[redBit])
+        if (temp >= Rranges[redBit])
         {
             Rranges[redBit] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= LLranges[redBit])
+        if (temp >= RRranges[redBit])
         {
             RRranges[redBit] = temp;
         }
@@ -271,17 +276,17 @@ void calibrate()
             Lranges[blueBit] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= LLranges[blueBit])
+        if (temp >= Mranges[blueBit])
         {
             Mranges[blueBit] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= LLranges[blueBit])
+        if (temp >= Rranges[blueBit])
         {
             Rranges[blueBit] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= LLranges[blueBit])
+        if (temp >= RRranges[blueBit])
         {
             RRranges[blueBit] = temp;
         }
@@ -308,26 +313,24 @@ void calibrate()
             Lranges[blackBit] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= LLranges[blackBit])
+        if (temp >= Mranges[blackBit])
         {
             Mranges[blackBit] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= LLranges[blackBit])
+        if (temp >= Rranges[blackBit])
         {
             Rranges[blackBit] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= LLranges[blackBit])
+        if (temp >= RRranges[blackBit])
         {
             RRranges[blackBit] = temp;
         }
     }
     PORTAbits.RA4 = 1; //turn on the black LED
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
 
+    ranges();       //call ranges
     PORTA = 0;      //clear the port when done 
     return;
 }
@@ -414,7 +417,7 @@ void pyCal()
     unsigned char done = 0;
     while (1)
     {
-        msDelay(9); //delay 10ms between transmissions
+        msDelay(10); //delay 10ms between transmissions
         for (unsigned char a = 0; a < 5; a++)
         {
             trans(aveSensor(sensorChannels[a]));
@@ -436,12 +439,13 @@ void navigate(){
     displayRaceColor();         //this should remain constant
     setupPWMLeft();
     setupPWMRight();
+    setupADC();             //call just in case 
     while(1){                   //repeat until some stop condition
-        setupADC();             //call just in case 
         readAllSensors();
         classifyColors();
         displayColorDetected(2);
-
+        determineDirection();
+        // msDelay(50);            //sit hierdies by vir bietjie latency 
 
 
         if (PIR1bits.RC1IF)     //stop condition
@@ -452,7 +456,10 @@ void navigate(){
                 stopMotors();
                 return;
             }
-        }   //end if RC1IF
+        } else if (testBlack() == 0xAA){
+            stopMotors();
+            return;
+        }  //end if RC1IF
     }//end while
 }
 
@@ -476,7 +483,7 @@ void capTouch(){
         // trans(touch1);
         // trans(touch2);
 
-        if (abs(touch2 - touch1) > 10){
+        if (abs(touch2 - touch1) > 50){
             return;
         } else {
             touch1 = touch2 = 0;        //reset the bad bois
@@ -488,7 +495,9 @@ void capTouch(){
 void searchMode(){
     timer1setup();
     while(!PIR1bits.TMR1IF){
-        //do the things 
+        PORTAbits.RA5 = 1;
+        PORTAbits.RA6 = 1;
+        PORTAbits.RA7 = 1;
     }
     return;
 }
@@ -509,8 +518,8 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100;        
-    CCPR5L = 100;
+    CCPR1L = 250;        
+    CCPR5L = 250;
 }
 
 void left(){
@@ -524,8 +533,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 50;      
-    CCPR5L = 100;
+    CCPR1L = 100;      
+    CCPR5L = 200;
     return;
 }
 
@@ -534,13 +543,13 @@ void hardLeft(){
     PORTAbits.RA6 = 0;  //indicate right
     PORTAbits.RA7 = 1;  //indicate left
 
-    PORTCbits.RC0 = 0;
-    PORTCbits.RC1 = 1;
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 0;
+    CCPR1L = 20;
     CCPR5L = 100;
     return;
 }
@@ -556,8 +565,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100; 
-    CCPR5L = 50;
+    CCPR1L = 200; 
+    CCPR5L = 100;
     return;
 }
 
@@ -627,32 +636,32 @@ void turn45n(){
 void determineDirection(){
     //check of race color detected by enige sensor
     //as nie, kyk na relative voltage levels
-    unsigned char rc = 0;
-    if (raceColor[whiteBit])
-    {
-        rc = 'W';
+    static unsigned char rc = 0;
+    if (rc == 0){
+        if (raceColor[whiteBit])
+        {
+            rc = 'W';
+        }
+        else if (raceColor[greenBit])
+        {
+            rc = 'G';
+        }
+        else if (raceColor[redBit])
+        {
+            rc = 'B';       //call red and blue blue because we can't be sure
+        }
+        else if (raceColor[blueBit])
+        {
+            rc = 'B';       //call red and blue blue because we can't be sure
+        }
+        else if (raceColor[blackBit])
+        {
+            rc = 'n';
+        }   //ek weet hierdie is super dom, maar ek wil nie oorskakel van die goed wat reeds werk nie
     }
-    else if (raceColor[greenBit])
-    {
-        rc = 'G';
-    }
-    else if (raceColor[redBit])
-    {
-        rc = 'R';
-    }
-    else if (raceColor[blueBit])
-    {
-        rc = 'B';
-    }
-    else if (raceColor[blackBit])
-    {
-        rc = 'n';
-    }   //ek weet hierdie is super dom, maar ek wil nie oorskakel van die goed wat reeds werk nie
 
     if (colorsDetected[2] == rc){   //middle sensor
         straight();
-        
-        return;
     }
     else if (colorsDetected[1] == rc){  //left 
         left();
@@ -666,24 +675,27 @@ void determineDirection(){
     else if (colorsDetected[4] == rc){  //right right 
         hardRight();
     }
+    else {          //race color not detected anywhere
+        searchMode();
+    }
     return;
 }
 
 //Returns '0xAA' if all sensors are reading black 
 unsigned char testBlack(){
-    if (sensorVals[0] < LLranges[3]){       //check if higher than blue
+    if ((sensorVals[0] < LLranges[3]) || (sensorVals[0] < LLranges[2])){       //check if higher than blue
         return 0x0;
     }
-    if (sensorVals[1] < Lranges[3]){
+    if ((sensorVals[1] < Lranges[3]) || (sensorVals[1] < Lranges[2])){
         return 0x0;
     }
-    if (sensorVals[2] < Mranges[3]){
+    if ((sensorVals[2] < Mranges[3]) || (sensorVals[2] < Mranges[2])){
         return 0x0;
     }
-    if (sensorVals[3] < Rranges[3]){
+    if ((sensorVals[3] < Rranges[3]) || (sensorVals[3] < Rranges[2])){
         return 0x0;
     }
-    if (sensorVals[4] < RRranges[3]){
+    if ((sensorVals[4] < RRranges[3]) || (sensorVals[4] < RRranges[2])){
         return 0x0;
     }
     return 0xAA;        //this means there's black everywhere 
@@ -695,16 +707,13 @@ void classifyColors(){
     unsigned char* sensorRanges[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
 
     for (unsigned char a = 0; a < 5; a++){
-        if (sensorVals[a] < sensorRanges[a][0]){
+        if (sensorVals[a] < sensorRanges[a][1]){    //white
             colorsDetected[a] = 'W';
         }
-        else if (sensorVals[a] < sensorRanges[a][1]){
+        else if ((sensorVals[a] < sensorRanges[a][2]) || (sensorVals[a] < sensorRanges[a][3])){       //green
             colorsDetected[a] = 'G';
         }
-        else if (sensorVals[a] < sensorRanges[a][2]){
-            colorsDetected[a] = 'R';
-        }
-        else if (sensorVals[a] < sensorRanges[a][3]){
+        else if (sensorVals[a] < sensorRanges[a][4]){       //blue
             colorsDetected[a] = 'B';
         }
         else{
@@ -892,14 +901,45 @@ unsigned char aveSensor(unsigned char s)
 
 void ranges()
 {
-    for (unsigned char a = 0; a < 4; a++)
-    {
-        LLranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
-        Lranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
-        Mranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
-        Rranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
-        RRranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
+    unsigned char* rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
+    LLranges[0] += 10;
+    LLranges[1] += 5;
+    LLranges[2] += 10;
+    LLranges[3] += 0;
+    LLranges[4] += 0;
+
+    Lranges[0] += 10;
+    Lranges[1] += 10;
+    Lranges[2] += 10;
+    Lranges[3] += 0;
+    Lranges[4] += 0;
+
+    Mranges[0] += 10;
+    Mranges[1] += 10;
+    Mranges[2] += 0;
+    Mranges[3] += 0;
+    Mranges[4] += 0;
+
+    Rranges[0] += 10;
+    Rranges[1] += 10;
+    Rranges[2] += 0;
+    Rranges[3] += 0;
+    Rranges[4] += 0;
+
+    RRranges[0] += 10;
+    RRranges[1] += 10;
+    RRranges[2] += 0;
+    RRranges[3] += 0;
+    RRranges[4] += 0;
+
+
+    for (unsigned char a = 0; a < 5; a++){
+        for (unsigned char b = 0; b < 5; b++){
+            trans(rangeArray[a][b]);
+        }
+        trans('\n');
     }
+
     return;
 }
 
@@ -932,7 +972,7 @@ void oneSecDelay()
 void msDelay(unsigned char delayInMs)
 {
     TMR6 = 0;   //clear the timer 
-    PR6 = 3.90625 * delayInMs;
+    PR6 = 4 * delayInMs;
     T6CON = 0xFF; //16 pre, 16 post, timer on
 
     while (!PIR5bits.TMR6IF);

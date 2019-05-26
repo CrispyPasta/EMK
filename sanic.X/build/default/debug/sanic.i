@@ -9438,8 +9438,6 @@ extern volatile __bit nWRITE2 __attribute__((address(0x7B6A)));
 void sanic_ISR(void){
     PIR1bits.TMR1IF = 0;
     TMR1 = 0;
-    PORTAbits.RA7 = 1;
-    PORTAbits.RA5 = 1;
     return;
 }
 
@@ -9610,7 +9608,7 @@ extern __attribute__((nonreentrant)) void _delaywdt(unsigned long);
 #pragma intrinsic(_delay3)
 extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 32 "C:\\Program Files (x86)\\Microchip\\xc8\\v2.05\\pic\\include\\xc.h" 2 3
-# 88 "sanic.c" 2
+# 86 "sanic.c" 2
 
 # 1 "./functions.h" 1
 
@@ -9663,7 +9661,7 @@ void oneSecDelay(void);
 void msDelay(unsigned char delayInMs);
 void timer6Setup(unsigned char delayInMs);
 void timer1setup();
-# 89 "sanic.c" 2
+# 87 "sanic.c" 2
 
 # 1 "./functions.c" 1
 
@@ -9797,20 +9795,15 @@ void setupADC()
 # 137 "./functions.c"
 void calibrate()
 {
-    unsigned char *rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
-    for (unsigned char a = 0; a < 5; a++)
-    {
-        for (unsigned char b = 0; b < 5; b++)
-        {
-            rangeArray[a][b] = 0;
-        }
-    }
-
     PORTA = 0;
     unsigned char sensors[5] = {12, 8, 9, 10, 13};
     unsigned char temp = 0;
 
     PORTD = 0b11000001;
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     oneSecDelay();
     oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
@@ -9826,17 +9819,17 @@ void calibrate()
             Lranges[0] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= Mranges[0])
+        if (temp >= LLranges[0])
         {
             Mranges[0] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= Rranges[0])
+        if (temp >= LLranges[0])
         {
             Rranges[0] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= RRranges[0])
+        if (temp >= LLranges[0])
         {
             RRranges[0] = temp;
         }
@@ -9863,17 +9856,17 @@ void calibrate()
             Lranges[1] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= Mranges[1])
+        if (temp >= LLranges[1])
         {
             Mranges[1] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= Rranges[1])
+        if (temp >= LLranges[1])
         {
             Rranges[1] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= RRranges[1])
+        if (temp >= LLranges[1])
         {
             RRranges[1] = temp;
         }
@@ -9900,17 +9893,17 @@ void calibrate()
             Lranges[2] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= Mranges[2])
+        if (temp >= LLranges[2])
         {
             Mranges[2] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= Rranges[2])
+        if (temp >= LLranges[2])
         {
             Rranges[2] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= RRranges[2])
+        if (temp >= LLranges[2])
         {
             RRranges[2] = temp;
         }
@@ -9937,17 +9930,17 @@ void calibrate()
             Lranges[3] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= Mranges[3])
+        if (temp >= LLranges[3])
         {
             Mranges[3] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= Rranges[3])
+        if (temp >= LLranges[3])
         {
             Rranges[3] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= RRranges[3])
+        if (temp >= LLranges[3])
         {
             RRranges[3] = temp;
         }
@@ -9974,24 +9967,26 @@ void calibrate()
             Lranges[4] = temp;
         }
         temp = aveSensor(8);
-        if (temp >= Mranges[4])
+        if (temp >= LLranges[4])
         {
             Mranges[4] = temp;
         }
         temp = aveSensor(9);
-        if (temp >= Rranges[4])
+        if (temp >= LLranges[4])
         {
             Rranges[4] = temp;
         }
         temp = aveSensor(13);
-        if (temp >= RRranges[4])
+        if (temp >= LLranges[4])
         {
             RRranges[4] = temp;
         }
     }
     PORTAbits.RA4 = 1;
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
 
-    ranges();
     PORTA = 0;
     return;
 }
@@ -10100,13 +10095,14 @@ void navigate(){
     displayRaceColor();
     setupPWMLeft();
     setupPWMRight();
-    setupADC();
     while(1){
+        setupADC();
         readAllSensors();
         classifyColors();
         displayColorDetected(2);
         determineDirection();
-
+        msDelay(50);
+        msDelay(50);
 
 
         if (PIR1bits.RC1IF)
@@ -10156,9 +10152,7 @@ void capTouch(){
 void searchMode(){
     timer1setup();
     while(!PIR1bits.TMR1IF){
-        PORTAbits.RA5 = 1;
-        PORTAbits.RA6 = 1;
-        PORTAbits.RA7 = 1;
+
     }
     return;
 }
@@ -10179,8 +10173,8 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 250;
-    CCPR5L = 250;
+    CCPR1L = 100;
+    CCPR5L = 100;
 }
 
 void left(){
@@ -10194,8 +10188,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100;
-    CCPR5L = 200;
+    CCPR1L = 50;
+    CCPR5L = 100;
     return;
 }
 
@@ -10204,13 +10198,13 @@ void hardLeft(){
     PORTAbits.RA6 = 0;
     PORTAbits.RA7 = 1;
 
-    PORTCbits.RC0 = 1;
-    PORTCbits.RC1 = 0;
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 20;
+    CCPR1L = 0;
     CCPR5L = 100;
     return;
 }
@@ -10226,8 +10220,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 200;
-    CCPR5L = 100;
+    CCPR1L = 100;
+    CCPR5L = 50;
     return;
 }
 
@@ -10297,32 +10291,33 @@ void turn45n(){
 void determineDirection(){
 
 
-    static unsigned char rc = 0;
-    if (rc == 0){
-        if (raceColor[0])
-        {
-            rc = 'W';
-        }
-        else if (raceColor[1])
-        {
-            rc = 'G';
-        }
-        else if (raceColor[2])
-        {
-            rc = 'B';
-        }
-        else if (raceColor[3])
-        {
-            rc = 'B';
-        }
-        else if (raceColor[4])
-        {
-            rc = 'n';
-        }
+    unsigned char rc = 0;
+    if (raceColor[0])
+    {
+        rc = 'W';
     }
+    else if (raceColor[1])
+    {
+        rc = 'G';
+    }
+    else if (raceColor[2])
+    {
+        rc = 'R';
+    }
+    else if (raceColor[3])
+    {
+        rc = 'B';
+    }
+    else if (raceColor[4])
+    {
+        rc = 'n';
+    }
+
 
     if (colorsDetected[2] == rc){
         straight();
+
+        return;
     }
     else if (colorsDetected[1] == rc){
         left();
@@ -10344,19 +10339,19 @@ void determineDirection(){
 
 
 unsigned char testBlack(){
-    if ((sensorVals[0] < LLranges[3]) || (sensorVals[0] < LLranges[2])){
+    if (sensorVals[0] < LLranges[3]){
         return 0x0;
     }
-    if ((sensorVals[1] < Lranges[3]) || (sensorVals[1] < Lranges[2])){
+    if (sensorVals[1] < Lranges[3]){
         return 0x0;
     }
-    if ((sensorVals[2] < Mranges[3]) || (sensorVals[2] < Mranges[2])){
+    if (sensorVals[2] < Mranges[3]){
         return 0x0;
     }
-    if ((sensorVals[3] < Rranges[3]) || (sensorVals[3] < Rranges[2])){
+    if (sensorVals[3] < Rranges[3]){
         return 0x0;
     }
-    if ((sensorVals[4] < RRranges[3]) || (sensorVals[4] < RRranges[2])){
+    if (sensorVals[4] < RRranges[3]){
         return 0x0;
     }
     return 0xAA;
@@ -10368,13 +10363,16 @@ void classifyColors(){
     unsigned char* sensorRanges[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
 
     for (unsigned char a = 0; a < 5; a++){
-        if (sensorVals[a] < sensorRanges[a][1]){
+        if (sensorVals[a] < sensorRanges[a][0]){
             colorsDetected[a] = 'W';
         }
-        else if ((sensorVals[a] < sensorRanges[a][2]) || (sensorVals[a] < sensorRanges[a][3])){
+        else if (sensorVals[a] < sensorRanges[a][1]){
             colorsDetected[a] = 'G';
         }
-        else if (sensorVals[a] < sensorRanges[a][4]){
+        else if (sensorVals[a] < sensorRanges[a][2]){
+            colorsDetected[a] = 'R';
+        }
+        else if (sensorVals[a] < sensorRanges[a][3]){
             colorsDetected[a] = 'B';
         }
         else{
@@ -10554,45 +10552,14 @@ unsigned char aveSensor(unsigned char s)
 
 void ranges()
 {
-    unsigned char* rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
-    LLranges[0] += 10;
-    LLranges[1] += 5;
-    LLranges[2] += 10;
-    LLranges[3] += 0;
-    LLranges[4] += 0;
-
-    Lranges[0] += 10;
-    Lranges[1] += 10;
-    Lranges[2] += 10;
-    Lranges[3] += 0;
-    Lranges[4] += 0;
-
-    Mranges[0] += 10;
-    Mranges[1] += 10;
-    Mranges[2] += 0;
-    Mranges[3] += 0;
-    Mranges[4] += 0;
-
-    Rranges[0] += 10;
-    Rranges[1] += 10;
-    Rranges[2] += 0;
-    Rranges[3] += 0;
-    Rranges[4] += 0;
-
-    RRranges[0] += 10;
-    RRranges[1] += 10;
-    RRranges[2] += 0;
-    RRranges[3] += 0;
-    RRranges[4] += 0;
-
-
-    for (unsigned char a = 0; a < 5; a++){
-        for (unsigned char b = 0; b < 5; b++){
-            trans(rangeArray[a][b]);
-        }
-        trans('\n');
+    for (unsigned char a = 0; a < 4; a++)
+    {
+        LLranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
+        Lranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
+        Mranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
+        Rranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
+        RRranges[a] = (LLranges[a] + LLranges[a + 1]) / 2;
     }
-
     return;
 }
 
@@ -10625,7 +10592,7 @@ void oneSecDelay()
 void msDelay(unsigned char delayInMs)
 {
     TMR6 = 0;
-    PR6 = 4 * delayInMs;
+    PR6 = 3.90625 * delayInMs;
     T6CON = 0xFF;
 
     while (!PIR5bits.TMR6IF);
@@ -10658,7 +10625,7 @@ void timer1setup(){
 void stopTimer1(){
     PIE1bits.TMR1IE = 0;
 }
-# 90 "sanic.c" 2
+# 88 "sanic.c" 2
 
 
 void init(void);
@@ -10667,7 +10634,7 @@ void RCE(void);
 
 void main(void)
 {
-# 113 "sanic.c"
+# 111 "sanic.c"
     init();
     RCE();
     while(1);

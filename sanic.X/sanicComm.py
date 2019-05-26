@@ -73,13 +73,12 @@ def animate(i):
                     
         points += 1
 
-    if len(data[0]) % 50 == 0 and len(data[0]) >= 1000:
+    if len(data[0]) % 50 == 0 and len(data[0]) >= 2000:
         data = [data[0][50:], data[1][50:], data[2]
                 [50:], data[3][50:], data[4][50:]]
 
     ax1.clear()
-    # labels = ['RR', 'R', 'M', 'L', 'LL']
-    labels = ['LL', 'L', 'M', 'R', 'RR']
+    labels = ['RR', 'R', 'M', 'L', 'LL']
     cols = ['c', 'g', 'b', 'r', 'k']
     calVals = np.array(calValues, dtype=np.float)
 
@@ -116,12 +115,21 @@ setupSerial(9600)
 
 command = ""        #command is die command wat ons vir die marv stuur
 while command != "exit":
-    marv = ser.readline()       #marv is die string wat ons by hom terug kry
-    print ((marv)),
     print (">>>"),
     command = (str(raw_input()))
     # command = str(input())
+    if (command == "CAL"):
+        ser.write(command.encode())
+        for a in range (0, 5):
+            marv = ser.readline()       #marv is die string wat ons by hom terug kry
+            for b in range(0, 5):
+                print(str(ord(marv[b])) + ',')
+            print('\n')
+        
+        
     ser.write(command.encode())
+    marv = ser.readline()       #marv is die string wat ons by hom terug kry
+    print ((marv)),
     if (command == "QCL"):
         pythonCalibration() #call die plot
         calibrationComplete = False

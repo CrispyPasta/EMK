@@ -25,7 +25,7 @@ pos = 0
 def setupSerial(baud):
     ser.baudrate = baud
     ser.bytesize = 8
-    ser.port = 'COM6' 
+    ser.port = 'COM13' 
     ser.parity = 'N'
     ser.stopbits = 1
     ser.timeout = None
@@ -56,7 +56,7 @@ def animate(i):
             #    voltages += 5 * ord(line[a]) / 255.0
 
             try:
-                voltage = 5 * ord(line[a]) / 255.0
+                voltage = ord(line[a]) 
                 data[a].append(voltage)
             except:
                 try:

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="dist/default/production\sanic.X.production.hex">
+  <executable name="dist/default/debug\sanic.X.debug.hex">
     <memory name="program">
       <units>bytes</units>
       <length>32768</length>
-      <used>3736</used>
-      <free>29032</free>
+      <used>4890</used>
+      <free>27878</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
       <length>1536</length>
-      <used>251</used>
-      <free>1285</free>
+      <used>254</used>
+      <free>1282</free>
     </memory>
   </executable>
 </project>

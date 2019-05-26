@@ -71,9 +71,10 @@
 void sanic_ISR(void){
     PIR1bits.TMR1IF = 0;//clear the flag 
     TMR1 = 0;           //clear the timer
+    PORTAbits.RA7 = 1;
+    PORTAbits.RA5 = 1;
     return;
 }
-#pragma code
 
 #pragma code high_vector = 0x0008
 void interrup_vector(){
