@@ -154,7 +154,7 @@ void RCE(){
         switch (commandReceived[0])
         {
         case 'R':
-            //go to cap touch wait mode 
+            capTouch(); 
             break;
         case 'P':
             PRC();

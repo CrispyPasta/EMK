@@ -38,7 +38,7 @@ def animate(i):
     global fig
     sensors
     points = 0
-    while ser.is_open and points < 25:
+    while ser.is_open and points < 50:
         line = ser.readline()
         line = str(line)
         if (line == '\OwO/\n'):     #stop string for the python plotting
@@ -73,12 +73,13 @@ def animate(i):
                     
         points += 1
 
-    if len(data[0]) % 25 == 0 and len(data[0]) >= 1000:
-        data = [data[0][25:], data[1][25:], data[2]
-                [25:], data[3][25:], data[4][25:]]
+    if len(data[0]) % 50 == 0 and len(data[0]) >= 1000:
+        data = [data[0][50:], data[1][50:], data[2]
+                [50:], data[3][50:], data[4][50:]]
 
     ax1.clear()
-    labels = ['RR', 'R', 'M', 'L', 'LL']
+    # labels = ['RR', 'R', 'M', 'L', 'LL']
+    labels = ['LL', 'L', 'M', 'R', 'RR']
     cols = ['c', 'g', 'b', 'r', 'k']
     calVals = np.array(calValues, dtype=np.float)
 
@@ -98,7 +99,7 @@ def animate(i):
 def pythonCalibration():
     global calibrationComplete
     if calibrationComplete == False:
-        ani = animation.FuncAnimation(fig, animate, interval = 260)
+        ani = animation.FuncAnimation(fig, animate, interval = 510)
         if calibrationComplete == True:
             plt.close()
             return

@@ -9612,9 +9612,14 @@ void calibrate(void);
 void PRC(void);
 void pyCal(void);
 void navigate();
+void capTouch();
 
 
 
+void straight();
+void left();
+void right();
+void reverse();
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();
@@ -9773,6 +9778,12 @@ void calibrate()
     unsigned char temp = 0;
 
     PORTD = 0b11000001;
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -9802,14 +9813,14 @@ void calibrate()
         }
     }
     PORTAbits.RA0 = 1;
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b10000010;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -9839,14 +9850,14 @@ void calibrate()
         }
     }
     PORTAbits.RA1 = 1;
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b10001000;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -9876,14 +9887,14 @@ void calibrate()
         }
     }
     PORTAbits.RA2 = 1;
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b10000000;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -9913,14 +9924,14 @@ void calibrate()
         }
     }
     PORTAbits.RA3 = 1;
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b11001000;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -10082,6 +10093,34 @@ void navigate(){
     }
 }
 
+void capTouch(){
+
+    unsigned char message[] = "\nSanic waits for a touch\n";
+
+    for (unsigned char a = 0; a < 25; a++)
+    {
+        trans(message[a]);
+    }
+
+    signed int change = 0;
+    unsigned char touch1 = 0;
+    unsigned char touch2 = 0;
+
+    while(1){
+        touch1 = aveSensor(15);
+        msDelay(5);
+        touch2 = aveSensor(15);
+        trans(touch1);
+        trans(touch2);
+
+        if (abs(touch2 - touch1) > 0x0F){
+            return;
+        } else {
+            touch1 = touch2 = 0;
+        }
+    }
+    return;
+}
 
 
 
@@ -10095,8 +10134,44 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 200;
-    CCPR5L = 200;
+    CCPR1L = 100;
+    CCPR5L = 100;
+}
+
+void left(){
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 50;
+    CCPR5L = 100;
+    return;
+}
+
+void right(){
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 100;
+    CCPR5L = 50;
+    return;
+}
+
+void reverse(){
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
+
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
+
+    CCPR1L = 100;
+    CCPR5L = 100;
+    return;
 }
 
 void determineDirection(){
@@ -10274,7 +10349,7 @@ void trans(unsigned char s)
     TXREG = s;
     return;
 }
-# 654 "./functions.c"
+# 724 "./functions.c"
 void setADCChannel(unsigned char channel)
 {
     ADCON0bits.CHS = channel;
@@ -10473,7 +10548,7 @@ void RCE(){
         switch (commandReceived[0])
         {
         case 'R':
-
+            capTouch();
             break;
         case 'P':
             PRC();

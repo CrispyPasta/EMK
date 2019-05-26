@@ -141,6 +141,12 @@ void calibrate()
     unsigned char temp = 0;
 
     PORTD = 0b11000001;
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -170,14 +176,14 @@ void calibrate()
         }
     }
     PORTAbits.RA0 = 1; //turn on the white LED
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b10000010;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -207,14 +213,14 @@ void calibrate()
         }
     }
     PORTAbits.RA1 = 1; //turn on the green LED
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b10001000;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -244,14 +250,14 @@ void calibrate()
         }
     }
     PORTAbits.RA2 = 1; //turn on the red LED
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b10000000;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -281,14 +287,14 @@ void calibrate()
         }
     }
     PORTAbits.RA3 = 1; //turn on the blue LED
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-
     PORTD = 0b11001000;
+
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
+    oneSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -450,6 +456,34 @@ void navigate(){
     }//end while
 }
 
+void capTouch(){
+
+    unsigned char message[] = "\nSanic waits for a touch\n";
+
+    for (unsigned char a = 0; a < 25; a++)
+    {
+        trans(message[a]);
+    }
+
+    signed int change  = 0;
+    unsigned char touch1 = 0;
+    unsigned char touch2 = 0;
+
+    while(1){
+        touch1 = aveSensor(15);
+        msDelay(5);
+        touch2 = aveSensor(15);
+        // trans(touch1);
+        // trans(touch2);
+
+        if (abs(touch2 - touch1) > 10){
+            return;
+        } else {
+            touch1 = touch2 = 0;        //reset the bad bois
+        }
+    }
+    return;
+}
 //###############STATE FUNCTIONS##################
 
 
@@ -457,14 +491,94 @@ void navigate(){
 
 //###############UTILITY FUNCTIONS##################
 void straight(){
+    PORTAbits.RA5 = 1;  //indicate straight
+    PORTAbits.RA6 = 0;  //indicate right
+    PORTAbits.RA7 = 0;  //indicate left
+
     PORTCbits.RC0 = 0;
     PORTCbits.RC1 = 1;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 200;       //max speed 
-    CCPR5L = 200;
+    CCPR1L = 100;        
+    CCPR5L = 100;
+}
+
+void left(){
+    PORTAbits.RA5 = 0;  //indicate straight
+    PORTAbits.RA6 = 0;  //indicate right
+    PORTAbits.RA7 = 1;  //indicate left
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 50;      
+    CCPR5L = 100;
+    return;
+}
+
+void hardLeft(){
+    PORTAbits.RA5 = 0;  //indicate straight
+    PORTAbits.RA6 = 0;  //indicate right
+    PORTAbits.RA7 = 1;  //indicate left
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 0;
+    CCPR5L = 100;
+    return;
+}
+
+void right(){
+    PORTAbits.RA5 = 0;  //indicate straight
+    PORTAbits.RA6 = 1;  //indicate right
+    PORTAbits.RA7 = 0;  //indicate left
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 100; 
+    CCPR5L = 50;
+    return;
+}
+
+void hardRight(){
+    PORTAbits.RA5 = 0;  //indicate straight
+    PORTAbits.RA6 = 1;  //indicate right
+    PORTAbits.RA7 = 0;  //indicate left
+
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
+
+    PORTEbits.RE0 = 0;
+    PORTEbits.RE1 = 1;
+
+    CCPR1L = 100;
+    CCPR5L = 0;
+    return;
+}
+
+void reverse(){
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
+
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
+
+    CCPR1L = 100;
+    CCPR5L = 100;
+    return;
 }
 
 void determineDirection(){
@@ -492,7 +606,23 @@ void determineDirection(){
         rc = 'n';
     }   //ek weet hierdie is super dom, maar ek wil nie oorskakel van die goed wat reeds werk nie
 
-
+    if (colorsDetected[2] == rc){   //middle sensor
+        straight();
+        
+        return;
+    }
+    else if (colorsDetected[1] == rc){  //left 
+        left();
+    }
+    else if (colorsDetected[3] == rc){  //right 
+        right();
+    }
+    else if (colorsDetected[0] == rc){  //left left
+        hardLeft();
+    }
+    else if (colorsDetected[4] == rc){  //right right 
+        hardRight();
+    }
     return;
 }
 

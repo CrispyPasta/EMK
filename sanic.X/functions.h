@@ -15,9 +15,16 @@ void calibrate(void);
 void PRC(void);
 void pyCal(void);
 void navigate();
+void capTouch();
 //###############STATE FUNCTIONS##################
 
 //##############UTILITY FUNCTIONS#################
+void straight();
+void left();
+void hardLeft();
+void right();
+void hardRight();
+void reverse();
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();
