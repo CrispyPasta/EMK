@@ -67,12 +67,29 @@
 // #pragma config statements should precede project file includes.
 // Use project enums instead of #define for ON and OFF.
 
+#pragma interrupt sanic_ISR
+void sanic_ISR(void){
+    PIR1bits.TMR1IF = 0;//clear the flag 
+    TMR1 = 0;           //clear the timer
+    PORTAbits.RA7 = 1;
+    PORTAbits.RA5 = 1;
+    return;
+}
+
+#pragma code high_vector = 0x0008
+void interrup_vector(){
+    if (PIR1bits.TMR1IF == 1){
+        sanic_ISR;
+    }
+}
+#pragma code
+
+
 #include <xc.h>
 #include "functions.h"
 #include "functions.c"
 
 void init(void);
-void delay(void);
 void RCE(void);
 
 
@@ -105,18 +122,13 @@ void main(void)
 
 }
 
-void delay(){
-    for (unsigned int x = 0; x < 900; x++){
-        for(unsigned char b =0 ; b < 100; b++);
-    }
-    return;
-}
-
 void init(){
-    raceColor[blueBit] = 1;     //set default color 
+    raceColor[3] = 1;     //set default color 
     setupOSC();
     clearPorts();
     setupSerial();
+    setupADC();
+    readFromEEP();
 }
 
 void RCE(){
@@ -161,19 +173,19 @@ void RCE(){
         switch (commandReceived[0])
         {
         case 'R':
-            //go to cap touch wait mode 
+            capTouch(); 
             break;
         case 'P':
             PRC();
             break;
         case 'N':
-            //go to navigation 
+            navigate();
             break;
         case 'Q':
-            //go to python serial mode  
+            pyCal(); 
             break;
         case 'C':
-            //go to calibration mode  
+            calibrate();  
             break;
         
         default:
