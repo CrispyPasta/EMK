@@ -9687,6 +9687,7 @@ unsigned char sensorVals[] = {120, 170, 170, 190, 250};
 unsigned char raceColor[] = "00001000";
 unsigned char sensorChannels[] = {12, 10, 8, 9, 13, 15};
 unsigned char colorsDetected[] = {0, 0, 0, 0, 0};
+unsigned char raceDayColor = 'B';
 
 
 void setupPWMLeft()
@@ -9795,7 +9796,7 @@ void setupADC()
     ADCON0bits.ADON = 1;
     return;
 }
-# 137 "./functions.c"
+# 138 "./functions.c"
 void calibrate()
 {
     ranges();
@@ -10003,6 +10004,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'B';
             return;
             break;
         case 'G':
@@ -10015,6 +10017,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'G';
             return;
             break;
         case 'R':
@@ -10027,6 +10030,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'R';
             return;
             break;
         case 'n':
@@ -10039,6 +10043,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'n';
             return;
             break;
 
@@ -10088,7 +10093,7 @@ void navigate(){
         classifyColors();
         displayColorDetected(2);
         determineDirection();
-
+        msDelay(50);
 
 
         if (PIR1bits.RC1IF)
@@ -10136,13 +10141,12 @@ void capTouch(){
 }
 
 void searchMode(){
-    timer1setup();
-    while(!PIR1bits.TMR1IF){
-        PORTAbits.RA5 = 1;
-        PORTAbits.RA6 = 1;
-        PORTAbits.RA7 = 1;
-    }
-    PORTD = 0xFF;
+    PORTAbits.RA5 = 1;
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 1;
+    right();
+
+
     return;
 }
 
@@ -10162,8 +10166,8 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 250;
-    CCPR5L = 250;
+    CCPR1L = 200;
+    CCPR5L = 200;
 }
 
 void left(){
@@ -10177,8 +10181,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 150;
-    CCPR5L = 250;
+    CCPR1L = 100;
+    CCPR5L = 150;
     return;
 }
 
@@ -10187,8 +10191,8 @@ void hardLeft(){
     PORTAbits.RA6 = 0;
     PORTAbits.RA7 = 1;
 
-    PORTCbits.RC0 = 1;
-    PORTCbits.RC1 = 0;
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
@@ -10209,8 +10213,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 250;
-    CCPR5L = 150;
+    CCPR1L = 150;
+    CCPR5L = 100;
     return;
 }
 
@@ -10231,6 +10235,8 @@ void hardRight(){
 }
 
 void determineDirection(){
+    straight();
+    return;
 
 
     static unsigned char rc = 0;
@@ -10257,22 +10263,27 @@ void determineDirection(){
         }
     }
 
-    if (colorsDetected[2] == rc){
+    if (colorsDetected[2] == raceDayColor){
         straight();
     }
-    else if (colorsDetected[1] == rc){
+    else if (colorsDetected[1] == raceDayColor){
         left();
     }
-    else if (colorsDetected[3] == rc){
+    else if (colorsDetected[3] == raceDayColor){
         right();
     }
-    else if (colorsDetected[0] == rc){
+    else if (colorsDetected[0] == raceDayColor){
         hardLeft();
     }
-    else if (colorsDetected[4] == rc){
+    else if (colorsDetected[4] == raceDayColor){
         hardRight();
     }
     else {
+        if (sensorVals[3] > Rranges[0]){
+            right();
+        } else if (sensorVals[4] > RRranges[0]){
+            hardRight();
+        }
         searchMode();
     }
     return;
@@ -10432,7 +10443,7 @@ void trans(unsigned char s)
     TXREG = s;
     return;
 }
-# 782 "./functions.c"
+# 793 "./functions.c"
 void setADCChannel(unsigned char channel)
 {
     ADCON0bits.CHS = channel;
@@ -10502,12 +10513,6 @@ unsigned char aveSensor(unsigned char s)
 void ranges()
 {
     unsigned char* rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
-    LLranges[0] += 10;
-    Lranges[0] += 10;
-    Mranges[0] += 10;
-    Rranges[0] += 10;
-    RRranges[0] += 10;
-
 
     for (unsigned char a = 0; a < 5; a++){
         rangeArray[a][1] = (rangeArray[a][1] + rangeArray[a][2]) / 2;
@@ -10516,6 +10521,12 @@ void ranges()
         }
         trans('\n');
     }
+
+    LLranges[0] += 10;
+    Lranges[0] += 10;
+    Mranges[0] += 10;
+    Rranges[0] += 10;
+    RRranges[0] += 10;
 
     writeToEEP();
     return;

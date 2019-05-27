@@ -18,6 +18,7 @@ unsigned char sensorVals[] = {120, 170, 170, 190, 250};
 unsigned char raceColor[] = "00001000"; //initialize as blue for now
 unsigned char sensorChannels[] = {12, 10, 8, 9, 13, 15};
 unsigned char colorsDetected[] = {0, 0, 0, 0, 0};
+unsigned char raceDayColor = 'B';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~GLOBAL VARIABLES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //###############SETUP FUNCTIONS##################
 void setupPWMLeft()
@@ -341,6 +342,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'B';
             return;
             break;
         case 'G':
@@ -353,6 +355,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'G';
             return;
             break;
         case 'R':
@@ -365,6 +368,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'R';
             return;
             break;
         case 'n':
@@ -377,6 +381,7 @@ void PRC()
             {
                 trans(message2[a]);
             }
+            raceDayColor = 'n';
             return;
             break;
 
@@ -426,7 +431,7 @@ void navigate(){
         classifyColors();
         displayColorDetected(2);
         determineDirection();
-        // msDelay(50);            //sit hierdies by vir bietjie latency 
+        msDelay(50);            //sit hierdies by vir bietjie latency 
 
 
         if (PIR1bits.RC1IF)     //stop condition
@@ -474,13 +479,12 @@ void capTouch(){
 }
 
 void searchMode(){
-    timer1setup();
-    while(!PIR1bits.TMR1IF){
-        PORTAbits.RA5 = 1;
-        PORTAbits.RA6 = 1;
-        PORTAbits.RA7 = 1;
-    }
-    PORTD = 0xFF;
+    PORTAbits.RA5 = 1;
+    PORTAbits.RA6 = 1;
+    PORTAbits.RA7 = 1;
+    right();
+    // PORTD = 0xFF;
+
     return;
 }
 //###############STATE FUNCTIONS##################
@@ -500,8 +504,8 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 250;        
-    CCPR5L = 250;
+    CCPR1L = 200;        
+    CCPR5L = 200;
 }
 
 void left(){
@@ -515,8 +519,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 150;      
-    CCPR5L = 250;
+    CCPR1L = 100;      
+    CCPR5L = 150;
     return;
 }
 
@@ -525,8 +529,8 @@ void hardLeft(){
     PORTAbits.RA6 = 0;  //indicate right
     PORTAbits.RA7 = 1;  //indicate left
 
-    PORTCbits.RC0 = 1;
-    PORTCbits.RC1 = 0;
+    PORTCbits.RC0 = 0;
+    PORTCbits.RC1 = 1;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
@@ -547,8 +551,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 250; 
-    CCPR5L = 150;
+    CCPR1L = 150; 
+    CCPR5L = 100;
     return;
 }
 
@@ -569,6 +573,8 @@ void hardRight(){
 }
 
 void determineDirection(){
+    straight();
+    return;
     //check of race color detected by enige sensor
     //as nie, kyk na relative voltage levels
     static unsigned char rc = 0;
@@ -595,22 +601,27 @@ void determineDirection(){
         }   //ek weet hierdie is super dom, maar ek wil nie oorskakel van die goed wat reeds werk nie
     }
 
-    if (colorsDetected[2] == rc){   //middle sensor
+    if (colorsDetected[2] == raceDayColor){   //middle sensor
         straight();
     }
-    else if (colorsDetected[1] == rc){  //left 
+    else if (colorsDetected[1] == raceDayColor){  //left 
         left();
     }
-    else if (colorsDetected[3] == rc){  //right 
+    else if (colorsDetected[3] == raceDayColor){  //right 
         right();
     }
-    else if (colorsDetected[0] == rc){  //left left
+    else if (colorsDetected[0] == raceDayColor){  //left left
         hardLeft();
     }
-    else if (colorsDetected[4] == rc){  //right right 
+    else if (colorsDetected[4] == raceDayColor){  //right right 
         hardRight();
     }
     else {          //race color not detected anywhere
+        if (sensorVals[3] > Rranges[0]){
+            right();
+        } else if (sensorVals[4] > RRranges[0]){
+            hardRight();
+        }
         searchMode();
     }
     return;
@@ -848,12 +859,6 @@ unsigned char aveSensor(unsigned char s)
 void ranges()
 {
     unsigned char* rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
-    LLranges[0] += 10;
-    Lranges[0]  += 10;
-    Mranges[0]  += 10;
-    Rranges[0]  += 10;
-    RRranges[0] += 10;
-
 
     for (unsigned char a = 0; a < 5; a++){
         rangeArray[a][1] = (rangeArray[a][1] + rangeArray[a][2]) / 2;
@@ -862,6 +867,12 @@ void ranges()
         }
         trans('\n');
     }
+
+    LLranges[0] += 10;
+    Lranges[0]  += 10;
+    Mranges[0]  += 10;
+    Rranges[0]  += 10;
+    RRranges[0] += 10;
 
     writeToEEP();
     return;
