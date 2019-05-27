@@ -25,9 +25,6 @@ void left();
 void hardLeft();
 void right();
 void hardRight();
-void reverse();
-void turn45p(); //turn 45 degrees positive (anticlockwise)
-void turn45n(); //turn 45 degrees negative (clockwise)
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();
@@ -41,10 +38,14 @@ unsigned char readADC();
 unsigned char aveSensor(unsigned char s);
 void ranges();
 void error();
+void writeToEEP();
+void EE_WRT();
+void readFromEEP();
+unsigned char EE_READ();
 //##############UTILITY FUNCTIONS#################
 
 //###############DELAY FUNCTIONS##################
-void oneSecDelay(void);
+void sixSecDelay(void);
 void msDelay(unsigned char delayInMs);
 void timer6Setup(unsigned char delayInMs);
 void timer1setup();

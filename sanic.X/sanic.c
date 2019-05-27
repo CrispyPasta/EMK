@@ -123,11 +123,12 @@ void main(void)
 }
 
 void init(){
-    raceColor[blueBit] = 1;     //set default color 
+    raceColor[3] = 1;     //set default color 
     setupOSC();
     clearPorts();
     setupSerial();
     setupADC();
+    readFromEEP();
 }
 
 void RCE(){

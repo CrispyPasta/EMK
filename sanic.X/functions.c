@@ -136,6 +136,7 @@ void setupADC()
 //order is white, green, red, blue, black
 void calibrate()
 {
+    ranges();
     unsigned char *rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
     for (unsigned char a = 0; a < 5; a++)
     {
@@ -146,12 +147,11 @@ void calibrate()
     }
 
     PORTA = 0;
-    unsigned char sensors[5] = {12, 8, 9, 10, 13};
+    // unsigned char sensors[5] = {12, 8, 9, 10, 13};
     unsigned char temp = 0;
 
     PORTD = 0b11000001;
-    oneSecDelay();
-    oneSecDelay();
+    sixSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -183,12 +183,7 @@ void calibrate()
     PORTAbits.RA0 = 1; //turn on the white LED
     PORTD = 0b10000010;
 
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
+    sixSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -220,12 +215,7 @@ void calibrate()
     PORTAbits.RA1 = 1; //turn on the green LED
     PORTD = 0b10001000;
 
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
+    sixSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -257,12 +247,7 @@ void calibrate()
     PORTAbits.RA2 = 1; //turn on the red LED
     PORTD = 0b10000000;
 
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
+    sixSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -294,12 +279,7 @@ void calibrate()
     PORTAbits.RA3 = 1; //turn on the blue LED
     PORTD = 0b11001000;
 
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
-    oneSecDelay();
+    sixSecDelay();
     for (unsigned char samples = 0; samples < 250; samples++)
     {
         temp = aveSensor(12);
@@ -415,12 +395,13 @@ void pyCal()
     setupADC();
     PORTD = 0b00001100;
     unsigned char done = 0;
+    unsigned char a = 0;
     while (1)
     {
         msDelay(10); //delay 10ms between transmissions
-        for (unsigned char a = 0; a < 5; a++)
-        {
-            trans(aveSensor(sensorChannels[a]));
+        readAllSensors();
+        for (a = 0; a < 5; a++){
+            trans(sensorVals[a]);
         }
         trans('\n');
 
@@ -499,6 +480,7 @@ void searchMode(){
         PORTAbits.RA6 = 1;
         PORTAbits.RA7 = 1;
     }
+    PORTD = 0xFF;
     return;
 }
 //###############STATE FUNCTIONS##################
@@ -533,8 +515,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100;      
-    CCPR5L = 200;
+    CCPR1L = 150;      
+    CCPR5L = 250;
     return;
 }
 
@@ -549,8 +531,8 @@ void hardLeft(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 20;
-    CCPR5L = 100;
+    CCPR1L = 50;
+    CCPR5L = 150;
     return;
 }
 
@@ -565,8 +547,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 200; 
-    CCPR5L = 100;
+    CCPR1L = 250; 
+    CCPR5L = 150;
     return;
 }
 
@@ -581,57 +563,10 @@ void hardRight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100;
-    CCPR5L = 0;
+    CCPR1L = 150;
+    CCPR5L = 50;
     return;
 }
-
-void reverse(){
-    PORTCbits.RC0 = 1;
-    PORTCbits.RC1 = 0;
-
-    PORTEbits.RE0 = 1;
-    PORTEbits.RE1 = 0;
-
-    CCPR1L = 100;
-    CCPR5L = 100;
-    return;
-}
-
-void turn45p(){
-    PORTAbits.RA5 = 1;  //indicate search
-    PORTAbits.RA6 = 1;
-    PORTAbits.RA7 = 1;
-
-    PORTCbits.RC0 = 1;
-    PORTCbits.RC1 = 0;
-
-    PORTEbits.RE0 = 0;
-    PORTEbits.RE1 = 1;
-
-    CCPR1L = 100;
-    CCPR5L = 100;
-
-    msDelay(50);
-    return;
-}
-
-void turn45n(){
-    PORTAbits.RA5 = 1;  //indicate search
-    PORTAbits.RA6 = 1;
-    PORTAbits.RA7 = 1;
-
-    PORTCbits.RC0 = 0;
-    PORTCbits.RC1 = 1;
-
-    PORTEbits.RE0 = 1;
-    PORTEbits.RE1 = 0;
-
-    CCPR1L = 100;
-    CCPR5L = 100;
-    return;
-}
-
 
 void determineDirection(){
     //check of race color detected by enige sensor
@@ -707,10 +642,10 @@ void classifyColors(){
     unsigned char* sensorRanges[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
 
     for (unsigned char a = 0; a < 5; a++){
-        if (sensorVals[a] < sensorRanges[a][1]){    //white
+        if (sensorVals[a] < sensorRanges[a][0]){    //white
             colorsDetected[a] = 'W';
         }
-        else if ((sensorVals[a] < sensorRanges[a][2]) || (sensorVals[a] < sensorRanges[a][3])){       //green
+        else if (sensorVals[a] < sensorRanges[a][1]){       //green
             colorsDetected[a] = 'G';
         }
         else if (sensorVals[a] < sensorRanges[a][4]){       //blue
@@ -811,8 +746,19 @@ void displayRaceColor(){
 
 //reads sensor values into the sensorVals array
 void readAllSensors(){
-    for (unsigned a  = 0; a < 5; a++){
+    unsigned char tempSensorVals[5];
+    unsigned char a;
+    for (a = 0; a < 5; a++){
+        tempSensorVals[a] = aveSensor(sensorChannels[a]);
+    }
+    for (a = 0; a < 5; a++){
         sensorVals[a] = aveSensor(sensorChannels[a]);
+
+        if (abs(tempSensorVals[a] - sensorVals[a]) > 30){   //attempt to fix glitchiness
+            if (sensorVals[a] > tempSensorVals[a]){
+                sensorVals[a] = tempSensorVals[a];
+            }
+        }
     }
     return;
 }
@@ -889,12 +835,12 @@ unsigned char aveSensor(unsigned char s)
     setADCChannel(s); //set the channel of the pin
     unsigned int measurements = 0;
 
-    for (unsigned char a = 0; a < 4; a++)
+    for (unsigned char a = 0; a < 8; a++)
     {
         measurements += readADC();
     }
 
-    unsigned char result = measurements / 4;
+    unsigned char result = measurements / 8;
 
     return result;
 }
@@ -903,43 +849,21 @@ void ranges()
 {
     unsigned char* rangeArray[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
     LLranges[0] += 10;
-    LLranges[1] += 5;
-    LLranges[2] += 10;
-    LLranges[3] += 0;
-    LLranges[4] += 0;
-
-    Lranges[0] += 10;
-    Lranges[1] += 10;
-    Lranges[2] += 10;
-    Lranges[3] += 0;
-    Lranges[4] += 0;
-
-    Mranges[0] += 10;
-    Mranges[1] += 10;
-    Mranges[2] += 0;
-    Mranges[3] += 0;
-    Mranges[4] += 0;
-
-    Rranges[0] += 10;
-    Rranges[1] += 10;
-    Rranges[2] += 0;
-    Rranges[3] += 0;
-    Rranges[4] += 0;
-
+    Lranges[0]  += 10;
+    Mranges[0]  += 10;
+    Rranges[0]  += 10;
     RRranges[0] += 10;
-    RRranges[1] += 10;
-    RRranges[2] += 0;
-    RRranges[3] += 0;
-    RRranges[4] += 0;
 
 
     for (unsigned char a = 0; a < 5; a++){
+        rangeArray[a][1] = (rangeArray[a][1] + rangeArray[a][2]) / 2;
         for (unsigned char b = 0; b < 5; b++){
             trans(rangeArray[a][b]);
         }
         trans('\n');
     }
 
+    writeToEEP();
     return;
 }
 
@@ -954,14 +878,62 @@ void error()
 
     RCREG = 0;  //clear RCREG
 }
+
+void writeToEEP(){
+    unsigned char* rs[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
+    unsigned char address = 0;
+    for (unsigned char a = 0; a < 5; a++){
+        for (unsigned char b = 0; b < 5; b++){
+            EEADR = address++;
+            EEDATA = rs[a][b];
+            EE_WRT();
+        }
+    }
+    EECON1bits.WREN = 0;        //disable writing
+    return;
+}
+
+void EE_WRT(){
+    EECON1bits.EEPGD = 0;
+    EECON1bits.CFGS = 0;
+    EECON1bits.WREN = 1;
+    INTCONbits.GIE = 0;
+    EECON2 = 0x55;
+    EECON2 = 0xAA;
+    EECON1bits.WR = 1;
+    INTCONbits.GIE = 1;
+    while(!PIR2bits.EEIF);
+    PIR2bits.EEIF = 0;
+}
+
+void readFromEEP(){
+    unsigned char* rs[] = {LLranges, Lranges, Mranges, Rranges, RRranges};
+    unsigned char address = 0;
+    EECON1bits.RD = 1;      //enable read
+
+    for (unsigned char a = 0; a < 5; a++){
+        for (unsigned char b = 0; b< 5; b++){
+            EEADR = address++;      //postincrement
+            rs[a][b] = EE_READ();
+        }
+    }
+    return;
+}
+
+unsigned char EE_READ(){
+    EECON1bits.EEPGD = 0;
+    EECON1bits.CFGS = 0;
+    EECON1bits.RD = 1;
+    return(EEDATA);
+}
 //###############UTILITY FUNCTIONS##################
 
 
 
 //################DELAY FUNCTIONS###################
-void oneSecDelay()
+void sixSecDelay()
 {
-    for (unsigned char a = 0; a < 15; a++)
+    for (unsigned char a = 0; a < 90; a++)
     {
         msDelay(63);
     }
