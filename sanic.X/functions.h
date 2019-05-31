@@ -25,6 +25,7 @@ void left();
 void hardLeft();
 void right();
 void hardRight();
+void reverse();
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();

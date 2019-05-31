@@ -504,8 +504,8 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 200;        
-    CCPR5L = 200;
+    CCPR1L = 250;        
+    CCPR5L = 250;
 }
 
 void left(){
@@ -519,8 +519,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100;      
-    CCPR5L = 150;
+    CCPR1L = 120;      
+    CCPR5L = 180;
     return;
 }
 
@@ -532,8 +532,8 @@ void hardLeft(){
     PORTCbits.RC0 = 0;
     PORTCbits.RC1 = 1;
 
-    PORTEbits.RE0 = 0;
-    PORTEbits.RE1 = 1;
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
 
     CCPR1L = 50;
     CCPR5L = 150;
@@ -551,8 +551,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 150; 
-    CCPR5L = 100;
+    CCPR1L = 180; 
+    CCPR5L = 120;
     return;
 }
 
@@ -561,8 +561,8 @@ void hardRight(){
     PORTAbits.RA6 = 1;  //indicate right
     PORTAbits.RA7 = 0;  //indicate left
 
-    PORTCbits.RC0 = 0;
-    PORTCbits.RC1 = 1;
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
@@ -572,9 +572,22 @@ void hardRight(){
     return;
 }
 
+void reverse(){
+    PORTAbits.RA5 = 1; //indicate straight
+    PORTAbits.RA6 = 0; //indicate right
+    PORTAbits.RA7 = 0; //indicate left
+
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
+
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
+
+    CCPR1L = 250;
+    CCPR5L = 250;
+}
+
 void determineDirection(){
-    straight();
-    return;
     //check of race color detected by enige sensor
     //as nie, kyk na relative voltage levels
     static unsigned char rc = 0;

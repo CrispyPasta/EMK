@@ -173,7 +173,21 @@ void RCE(){
         switch (commandReceived[0])
         {
         case 'R':
-            capTouch(); 
+            if (commandReceived[1] == 'C'){
+                capTouch(); 
+            } else if (commandReceived[1] == 'E'){
+                setupPWMRight();
+                setupPWMLeft();
+                reverse();
+                if (PIR1bits.RC1IF) //stop condition
+                {
+                    PIR1bits.RC1IF = 0; //clear the flag
+                    if (RCREG == 'S' || RCREG == 's')
+                    {
+                        stopMotors();
+                    }
+                }
+            }
             break;
         case 'P':
             PRC();

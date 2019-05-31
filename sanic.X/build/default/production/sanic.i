@@ -9640,6 +9640,7 @@ void left();
 void hardLeft();
 void right();
 void hardRight();
+void reverse();
 void determineDirection();
 unsigned char testBlack();
 void classifyColors();
@@ -10166,8 +10167,8 @@ void straight(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 200;
-    CCPR5L = 200;
+    CCPR1L = 250;
+    CCPR5L = 250;
 }
 
 void left(){
@@ -10181,8 +10182,8 @@ void left(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 100;
-    CCPR5L = 150;
+    CCPR1L = 120;
+    CCPR5L = 180;
     return;
 }
 
@@ -10194,8 +10195,8 @@ void hardLeft(){
     PORTCbits.RC0 = 0;
     PORTCbits.RC1 = 1;
 
-    PORTEbits.RE0 = 0;
-    PORTEbits.RE1 = 1;
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
 
     CCPR1L = 50;
     CCPR5L = 150;
@@ -10213,8 +10214,8 @@ void right(){
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
 
-    CCPR1L = 150;
-    CCPR5L = 100;
+    CCPR1L = 180;
+    CCPR5L = 120;
     return;
 }
 
@@ -10223,8 +10224,8 @@ void hardRight(){
     PORTAbits.RA6 = 1;
     PORTAbits.RA7 = 0;
 
-    PORTCbits.RC0 = 0;
-    PORTCbits.RC1 = 1;
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
 
     PORTEbits.RE0 = 0;
     PORTEbits.RE1 = 1;
@@ -10234,9 +10235,22 @@ void hardRight(){
     return;
 }
 
+void reverse(){
+    PORTAbits.RA5 = 1;
+    PORTAbits.RA6 = 0;
+    PORTAbits.RA7 = 0;
+
+    PORTCbits.RC0 = 1;
+    PORTCbits.RC1 = 0;
+
+    PORTEbits.RE0 = 1;
+    PORTEbits.RE1 = 0;
+
+    CCPR1L = 250;
+    CCPR5L = 250;
+}
+
 void determineDirection(){
-    straight();
-    return;
 
 
     static unsigned char rc = 0;
@@ -10443,7 +10457,7 @@ void trans(unsigned char s)
     TXREG = s;
     return;
 }
-# 793 "./functions.c"
+# 806 "./functions.c"
 void setADCChannel(unsigned char channel)
 {
     ADCON0bits.CHS = channel;
@@ -10715,7 +10729,21 @@ void RCE(){
         switch (commandReceived[0])
         {
         case 'R':
-            capTouch();
+            if (commandReceived[1] == 'C'){
+                capTouch();
+            } else if (commandReceived[1] == 'E'){
+                setupPWMRight();
+                setupPWMLeft();
+                reverse();
+                if (PIR1bits.RC1IF)
+                {
+                    PIR1bits.RC1IF = 0;
+                    if (RCREG == 'S' || RCREG == 's')
+                    {
+                        stopMotors();
+                    }
+                }
+            }
             break;
         case 'P':
             PRC();

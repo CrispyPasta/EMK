@@ -38,42 +38,44 @@
 "559
 [v _hardRight hardRight `(v  1 e 1 0 ]
 "575
+[v _reverse reverse `(v  1 e 1 0 ]
+"590
 [v _determineDirection determineDirection `(v  1 e 1 0 ]
-"631
+"644
 [v _testBlack testBlack `(uc  1 e 1 0 ]
-"652
+"665
 [v _classifyColors classifyColors `(v  1 e 1 0 ]
-"674
+"687
 [v _displayColorDetected displayColorDetected `(v  1 e 1 0 ]
-"727
+"740
 [v _stopMotors stopMotors `(v  1 e 1 0 ]
-"739
+"752
 [v _displayRaceColor displayRaceColor `(v  1 e 1 0 ]
-"759
+"772
 [v _readAllSensors readAllSensors `(v  1 e 1 0 ]
-"777
+"790
 [v _trans trans `(v  1 e 1 0 ]
-"793
+"806
 [v _setADCChannel setADCChannel `(v  1 e 1 0 ]
-"834
+"847
 [v _readADC readADC `(uc  1 e 1 0 ]
-"844
+"857
 [v _aveSensor aveSensor `(uc  1 e 1 0 ]
-"859
+"872
 [v _ranges ranges `(v  1 e 1 0 ]
-"881
+"894
 [v _error error `(v  1 e 1 0 ]
-"893
+"906
 [v _writeToEEP writeToEEP `(v  1 e 1 0 ]
-"907
-[v _EE_WRT EE_WRT `(v  1 e 1 0 ]
 "920
+[v _EE_WRT EE_WRT `(v  1 e 1 0 ]
+"933
 [v _readFromEEP readFromEEP `(v  1 e 1 0 ]
-"934
+"947
 [v _EE_READ EE_READ `(uc  1 e 1 0 ]
-"945
+"958
 [v _sixSecDelay sixSecDelay `(v  1 e 1 0 ]
-"955
+"968
 [v _msDelay msDelay `(v  1 e 1 0 ]
 "1 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\abs.c
 [v _abs abs `(i  1 e 2 0 ]
@@ -750,25 +752,25 @@
 {
 "95
 } 0
-"920
+"933
 [v _readFromEEP readFromEEP `(v  1 e 1 0 ]
 {
-"926
+"939
 [v readFromEEP@b b `uc  1 a 1 14 ]
-"925
+"938
 [v readFromEEP@a a `uc  1 a 1 13 ]
-"921
-[v readFromEEP@rs rs `[5]*.39uc  1 a 10 2 ]
-"922
-[v readFromEEP@address address `uc  1 a 1 12 ]
-"920
-[v readFromEEP@F6099 F6099 `[5]*.39uc  1 s 10 F6099 ]
-"932
-} 0
 "934
+[v readFromEEP@rs rs `[5]*.39uc  1 a 10 2 ]
+"935
+[v readFromEEP@address address `uc  1 a 1 12 ]
+"933
+[v readFromEEP@F6101 F6101 `[5]*.39uc  1 s 10 F6101 ]
+"945
+} 0
+"947
 [v _EE_READ EE_READ `(uc  1 e 1 0 ]
 {
-"939
+"952
 } 0
 "60
 [v _clearPorts clearPorts `(v  1 e 1 0 ]
@@ -778,8 +780,8 @@
 "134 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X\sanic.c
 [v _RCE RCE `(v  1 e 1 0 ]
 {
-"196
-[v RCE@a_1463 a `uc  1 a 1 78 ]
+"210
+[v RCE@a_1465 a `uc  1 a 1 78 ]
 "140
 [v RCE@a a `uc  1 a 1 77 ]
 "138
@@ -789,10 +791,15 @@
 "162
 [v RCE@nCharsReceived nCharsReceived `uc  1 a 1 76 ]
 "136
-[v RCE@F6118 F6118 `[14]uc  1 s 14 F6118 ]
-"202
+[v RCE@F6120 F6120 `[14]uc  1 s 14 F6120 ]
+"216
 } 0
-"398 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+"575 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+[v _reverse reverse `(v  1 e 1 0 ]
+{
+"588
+} 0
+"398
 [v _pyCal pyCal `(v  1 e 1 0 ]
 {
 "403
@@ -804,15 +811,15 @@
 {
 "450
 } 0
-"631
+"644
 [v _testBlack testBlack `(uc  1 e 1 0 ]
 {
-"648
+"661
 } 0
-"727
+"740
 [v _stopMotors stopMotors `(v  1 e 1 0 ]
 {
-"736
+"749
 } 0
 "41
 [v _setupPWMRight setupPWMRight `(v  1 e 1 0 ]
@@ -829,34 +836,34 @@
 {
 "129
 } 0
-"759
+"772
 [v _readAllSensors readAllSensors `(v  1 e 1 0 ]
 {
-"760
+"773
 [v readAllSensors@tempSensorVals tempSensorVals `[5]uc  1 a 5 12 ]
-"761
+"774
 [v readAllSensors@a a `uc  1 a 1 17 ]
-"775
+"788
 } 0
-"739
+"752
 [v _displayRaceColor displayRaceColor `(v  1 e 1 0 ]
 {
-"756
+"769
 } 0
-"674
+"687
 [v _displayColorDetected displayColorDetected `(v  1 e 1 0 ]
 {
 [v displayColorDetected@sensor sensor `uc  1 a 1 wreg ]
 [v displayColorDetected@sensor sensor `uc  1 a 1 wreg ]
 [v displayColorDetected@sensor sensor `uc  1 a 1 2 ]
-"722
+"735
 } 0
-"575
+"590
 [v _determineDirection determineDirection `(v  1 e 1 0 ]
 {
-"580
+"593
 [v determineDirection@rc rc `uc  1 s 1 rc ]
-"628
+"641
 } 0
 "496
 [v _straight straight `(v  1 e 1 0 ]
@@ -888,16 +895,16 @@
 {
 "541
 } 0
-"652
+"665
 [v _classifyColors classifyColors `(v  1 e 1 0 ]
 {
-"655
+"668
 [v classifyColors@a a `uc  1 a 1 14 ]
-"653
+"666
 [v classifyColors@sensorRanges sensorRanges `[5]*.39uc  1 a 10 4 ]
-"652
-[v classifyColors@F6062 F6062 `[5]*.39uc  1 s 10 F6062 ]
-"670
+"665
+[v classifyColors@F6064 F6064 `[5]*.39uc  1 s 10 F6064 ]
+"683
 } 0
 "452
 [v _capTouch capTouch `(v  1 e 1 0 ]
@@ -911,7 +918,7 @@
 "462
 [v capTouch@touch1 touch1 `uc  1 a 1 38 ]
 "452
-[v capTouch@F6046 F6046 `[26]uc  1 s 26 F6046 ]
+[v capTouch@F6047 F6047 `[26]uc  1 s 26 F6047 ]
 "479
 } 0
 "1 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\abs.c
@@ -942,57 +949,57 @@
 "152
 [v calibrate@temp temp `uc  1 a 1 48 ]
 "140
-[v calibrate@F6017 F6017 `[5]*.39uc  1 s 10 F6017 ]
+[v calibrate@F6018 F6018 `[5]*.39uc  1 s 10 F6018 ]
 "317
 } 0
-"945
+"958
 [v _sixSecDelay sixSecDelay `(v  1 e 1 0 ]
 {
-"947
+"960
 [v sixSecDelay@a a `uc  1 a 1 1 ]
-"951
+"964
 } 0
-"955
+"968
 [v _msDelay msDelay `(v  1 e 1 0 ]
 {
 [v msDelay@delayInMs delayInMs `uc  1 a 1 wreg ]
 [v msDelay@delayInMs delayInMs `uc  1 a 1 wreg ]
-"957
+"970
 [v msDelay@delayInMs delayInMs `uc  1 a 1 0 ]
-"965
+"978
 } 0
-"859
+"872
 [v _ranges ranges `(v  1 e 1 0 ]
 {
-"865
+"878
 [v ranges@b b `uc  1 a 1 27 ]
-"863
+"876
 [v ranges@a a `uc  1 a 1 28 ]
-"861
+"874
 [v ranges@rangeArray rangeArray `[5]*.39uc  1 a 10 17 ]
-"860
-[v ranges@F6083 F6083 `[5]*.39uc  1 s 10 F6083 ]
-"879
+"873
+[v ranges@F6085 F6085 `[5]*.39uc  1 s 10 F6085 ]
+"892
 } 0
-"893
+"906
 [v _writeToEEP writeToEEP `(v  1 e 1 0 ]
 {
-"897
+"910
 [v writeToEEP@b b `uc  1 a 1 14 ]
-"896
+"909
 [v writeToEEP@a a `uc  1 a 1 13 ]
-"894
-[v writeToEEP@rs rs `[5]*.39uc  1 a 10 2 ]
-"895
-[v writeToEEP@address address `uc  1 a 1 12 ]
-"893
-[v writeToEEP@F6092 F6092 `[5]*.39uc  1 s 10 F6092 ]
-"905
-} 0
 "907
+[v writeToEEP@rs rs `[5]*.39uc  1 a 10 2 ]
+"908
+[v writeToEEP@address address `uc  1 a 1 12 ]
+"906
+[v writeToEEP@F6094 F6094 `[5]*.39uc  1 s 10 F6094 ]
+"918
+} 0
+"920
 [v _EE_WRT EE_WRT `(v  1 e 1 0 ]
 {
-"918
+"931
 } 0
 "7 C:\Program Files (x86)\Microchip\xc8\v2.05\pic\sources\c99\common\awdiv.c
 [v ___awdiv __awdiv `(i  1 e 2 0 ]
@@ -1007,35 +1014,35 @@
 [v ___awdiv@divisor divisor `i  1 p 2 2 ]
 "41
 } 0
-"844 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
+"857 C:\Users\Armandt\Documents\Uni\Year 3\Semester 1\EMK\Practicals\EMK\sanic.X/functions.c
 [v _aveSensor aveSensor `(uc  1 e 1 0 ]
 {
 [v aveSensor@s s `uc  1 a 1 wreg ]
-"849
+"862
 [v aveSensor@a a `uc  1 a 1 9 ]
-"847
+"860
 [v aveSensor@measurements measurements `ui  1 a 2 6 ]
-"854
+"867
 [v aveSensor@result result `uc  1 a 1 8 ]
-"844
-[v aveSensor@s s `uc  1 a 1 wreg ]
-"846
-[v aveSensor@s s `uc  1 a 1 5 ]
 "857
+[v aveSensor@s s `uc  1 a 1 wreg ]
+"859
+[v aveSensor@s s `uc  1 a 1 5 ]
+"870
 } 0
-"793
+"806
 [v _setADCChannel setADCChannel `(v  1 e 1 0 ]
 {
 [v setADCChannel@channel channel `uc  1 a 1 wreg ]
 [v setADCChannel@channel channel `uc  1 a 1 wreg ]
-"795
+"808
 [v setADCChannel@channel channel `uc  1 a 1 2 ]
-"831
+"844
 } 0
-"834
+"847
 [v _readADC readADC `(uc  1 e 1 0 ]
 {
-"841
+"854
 } 0
 "319
 [v _PRC PRC `(v  1 e 1 0 ]
@@ -1063,27 +1070,27 @@
 "325
 [v PRC@message2 message2 `[5]uc  1 a 5 43 ]
 "323
-[v PRC@F6028 F6028 `[32]uc  1 s 32 F6028 ]
+[v PRC@F6029 F6029 `[32]uc  1 s 32 F6029 ]
 "324
-[v PRC@F6030 F6030 `[5]uc  1 s 5 F6030 ]
+[v PRC@F6031 F6031 `[5]uc  1 s 5 F6031 ]
 "396
 } 0
-"881
+"894
 [v _error error `(v  1 e 1 0 ]
 {
-"885
+"898
 [v error@a a `uc  1 a 1 8 ]
-"883
+"896
 [v error@message message `[7]uc  1 a 7 1 ]
-"882
-[v error@F6088 F6088 `[7]uc  1 s 7 F6088 ]
-"891
+"895
+[v error@F6090 F6090 `[7]uc  1 s 7 F6090 ]
+"904
 } 0
-"777
+"790
 [v _trans trans `(v  1 e 1 0 ]
 {
 [v trans@s s `uc  1 a 1 wreg ]
 [v trans@s s `uc  1 a 1 wreg ]
 [v trans@s s `uc  1 a 1 0 ]
-"783
+"796
 } 0
