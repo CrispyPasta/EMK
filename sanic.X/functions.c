@@ -789,8 +789,7 @@ void readAllSensors(){
 
 void trans(unsigned char s)
 {
-    while (!PIR1bits.TX1IF)
-        ;      //wait for previous transmission to finish
+    while (!PIR1bits.TX1IF);      //wait for previous transmission to finish
     TXREG = s; //move character into txreg
     return;
 }
